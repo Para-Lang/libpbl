@@ -1,5 +1,8 @@
 # `libpbl` - Para-C Base Library  
 
+[![Codecov](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/codecov.yml/badge.svg)](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/codecov.yml)
+[![Dr.Memory and GTest](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/drmemory.yml/badge.svg)](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/drmemory.yml)
+
 This is the repository containing the c-implementation library (Para-C Core Library, and partly Para-C Built-In Library),
 which is used for the built-in functions, keywords and items, which are required for the base language.
 
