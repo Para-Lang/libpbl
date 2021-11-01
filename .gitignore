@@ -1,3 +1,14 @@
+# JetBrains
+*.log
+**/.idea
+**/venv/
+**/cmake-build-debug
+*.java
+**/gen
+**/build
+**/dist
+**/Output
+
 # Prerequisites
 *.d
 

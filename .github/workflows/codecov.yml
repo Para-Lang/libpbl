@@ -1,0 +1,30 @@
+name: Codecov
+on: [push]
+jobs:
+  run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    env:
+      OS: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@master
+    - name: Build GTest Tests
+      run: |
+        cd ./modules
+        cmake .
+        cmake --build . --target runParacModulesTests -- -j 9
+    - name: Run C-Coverage
+      run: |
+        ./modules/parac-modules-tests/tests/runParacModulesTests
+        gcov -abcfu ./include/CMakeFiles/parac-modules.dir/*.gc*
+        tree .
+    - name: Upload C coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        directory: .
+        env_vars: OS
+        files: pbl-int.c.gcov,pbl-string.c.gcov,pbl-types.c.gcov,pbl-io.c.gcov,pbl-mem.c.gcov,pbl-main.c.gcov,pbl-function.c.gcov,pbl.c.gcov
+        verbose: true
