@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Base types in `pbl-types.h` that wrap the low-level C types
 - Proper meta-tracking for all Para-C types using `PblVarMeta_T`
-- Default declaration and definition macros for all types in `parac-modules`
+- Default declaration and definition macros for all types in `libpbl`
 - `PblStream_T` and `PblFile_T` implementation for stream handling
 - Specified Int Types in `pbl-int.h` that wrap the int types in `stdint.h`
 - Meta handling for managing a function call context and Exception handling in `pbl-function.h` 

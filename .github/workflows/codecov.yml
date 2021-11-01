@@ -12,12 +12,11 @@ jobs:
     - uses: actions/checkout@master
     - name: Build GTest Tests
       run: |
-        cd ./modules
         cmake .
         cmake --build . --target runParacModulesTests -- -j 9
     - name: Run C-Coverage
       run: |
-        ./modules/parac-modules-tests/tests/runParacModulesTests
+        ./tests/tests/runParacModulesTests
         gcov -abcfu ./include/CMakeFiles/parac-modules.dir/*.gc*
         tree .
     - name: Upload C coverage to Codecov

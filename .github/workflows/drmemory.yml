@@ -30,7 +30,6 @@ jobs:
           tar -xvzf DrMemory-Linux-2.4.0-2.tar.gz
       - name: Build Tests
         run: |
-          cd ./modules
           cmake .
           cmake --build . --target runParacModulesTests -- -j 9
       - name: Run Tests
