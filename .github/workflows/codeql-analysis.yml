@@ -27,9 +27,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - if: matrix.language == 'c'
-      name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    - name: Build
+      run: |
+        cmake .
+        cmake --build . --target pbl -- -j 9
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
