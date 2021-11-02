@@ -3,6 +3,7 @@
 ///
 /// @author Luna-Klatzer
 
+#include "gc.h"
 #include "./pbl-main.h"
 
 #ifndef PARAC_MODULES_MEM_H

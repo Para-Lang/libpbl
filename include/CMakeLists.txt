@@ -26,3 +26,9 @@ set(INCLUDED_EXTENSIONS
         pbl/additional/va-opt.h)
 
 add_library(pbl STATIC ${SOURCE_FILES} ${HEADER_FILES} ${INCLUDED_EXTENSIONS})
+
+include_directories(pbl)
+include_directories(pbl/additional)
+
+add_subdirectory(pbl)
+add_subdirectory(pbl/additional)
