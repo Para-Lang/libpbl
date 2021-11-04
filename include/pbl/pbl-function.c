@@ -93,22 +93,3 @@ PblVoid_T PblSafeDeallocateExceptionT(PblException_T *exc) {
   }
   return PblVoid_T_DeclDefault;
 }
-
-PblVoid_T PblCleanupExceptionContext(PblMetaFunctionCallCtx_T* cleanup_ctx) {
-  // Validate the pointer for safety measures
-  cleanup_ctx = PblValPtr((void *) cleanup_ctx);
-
-  // if an exception was raised -> cleanup the original context and all it's parents until reaching the cleanup_ctx
-  // again
-  if (cleanup_ctx->actual.is_failure.actual) {
-    PblMetaFunctionCallCtx_T* current_ctx = cleanup_ctx->actual.failure_origin_ctx;
-    PblMetaFunctionCallCtx_T* next_ctx;
-    while (current_ctx != cleanup_ctx && current_ctx != NULL) {
-      next_ctx = current_ctx->actual.call_origin_ctx;
-      PblSafeDeallocateMetaFunctionCallCtxT(current_ctx);
-      current_ctx = next_ctx;
-    }
-  }
-  PblSafeDeallocateMetaFunctionCallCtxT(cleanup_ctx);
-  return PblVoid_T_DeclDefault;
-};

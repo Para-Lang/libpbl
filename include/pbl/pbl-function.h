@@ -22,7 +22,7 @@ extern "C" {
 /// @param exception The exception that shall be raised.
 /// @param call_return_type The return type of the function where this macro is invoked.
 /// @note This requires the existence of `this_call_meta` of type `PblMetaFunctionCallCtx_T`.
-#define RAISE_EXCEPTION(exception, call_return_type)                                                                   \
+#define PBL_RAISE_EXCEPTION(exception, call_return_type)                                                               \
   PblRaiseNewException(this_call_meta, exception);                                                                     \
   return call_return_type##_DeclDefault;
 
@@ -36,7 +36,7 @@ extern "C" {
 /// created context.
 /// @param meta_ctx The meta_ctx that should be used as a parent ctx (invocation context) of the child function
 /// @param args The arguments to pass to the local function
-#define CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)                             \
+#define PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)                         \
   PblMetaFunctionCallCtx_T *unique_id##_callctx_##func = PblGetMetaFunctionCallCtxT(                                   \
     PblGetStringT(#func), PblGetBoolT(false), PblGetUIntT(0), is_threaded, NULL, meta_ctx, NULL);                      \
   var_to_pass = func(unique_id##_callctx_##func IFN(args)(, args));
@@ -51,8 +51,8 @@ extern "C" {
 /// @param is_threaded Whether this macro is invoked in a threaded context. This variable is directly passed to the
 /// created context.
 /// @param args the arguments to pass to the function, leave empty if none shall be passed.
-#define C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)                  \
-  CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, is_threaded, meta_ctx, IFN(args)(args))                        \
+#define PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)              \
+  PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, is_threaded, meta_ctx, IFN(args)(args))                    \
   if (unique_id##_callctx_##func->actual.is_failure.actual) {                                                          \
     (meta_ctx)->actual.is_failure = PblGetBoolT(true);                                                                 \
     (meta_ctx)->actual.exception = unique_id##_callctx_##func->actual.exception;                                       \
@@ -69,9 +69,9 @@ extern "C" {
 /// default value (_DeclDefault) will be returned.
 /// @param unique_id The unique id the call ctx should be declared as. It follows the following scheme: unique##_##func.
 /// @note This requires the existence of `this_call_meta` of type `PblMetaFunctionCallCtx_T`
-#define EXCEPTION_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, args...)                             \
-  CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta,            \
-                          IFN(args)(args))                                                                             \
+#define PBL_EXCEPTION_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, args...)                         \
+  PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta,        \
+                              IFN(args)(args))                                                                         \
   if (unique_id##_callctx_##func->actual.is_failure.actual) {                                                          \
     this_call_meta->actual.is_failure = PblGetBoolT(true);                                                             \
     this_call_meta->actual.exception = unique_id##_callctx_##func->actual.exception;                                   \
@@ -89,7 +89,7 @@ extern "C" {
 /// correctly update the information.
 /// @param meta_ctx The meta_ctx that should be used as a parent ctx (invocation context) of the child function
 /// @param call_return_type The return type of the function where this macro is invoked.
-#define EXCEPTION_TRY_EXCEPT_BLOCK(block, except_block, block_identifier, meta_ctx, call_return_type)                  \
+#define PBL_EXCEPTION_TRY_EXCEPT_BLOCK(block, except_block, block_identifier, meta_ctx, call_return_type)              \
   PblException_T block_identifier##_local_catched_exc;                                                                 \
   PblBool_T block_identifier##_invoke_except = PblGetBoolT(false);                                                     \
   PblBool_T block_identifier##_except_handled = PblGetBoolT(false);                                                    \
@@ -109,18 +109,19 @@ extern "C" {
 /// default value (_DeclDefault) will be returned.
 /// @param unique_id The unique id the call ctx should be declared as. It follows the following scheme: unique##_##func.
 /// @note This requires the existence of `this_call_meta` of type `PblMetaFunctionCallCtx_T`
-#define EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, block_identifier, args...) \
-  CALL_FUNC_WITH_META_CTX(                                                                                             \
-    func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta, IFN(args)(args))                 \
+#define PBL_EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, block_identifier,      \
+                                                       args...)                                                        \
+  PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta,        \
+                              IFN(args)(args))                                                                         \
   if (unique_id##_callctx_##func->actual.is_failure.actual) {                                                          \
-    block_identifier##_local_catched_exc = *((PblException_T*) unique_id##_callctx_##func->actual.exception);          \
+    block_identifier##_local_catched_exc = *((PblException_T *) unique_id##_callctx_##func->actual.exception);         \
     block_identifier##_invoke_except = PblGetBoolT(true);                                                              \
     goto block_identifier##_except_block;                                                                              \
   }
 
 /// @brief Adds an exception clause to the current block - this should be used to create a block statement which then is
 /// passed as an argument to EXCEPTION_TRY_EXCEPT_BLOCK()
-#define EXCEPTION_CREATE_EXCEPT_BLOCK(exception_name, block_to_execute, block_identifier)                              \
+#define PBL_EXCEPTION_CREATE_EXCEPT_BLOCK(exception_name, block_to_execute, block_identifier)                          \
   if (block_identifier##_invoke_except.actual) {                                                                       \
     block_to_execute;                                                                                                  \
     block_identifier##_except_handled = PblGetBoolT(true);                                                             \

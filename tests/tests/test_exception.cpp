@@ -65,20 +65,20 @@ PblInt_T NestedTestFunction(PblMetaFunctionCallCtx_T *this_call_meta, PblUInt_T 
     NULL,
     NULL
     );
-  RAISE_EXCEPTION(exception, PblInt_T);
+  PBL_RAISE_EXCEPTION(exception, PblInt_T);
 }
 
 PblInt_T TestFunction(PblMetaFunctionCallCtx_T *this_call_meta)
 {
   PblInt_T r_1 = PblInt_T_DeclDefault;
-  EXCEPTION_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T, X1, PblGetUIntT(1))
+  PBL_EXCEPTION_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T, X1, PblGetUIntT(1))
   return r_1;
 }
 
 TEST(ExceptionTest, OneNestCall) {
   PblInt_T r_1 = PblInt_T_DeclDefault;
   PblMetaFunctionCallCtx_T this_call_meta = PblMetaFunctionCallCtx_T_DefDefault;
-  C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction, r_1, H3, PblGetBoolT(false),&this_call_meta,);
+  PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction, r_1, H3, PblGetBoolT(false),&this_call_meta,);
 
   EXPECT_EQ(r_1.meta.defined, false);
   EXPECT_TRUE(this_call_meta.actual.is_failure.actual);
@@ -92,14 +92,13 @@ TEST(ExceptionTest, OneNestCall) {
 }
 
 PblInt_T TestFunction2(PblMetaFunctionCallCtx_T *this_call_meta) {
-  EXCEPTION_TRY_EXCEPT_BLOCK(
+  PBL_EXCEPTION_TRY_EXCEPT_BLOCK(
     {
       PblInt_T r_1 = PblInt_T_DeclDefault;
-      EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T, X1, Y2, PblGetUIntT(1))
+      PBL_EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T, X1, Y2, PblGetUIntT(1))
       return r_1;
     },
-    {
-      EXCEPTION_CREATE_EXCEPT_BLOCK(
+    {PBL_EXCEPTION_CREATE_EXCEPT_BLOCK(
         "test",
         {
           return PblGetIntT(1);
@@ -118,7 +117,7 @@ PblInt_T TestFunction2(PblMetaFunctionCallCtx_T *this_call_meta) {
 TEST(ExceptionTest, TryExceptCall) {
   PblInt_T r_1 = PblInt_T_DeclDefault;
   PblMetaFunctionCallCtx_T this_call_meta = PblMetaFunctionCallCtx_T_DefDefault;
-  C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction2, r_1, H3, PblGetBoolT(false), &this_call_meta,);
+  PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction2, r_1, H3, PblGetBoolT(false), &this_call_meta,);
 
   // Try-except should never if there is a except statement that was executed, log it's exception and throw the results
   // away right after finishing up
@@ -131,14 +130,13 @@ TEST(ExceptionTest, TryExceptCall) {
 }
 
 PblInt_T TestFunction3(PblMetaFunctionCallCtx_T *this_call_meta) {
-  EXCEPTION_TRY_EXCEPT_BLOCK(
+  PBL_EXCEPTION_TRY_EXCEPT_BLOCK(
     {
       PblInt_T r_1 = PblInt_T_DeclDefault;
-      EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T, X1, Y2, PblGetUIntT(1))
+      PBL_EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T, X1, Y2, PblGetUIntT(1))
       return r_1;
     },
-    {
-      EXCEPTION_CREATE_EXCEPT_BLOCK(
+    {PBL_EXCEPTION_CREATE_EXCEPT_BLOCK(
         "test",
         {
           return PblGetIntT(1);
@@ -157,7 +155,7 @@ PblInt_T TestFunction3(PblMetaFunctionCallCtx_T *this_call_meta) {
 TEST(ExceptionTest, TryExceptCallWithContinuation) {
   PblInt_T r_1 = PblInt_T_DeclDefault;
   PblMetaFunctionCallCtx_T this_call_meta = PblMetaFunctionCallCtx_T_DefDefault;
-  C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction3, r_1, H3, PblGetBoolT(false), &this_call_meta,);
+  PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction3, r_1, H3, PblGetBoolT(false), &this_call_meta,);
 
   EXPECT_FALSE(this_call_meta.actual.is_failure.actual);
   EXPECT_TRUE(this_call_meta.actual.failure_origin_ctx == NULL);
