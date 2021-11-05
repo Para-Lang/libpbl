@@ -5,6 +5,7 @@
 
 #include "gc.h"
 #include "./pbl-main.h"
+#include "./pbl-types.h"
 
 #ifndef PARAC_MODULES_MEM_H
 #define PARAC_MODULES_MEM_H
@@ -58,7 +59,7 @@ void PblFree(void *ptr);
  * @return The pointer returned by the GC malloc call
  * @note This will crash the program if the size of the value is invalid!
  */
-void* PblMalloc(size_t size);
+void* PblMalloc(PblSize_T size);
 
 /**
  * @brief Allocates an atomic variable - Objects of atomic types are the only objects that are free from data races;
@@ -67,7 +68,7 @@ void* PblMalloc(size_t size);
  * @return The pointer returned by the GC atomic malloc call
  * @note This will crash the program if the size of the value is invalid!
  */
-void* PblMallocAtomic(size_t size);
+void* PblMallocAtomic(PblSize_T size);
 
 /**
  * @brief Re-allocates the memory to the size given.
@@ -78,7 +79,7 @@ void* PblMallocAtomic(size_t size);
  * @note Unlike the low-level GC realloc(), this may not be used to malloc or free memory and it will raise a critical
  * exception if attempted to secure the memory management process
  */
-void* PblRealloc(void* ptr, size_t size);
+void* PblRealloc(void* ptr, PblSize_T size);
 
 #ifdef __cplusplus
 }

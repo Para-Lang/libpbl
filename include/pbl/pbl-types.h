@@ -1,6 +1,6 @@
 ///
 /// Base Para-C Types Implementation, which implement default declaration and default definition types. This also
-/// includes meta-data tracking based on the `PblMetaVarCtx_T` type.
+/// includes meta-data tracking based on the 'PblMetaVarCtx_T' type.
 ///
 /// @author Luna-Klatzer
 /// @note The TYPE_T_Size macros define the actual size of the C-elements, without the meta struct - This is only used
@@ -32,11 +32,6 @@ struct PblMetaVarCtx {
   /// variable is undefined behaviour. This means it should IN NO CASE BE accessed when it's only declared)
   /// This variable is used to also validate whether a variable can be accessed without raising an error!
   bool defined;
-  /// Size of the allocated memory in bytes - this should not include the property PblMetaVarCtx_T
-  /// @note To properly implement this, for a struct implementation there should be both the base (without `meta`)
-  /// struct and the actual usage struct (with `meta`). `sizeof` can then be applied onto the base to correctly get
-  /// the size
-  size_t byte_size;
 };
 
 /// Base Meta Type contained in ALL variables
@@ -45,19 +40,26 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
 // ---- Constructor Macros --------------------------------------------------------------------------------------------
 
 /// Declaration constructor which initialised the meta data for the passed type
-#define PBL_DECLARATION_CONSTRUCTOR(type) (type) {                                                                     \
-    .meta = {.defined = false, .byte_size = type##_Size}                                                               \
+#define PBL_DECLARATION_CONSTRUCTOR(type)                                                                              \
+  (type) {                                                                                                             \
+    .meta = {.defined = false }                                                                                        \
   }
 
-/// Definition constructor which initialises the meta data for the passed type and passes to `.actual` the args as struct
-#define PBL_DEFINITION_STRUCT_CONSTRUCTOR(type, ...) (type) {                                                          \
-    .meta = {.defined = true, .byte_size = type##_Size}, .actual = { __VA_ARGS__ }                                     \
+/// Definition constructor, which initialises the type with the passed __VA_ARGS__, if they are empty, then it will be
+/// not set
+#define PBL_DEFINITION_UNSET_CONSTRUCTOR(type, ...)                                                                    \
+  (type) { .meta = {.defined = true}, __VA_ARGS__ }
+
+/// Definition constructor, which initialises the meta data for the passed type and passes to '.actual' the args as
+/// struct
+#define PBL_DEFINITION_STRUCT_CONSTRUCTOR(type, ...)                                                                   \
+  (type) {                                                                                                             \
+    .meta = {.defined = true}, .actual = { __VA_ARGS__ }                                                               \
   }
 
-/// Definition constructor which initialised the meta data for the passed type and passes to `.actual` the single arg
-#define PBL_DEFINITION_SINGLE_CONSTRUCTOR(type, var_actual) (type) {                                                   \
-    .meta = {.defined = true, .byte_size = type##_Size}, .actual = var_actual                                          \
-  }
+/// Definition constructor, which initialised the meta data for the passed type and passes to '.actual' the single arg
+#define PBL_DEFINITION_SINGLE_CONSTRUCTOR(type, var_actual)                                                            \
+  (type) { .meta = {.defined = true}, .actual = (var_actual) }
 
 /// Creates the body for a Para-C type definition wrapper - the base_type is the actual value/struct
 #define PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(base_type) { \
@@ -70,8 +72,12 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL PblVoid_T type
 #define PblVoid_T_Size 0
-/// Returns the declaration default for the type `PblVoid_T`
+/// Returns the declaration default for the type 'PblVoid_T'
 #define PblVoid_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblVoid_T)
+/// Returns the definition default, for the type 'PblVoid_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblVoid_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblVoid_T, )
 
 /// PBL Void implementation
 struct PblVoid {
@@ -89,10 +95,14 @@ typedef struct PblVoid PblVoid_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Bool type
 #define PblBool_T_Size sizeof(bool)
-/// Returns the declaration default for the type `PblBool_T`
+/// Returns the declaration default for the type 'PblBool_T'
 #define PblBool_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblBool_T)
-/// Returns the definition default for the type `PblBool_T`
+/// Returns the definition default, for the type 'PblBool_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
 #define PblBool_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblBool_T, false)
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblBool_T'
+#define PblBool_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblBool_T, false)
 
 /// PBL Bool implementation
 struct PblBool PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(bool)
@@ -104,10 +114,14 @@ typedef struct PblBool PblBool_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Size type
 #define PblSize_T_Size sizeof(size_t)
-/// Returns the declaration default for the type `PblSize_T`
+/// Returns the declaration default for the type 'PblSize_T'
 #define PblSize_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblSize_T)
-/// Returns the definition default for the type `PblSize_T`
-#define PblSize_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblSize_T, 0)
+/// Returns the definition default, for the type 'PblSize_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblSize_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblSize_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblSize_T'
+#define PblSize_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblSize_T, 0)
 
 /// PBL Byte Size implementation
 struct PblSize PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(size_t)
@@ -119,10 +133,14 @@ typedef struct PblSize PblSize_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Signed Char type
 #define PblChar_T_Size sizeof(signed char)
-/// Returns the declaration default for the type `PblChar_T`
+/// Returns the declaration default for the type 'PblChar_T'
 #define PblChar_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblChar_T)
-/// Returns the definition default for the type `PblChar_T`
-#define PblChar_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblChar_T, 0)
+/// Returns the definition default, for the type 'PblChar_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblChar_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblChar_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblChar_T'
+#define PblChar_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblChar_T, 0)
 
 /// PBL Signed Char implementation
 struct PblChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed char)
@@ -134,10 +152,14 @@ typedef struct PblChar PblChar_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Unsigned Char type
 #define PblUChar_T_Size sizeof(unsigned char)
-/// Returns the declaration default for the type `PblUChar_T_Size`
+/// Returns the declaration default for the type 'PblUChar_T_Size'
 #define PblUChar_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUChar_T)
-/// Returns the definition default for the type `PblUChar_T_Size`
-#define PblUChar_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUChar_T, 0)
+/// Returns the definition default, for the type 'PblUChar_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblUChar_T_DefDefault PblUChar_T_DeclDefault
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblUChar_T_Size'
+#define PblUChar_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUChar_T, 0)
 
 /// PBL Unsigned Char implementation
 struct PblUChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned char)
@@ -149,10 +171,14 @@ typedef struct PblUChar PblUChar_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Signed Short type
 #define PblShort_T_Size sizeof(signed short)
-/// Returns the declaration default for the type `PblShort_T`
+/// Returns the declaration default for the type 'PblShort_T'
 #define PblShort_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblShort_T)
-/// Returns the definition default for the type `PblShort_T`
-#define PblShort_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblShort_T, 0)
+/// Returns the definition default, for the type 'PblShort_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblShort_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblShort_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblShort_T'
+#define PblShort_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblShort_T, 0)
 
 /// PBL Signed Short implementation
 struct PblShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed short)
@@ -164,10 +190,14 @@ typedef struct PblShort PblShort_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Unsigned Short type
 #define PblUShort_T_Size sizeof(unsigned short)
-/// Returns the declaration default for the type `PblUShort_T_Size`
+/// Returns the declaration default for the type 'PblUShort_T_Size'
 #define PblUShort_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUShort_T)
-/// Returns the definition default for the type `PblUShort_T_Size`
-#define PblUShort_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUShort_T, 0)
+/// Returns the definition default, for the type 'PblUShort_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblUShort_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUShort_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblUShort_T_Size'
+#define PblUShort_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUShort_T, 0)
 
 /// PBL Unsigned Short implementation
 struct PblUShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned short)
@@ -179,10 +209,14 @@ typedef struct PblUShort PblUShort_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Signed Int type
 #define PblInt_T_Size sizeof(signed int)
-/// Returns the declaration default for the type `PblInt_T`
+/// Returns the declaration default for the type 'PblInt_T'
 #define PblInt_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblInt_T)
-/// Returns the definition default for the type `PblInt_T`
-#define PblInt_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt_T, 0)
+/// Returns the definition default, for the type 'PblInt_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblInt_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblInt_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblInt_T'
+#define PblInt_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt_T, 0)
 
 /// PBL Signed Int implementation
 struct PblInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed int)
@@ -194,10 +228,14 @@ typedef struct PblInt PblInt_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Unsigned Int type
 #define PblUInt_T_Size sizeof(unsigned int)
-/// Returns the declaration default for the type `PblUInt_T`
+/// Returns the declaration default for the type 'PblUInt_T'
 #define PblUInt_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUInt_T)
-/// Returns the definition default for the type `PblUInt_T`
-#define PblUInt_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt_T, 0)
+/// Returns the definition default, for the type 'PblUInt_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblUInt_T_DefDefault PblUInt_T_DeclDefault
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblUInt_T'
+#define PblUInt_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt_T, 0)
 
 /// PBL Unsigned Int implementation
 struct PblUInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned int)
@@ -209,10 +247,14 @@ typedef struct PblUInt PblUInt_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Signed Long type
 #define PblLong_T_Size sizeof(signed long)
-/// Returns the declaration default for the type `PblLong_T`
+/// Returns the declaration default for the type 'PblLong_T'
 #define PblLong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLong_T)
-/// Returns the definition default for the type `PblLong_T`
-#define PblLong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLong_T, 0)
+/// Returns the definition default, for the type 'PblLong_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblLong_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLong_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblLong_T'
+#define PblLong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLong_T, 0)
 
 /// PBL Signed Long implementation
 struct PblLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long)
@@ -224,10 +266,14 @@ typedef struct PblLong PblLong_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Unsigned Long type
 #define PblULong_T_Size sizeof(unsigned long)
-/// Returns the declaration default for the type `PblULong_T`
+/// Returns the declaration default for the type 'PblULong_T'
 #define PblULong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULong_T)
-/// Returns the definition default for the type `PblULong_T`
-#define PblULong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULong_T, 0)
+/// Returns the definition default, for the type 'PblULong_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblULong_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblULong_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblULong_T'
+#define PblULong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULong_T, 0)
 
 /// PBL Unsigned Long implementation
 struct PblULong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long)
@@ -239,10 +285,14 @@ typedef struct PblULong PblULong_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Signed Long Long type
 #define PblLongLong_T_Size sizeof(signed long long)
-/// Returns the declaration default for the type `PblLongLong_T`
+/// Returns the declaration default for the type 'PblLongLong_T'
 #define PblLongLong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLongLong_T)
-/// Returns the definition default for the type `PblLongLong_T`
-#define PblLongLong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongLong_T, 0)
+/// Returns the definition default, for the type 'PblLongLong_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblLongLong_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLongLong_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblLongLong_T'
+#define PblLongLong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongLong_T, 0)
 
 /// PBL Signed Long Long implementation
 struct PblLongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long long)
@@ -254,10 +304,14 @@ typedef struct PblLongLong PblLongLong_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Unsigned Long Long type
 #define PblULongLong_T_Size sizeof(unsigned long long)
-/// Returns the declaration default for the type `PblULongLong_T`
+/// Returns the declaration default for the type 'PblULongLong_T'
 #define PblULongLong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULongLong_T)
-/// Returns the definition default for the type `PblULongLong_T`
-#define PblULongLong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULongLong_T, 0)
+/// Returns the definition default, for the type 'PblULongLong_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblULongLong_T_DefDefault PblULongLong_T_DeclDefault
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblULongLong_T'
+#define PblULongLong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULongLong_T, 0)
 
 /// PBL Unsigned Long Long implementation
 struct PblULongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long long)
@@ -269,10 +323,14 @@ typedef struct PblULongLong PblULongLong_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Float type
 #define PblFloat_T_Size sizeof(float)
-/// Returns the declaration default for the type `PblFloat_T`
+/// Returns the declaration default for the type 'PblFloat_T'
 #define PblFloat_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFloat_T)
-/// Returns the definition default for the type `PblFloat_T`
-#define PblFloat_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFloat_T, 0)
+/// Returns the definition default, for the type 'PblFloat_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblFloat_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblFloat_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblFloat_T'
+#define PblFloat_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFloat_T, 0)
 
 /// PBL Float implementation
 struct PblFloat PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(float)
@@ -284,10 +342,14 @@ typedef struct PblFloat PblFloat_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Double type
 #define PblDouble_T_Size sizeof(double)
-/// Returns the declaration default for the type `PblDouble_T`
+/// Returns the declaration default for the type 'PblDouble_T'
 #define PblDouble_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblDouble_T)
-/// Returns the definition default for the type `PblDouble_T`
-#define PblDouble_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblDouble_T, 0)
+/// Returns the definition default, for the type 'PblDouble_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblDouble_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblDouble_T, )
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblDouble_T'
+#define PblDouble_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblDouble_T, 0)
 
 /// PBL Double implementation
 struct PblDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(double)
@@ -299,10 +361,14 @@ typedef struct PblDouble PblDouble_T;
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Long Double type
 #define PblLongDouble_T_Size sizeof(long double)
-/// Returns the declaration default for the type `PblLongDouble_T`
+/// Returns the declaration default for the type 'PblLongDouble_T'
 #define PblLongDouble_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLongDouble_T)
-/// Returns the definition default for the type `PblLongDouble_T`
-#define PblLongDouble_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongDouble_T, 0)
+/// Returns the definition default, for the type 'PblLongDouble_T', where the children have not been set yet and only the
+/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
+/// unless the value has been altered/set
+#define PblLongDouble_T_DefDefault PblLongDouble_T_DeclDefault
+/// Returns the definition default, with the children having been as well initialised, for the type 'PblLongDouble_T'
+#define PblLongDouble_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongDouble_T, 0)
 
 /// PBL Long Double implementation
 struct PblLongDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(long double)
@@ -315,7 +381,7 @@ typedef struct PblLongDouble PblLongDouble_T;
 /// Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this does
 /// not support complex initialisation.
 #define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type) {                                                  \
-    parac_type conv = parac_type##_DefDefault;                                                                         \
+    parac_type conv = parac_type##_DefWithSetChildrenDefault;                                                          \
     conv.actual = val;                                                                                                 \
     return conv;                                                                                                       \
   }

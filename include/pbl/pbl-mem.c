@@ -4,6 +4,7 @@
 /// @author Luna-Klatzer
 
 #include "./pbl-mem.h"
+#include "./pbl-types.h"
 
 void *PblValPtr(void *ptr) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
@@ -15,36 +16,44 @@ void PblFree(void *ptr) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (ptr == NULL) { PBL_LOG_FREE_ERR_NULL_PTR }
   GC_FREE(ptr);
+
   // old pointer is invalid
   ptr = NULL;
 }
 
-void *PblMalloc(size_t size) {
+void *PblMalloc(PblSize_T size) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
-  if (size <= 0) { PBL_LOG_ALLOC_ERR_NULL_SZ }
+  if (size.actual <= 0) {
+    PBL_LOG_ALLOC_ERR_NULL_SZ
+  }
+
   // allocating the memory
-  void *ptr = GC_MALLOC(size);
+  void *ptr = GC_MALLOC(size.actual);
   if (ptr == NULL) { PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET }
   return ptr;
 }
 
-void *PblMallocAtomic(size_t size) {
+void *PblMallocAtomic(PblSize_T size) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
-  if (size <= 0) { PBL_LOG_ALLOC_ERR_NULL_SZ }
+  if (size.actual <= 0) {
+    PBL_LOG_ALLOC_ERR_NULL_SZ
+  }
+
   // allocating the memory
-  void *ptr = GC_MALLOC_ATOMIC(size);
+  void *ptr = GC_MALLOC_ATOMIC(size.actual);
   if (ptr == NULL) { PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET }
   return ptr;
 }
 
-void *PblRealloc(void *ptr, size_t size) {
+void *PblRealloc(void *ptr, PblSize_T size) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (ptr == NULL) { PBL_LOG_REALLOC_ERR_NULL_PTR }
-  if (size <= 0) { PBL_LOG_REALLOC_ERR_NULL_SZ }
+  if (size.actual <= 0) { PBL_LOG_REALLOC_ERR_NULL_SZ }
 
   // re-allocating the memory
-  void *new_ptr = GC_REALLOC(ptr, size);
+  void *new_ptr = GC_REALLOC(ptr, size.actual);
   if (new_ptr == NULL) { PBL_LOG_REALLOC_ERR_RECEIVE_NULL_RET }
+
   // old pointer is invalid
   if (new_ptr != ptr) ptr = NULL;
   return new_ptr;

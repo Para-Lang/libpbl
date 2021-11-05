@@ -6,8 +6,8 @@
 #include "./pbl-function.h"
 
 PblMetaFunctionCallCtx_T *PblAllocateMetaFunctionCallCtxT() {
-  PblMetaFunctionCallCtx_T* ptr = PblMalloc(sizeof(PblMetaFunctionCallCtx_T));
-  *ptr = PblMetaFunctionCallCtx_T_DefDefault;
+  PblMetaFunctionCallCtx_T* ptr = PblMalloc(PblGetSizeT(sizeof(PblMetaFunctionCallCtx_T)));
+  *ptr = PblMetaFunctionCallCtx_T_DefWithSetChildrenDefault;
   return ptr;
 }
 
@@ -17,9 +17,9 @@ PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T function_identi
                                                      PblMetaFunctionCallCtx_T *call_origin_ctx,
                                                      PblException_T *exception) {
   PblMetaFunctionCallCtx_T *ptr = PblAllocateMetaFunctionCallCtxT();
-  *ptr = PblMetaFunctionCallCtx_T_DefDefault;
+  *ptr = PblMetaFunctionCallCtx_T_DefWithSetChildrenDefault;
 
-  ptr->actual = (struct PblMetaFunctionCallCtxBase) {
+  ptr->actual = (struct PblMetaFunctionCallCtx_Base) {
     .function_identifier=function_identifier, .is_failure=is_failure, .arg_amount=arg_amount,
     .is_threaded=is_threaded, .failure_origin_ctx=failure_origin_ctx, .call_origin_ctx=call_origin_ctx,
     .exception=exception
@@ -43,7 +43,7 @@ PblVoid_T PblSafeDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
 }
 
 PblException_T *PblAllocateExceptionType() {
-  PblException_T *ptr = PblMalloc(sizeof(PblException_T));
+  PblException_T *ptr = PblMalloc(PblGetSizeT(sizeof(PblException_T)));
   *ptr = PblException_T_DeclDefault;
   return ptr;
 }
@@ -53,8 +53,8 @@ PblException_T *PblGetExceptionT(PblString_T msg, PblString_T name, PblString_T 
   PblException_T *ptr = PblAllocateExceptionType();
 
   // Using the Definition Default
-  *ptr = PblException_T_DefDefault;
-  ptr->actual = (struct PblExceptionBase){
+  *ptr = PblException_T_DefWithSetChildrenDefault;
+  ptr->actual = (struct PblException_Base){
     .msg = msg, .name = name, .filename = filename, .line = line,
     .line_content = line_content, .parent_exc = parent_exc, .child_exc = child_exc
   };

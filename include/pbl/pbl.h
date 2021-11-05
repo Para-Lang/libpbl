@@ -12,33 +12,18 @@
 ///
 /// @author Luna-Klatzer
 /// @note The styling guide for the PBL is as following:
-/// - Structs/Enums: PascalCase with leading `Pbl`
+/// - Structs/Enums: PascalCase with leading 'Pbl'
 /// - Struct Properties: snake_case
-/// - Constants and Enum Properties: PascalCase with leading `k` (copied from the Google C++ Styling Guide)
-/// - Typedef: PascalCase with leading `Pbl` and trailing `_T`
+/// - Constants and Enum Properties: PascalCase with leading 'k' (copied from the Google C++ Styling Guide)
+/// - Typedef: PascalCase with leading 'Pbl' and trailing '_T'
 /// - Local Variables: snake_case
 /// - Parameters: snake_case
 /// - Macros: SCREAMING_SNAKE_CASE (exceptions are function definition macros, where PascalCase is applied)
 /// - Functions: PascalCase
 /// - Indention is set to 2 spaces
-/// @note When declaring a built-in type that should be used inside Para-C, these are following items that must be
-/// declared as well (template):
-/// // The size of the type `ITEM_T` in bytes - excluding meta-data
-/// #define ITEM_T_Size <insert-calculation>
-/// // Returns the declaration default for the type `ITEM_T`
-/// #define ITEM_T_DeclarationDefault (ITEM_T) {.meta = {.defined=false, .byte_size=ITEM_T_Size}}
-/// // Returns the definition default for the type `ITEM_T`
-/// #define ITEM_T_DefinitionDefault (ITEM_T) {               \
-///  .meta = {.defined=false, .byte_size=ITEM_T_Size}         \
-///  .actual = ...                                            \
-/// }
-///
-/// // Base Struct of ITEM - avoid using this type
-/// struct ITEMBase { ... };
-///
-/// // File Descriptor used to perform I/O actions on a file
-/// struct ITEM PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct ITEMBase)
-/// typedef struct ITEM ITEM_T;
+/// @note When declaring a built-in type that should be used inside Para-C, the style of the general types should
+/// be replicated, to allow for the proper usage of defaults aka. `_DefDefault`, `_DeclDefault` and
+// `_DefWithSetChildrenDefault`
 
 // lib-headers includes
 #include "./pbl-int.h"

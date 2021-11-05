@@ -1,6 +1,6 @@
 ///
 /// Base Para-C Types Implementation, which implement default declaration and default definition types. This also
-/// includes meta-data tracking based on the `PblMetaVarCtx_T` type.
+/// includes meta-data tracking based on the 'PblMetaVarCtx_T' type.
 ///
 /// @author Luna-Klatzer
 /// @note The TYPE_T_Size macros define the actual size of the C-elements, without the meta struct - This is only used

@@ -13,7 +13,7 @@ PblFile_T PblGetFileT(FILE *val) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);
 
-  PblFile_T conv = PblFile_T_DefDefault;
+  PblFile_T conv = PblFile_T_DefWithSetChildrenDefault;
   conv.actual = val;
   return conv;
 }
@@ -22,8 +22,8 @@ PblStream_T PblGetStreamT(int fd, const char *mode) {
   // Validate the pointer for safety measures
   mode = PblValPtr((void*) mode);
 
-  PblStream_T conv = PblStream_T_DefDefault;
-  conv.actual.fd = PblGetUIntT(fd);
+  PblStream_T conv = PblStream_T_DefWithSetChildrenDefault;
+  conv.actual.fd = PblGetUIntT((signed int) fd);
   conv.actual.file = PblGetFileT(fdopen(fd, mode));
   conv.actual.mode = PblGetStringT(mode);
   conv.actual.open = PblGetBoolT(true);
@@ -34,7 +34,7 @@ PblVoid_T PblPrint_Base(PblString_T *out, const PblStream_T stream, const PblCha
   // Validate the pointer for safety measures
   out = PblValPtr((void*) out);
 
-  fprintf(stream.actual.file.actual, "%s", out->actual.str);
+  for (int i = 0; i < out->actual.len.actual; i++) fprintf(stream.actual.file.actual, "%c", (out->actual.str[i].actual));
   fprintf(stream.actual.file.actual, "%c", end.actual);
   return PblVoid_T_DeclDefault;
 }
