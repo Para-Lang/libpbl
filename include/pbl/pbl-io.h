@@ -24,12 +24,8 @@ extern "C" {
 #define PblFile_T_Size sizeof(FILE *)
 /// Returns the declaration default for the type 'PblFile_T'
 #define PblFile_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFile_T)
-/// Returns the definition default, for the type 'PblFile_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblFile_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblFile_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblFile_T'
-#define PblFile_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFile_T, NULL)
+/// Returns the definition default, for the type 'PblFile_T', where only value itself has been created
+#define PblFile_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFile_T, NULL)
 
 /// File Descriptor used to perform I/O actions on a file
 struct PblFile PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(FILE*)
@@ -43,27 +39,20 @@ typedef struct PblFile PblFile_T;
 /// Returns the declaration default for the type 'PblStream_T'
 #define PblStream_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblStream_T)
 /// Returns the definition default, for the type 'PblStream_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the children the Declaration Defaults are returned, unless
-/// they have been altered/set
+/// value itself 'exists' already.
 #define PblStream_T_DefDefault                                                                                         \
-  PBL_DEFINITION_UNSET_CONSTRUCTOR(PblStream_T, .fd = PblUInt_T_DefDefault, .file = PblFile_T_DefDefault,       \
-                                          .open = PblBool_T_DefDefault, .mode = PblString_T_Def)
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblStream_T'
-#define PblStream_T_DefWithSetChildrenDefault                                                                          \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(                                                                                   \
-    PblStream_T, .fd = PblUInt_T_DefWithSetChildrenDefault, .file = PblFile_T_DefWithSetChildrenDefault,               \
-    .open = PblBool_T_DefWithSetChildrenDefault, .mode = PblString_T_DefWithSetChildrenDefault)
+  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = NULL, .file = NULL, .open = NULL, .mode = NULL)
 
 /// Base Struct of PblString - avoid using this type
 struct PblStream_Base {
   /// The unique integer identifier associated with the file Descriptor
-  PblUInt_T fd;
+  PblUInt_T *fd;
   /// The FILE pointer, which points to the stream/file - defined if the stream was opened
-  PblFile_T file;
+  PblFile_T *file;
   /// Describes whether the file descriptor is currently in use
-  PblBool_T open;
+  PblBool_T *open;
   /// The mode the FILE* was opened
-  PblString_T mode;
+  PblString_T *mode;
 };
 
 /// File Descriptor used to perform I/O actions on a file
@@ -96,7 +85,7 @@ typedef struct PblStream PblStream_T;
  * @return The newly created PBL File type
  * @note This is a C to Para-C type conversion function - args are in C therefore
  */
-PblFile_T PblGetFileT(FILE *val);
+PblFile_T* PblGetFileT(FILE *val);
 
 /**
  * @brief Converts the low level C-Type to a PBL Stream type. Creates the FILE* pointer as well
@@ -105,13 +94,13 @@ PblFile_T PblGetFileT(FILE *val);
  * @return The newly created PBL Stream type
  * @note This is a C to Para-C type conversion function - args are therefore in C
  */
-PblStream_T PblGetStreamT(int fd, const char *mode);
+PblStream_T* PblGetStreamT(int fd, const char *mode);
 
 /// Arguments struct for PblPrint (PblPrintOverhead)
 struct PblPrint_Args {
   PblString_T *out;
-  PblStream_T stream;
-  PblChar_T end;
+  PblStream_T *stream;
+  PblChar_T *end;
 };
 
 /**
@@ -121,7 +110,7 @@ struct PblPrint_Args {
  * @param end The end character that should be printed after 'out'
  * @note This is the base function that is wrapped using 'PblPrintOverhead'
  */
-PblVoid_T PblPrint_Base(PblString_T *out, PblStream_T stream, PblChar_T end);
+PblVoid_T PblPrint_Base(PblString_T *out, const PblStream_T *stream, const PblChar_T *end);
 
 /**
  * @brief Printing overhead for 'PblPrintBase' - this it the function called by the macro 'PblPrint'

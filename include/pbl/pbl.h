@@ -22,8 +22,7 @@
 /// - Functions: PascalCase
 /// - Indention is set to 2 spaces
 /// @note When declaring a built-in type that should be used inside Para-C, the style of the general types should
-/// be replicated, to allow for the proper usage of defaults aka. `_DefDefault`, `_DeclDefault` and
-// `_DefWithSetChildrenDefault`
+/// be replicated, to allow for the proper usage of defaults aka. `_DefDefault` and `_DeclDefault`
 
 // lib-headers includes
 #include "./pbl-int.h"

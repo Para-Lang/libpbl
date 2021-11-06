@@ -19,25 +19,16 @@ extern "C" {
 /// Returns the declaration default for the type 'PblString_T'
 #define PblString_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblString_T)
 /// Returns the definition default, for the type 'PblString_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the children the Declaration Defaults are returned, unless
-/// they have been altered/set
+/// value itself 'exists' already.
 #define PblString_T_DefDefault                                                                                         \
-  PBL_DEFINITION_UNSET_CONSTRUCTOR(PblString_T, .actual = {.allocated_len = PblUInt_T_DefDefault,                      \
-                                                           .len = PblUInt_T_DefDefault,                                \
-                                                           .str = NULL})
-/// Returns the definition default, for the type 'PblREPLACE_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the children the Declaration Defaults are returned, unless
-/// they have been altered/set
-#define PblREPLACE_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblREPLACE_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblString_T'
-#define PblString_T_DefWithSetChildrenDefault PblGetStringT("")
+  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblString_T, .allocated_len = NULL, .len = NULL, .str = NULL)
 
 /// Base Struct of PblString - avoid using this type
 struct PblString_Base {
   /// Amount of the chars that can be written to - includes null char (\0). This does not include the meta info
-  PblUInt_T allocated_len;
+  PblUInt_T *allocated_len;
   /// The length of the string
-  PblUInt_T len;
+  PblUInt_T *len;
   /// The char* pointer to the allocated memory
   PblChar_T *str;
 };
@@ -53,7 +44,7 @@ typedef struct PblString PblString_T;
  * @param content The char array (pointer)
  * @return The length as Para-C Int
  */
-PblUInt_T PblGetLengthOfCString(const char *content);
+PblUInt_T *PblGetLengthOfCString(const char *content);
 
 /**
  * @brief Converts the passed char* array to a PblChar_T array
@@ -62,7 +53,7 @@ PblUInt_T PblGetLengthOfCString(const char *content);
  * @return The newly allocated string
  * @note This is a C to Para-C type conversion function - args are in C therefore
  */
-PblChar_T* PblGetCharTArray(const char* content);
+PblChar_T *PblGetCharTArray(const char *content);
 
 /**
  * @brief This directly converts a char* to a Para-C string type
@@ -70,7 +61,7 @@ PblChar_T* PblGetCharTArray(const char* content);
  * @return The new Para-C string type, which was created using 'PblAllocateStringContentT'
  * @note This is a C to Para-C type conversion function - args are in C therefore
  */
-PblString_T PblGetStringT(const char *content);
+PblString_T *PblGetStringT(const char *content);
 
 /**
  * @brief Compares the two passed strings and returns whether they are equal
@@ -78,7 +69,7 @@ PblString_T PblGetStringT(const char *content);
  * @param str_2 The second string
  * @return True whether it's the same else false
  */
-PblBool_T PblCompareStringT(PblString_T* str_1, PblString_T* str_2);
+PblBool_T *PblCompareStringT(PblString_T *str_1, PblString_T *str_2);
 
 /**
  * @brief Gets the required byte_size for an allocation based on the passed length of the string.
@@ -87,7 +78,7 @@ PblBool_T PblCompareStringT(PblString_T* str_1, PblString_T* str_2);
  * @param len The length of the actual string content, which will be used to calculate the allocation length.
  * @returns The size as size_t (int)
  */
-PblSize_T PblGetAllocSizeStringT(PblUInt_T len);
+PblSize_T *PblGetAllocSizeStringT(PblUInt_T *len);
 
 /**
  * @brief Resizes the string by reallocating the memory.
@@ -96,7 +87,7 @@ PblSize_T PblGetAllocSizeStringT(PblUInt_T len);
  * @param str The string that should be reallocated
  * @param len The length of the string content that is used to calculate the required size
  */
-PblVoid_T PblResizeStringT(PblString_T *str, PblUInt_T len);
+PblVoid_T PblResizeStringT(PblString_T *str, PblUInt_T *len);
 
 /**
  * @brief Writes onto the allocated memory the passed string content
@@ -104,7 +95,7 @@ PblVoid_T PblResizeStringT(PblString_T *str, PblUInt_T len);
  * @param content The content of the string that should be written to the allocated memory - C type as this should be
  * used in the back of the program
  */
-PblVoid_T PblWriteToStringT(PblString_T *str, PblChar_T *content, PblUInt_T len_to_write);
+PblVoid_T PblWriteToStringT(PblString_T *str, PblChar_T *content, PblUInt_T *len_to_write);
 
 /**
  * @brief Allocates new memory for a new string
@@ -114,14 +105,14 @@ PblVoid_T PblWriteToStringT(PblString_T *str, PblChar_T *content, PblUInt_T len_
  * used for converting char * and char[] to PblString_T
  * @returns The new string type that was allocated
  */
-PblString_T PblCreateStringT(PblChar_T *content, PblUInt_T len);
+PblString_T *PblCreateStringT(PblChar_T *content, PblUInt_T *len);
 
 /**
  * @brief Allocates new memory for a new string
  * @param byte_size The byte_size that should be allocated
  * @returns The char* pointer to the memory
  */
-PblChar_T *PblAllocateStringContentT(PblSize_T byte_size);
+PblChar_T *PblAllocateStringContentT(PblSize_T *byte_size);
 
 /**
  * @brief Deallocates the entire memory for the string and resets it's struct properties

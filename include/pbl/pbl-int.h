@@ -23,17 +23,13 @@ extern "C" {
 #define PblInt8_T_Size sizeof(int8_t)
 /// Returns the declaration default for the type 'PblInt8_T'
 #define PblInt8_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblInt8_T)
-/// Returns the definition default, for the type 'PblInt8_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblInt8_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblInt8_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblInt8_T'
-#define PblInt8_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt8_T, 0)
+/// Returns the definition default, for the type 'PblInt8_T', where only value itself has been created
+#define PblInt8_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt8_T, 0)
 
 /// PBL Int8 implementation
 struct PblInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int8_t)
-  /// PBL Signed Int8 implementation
-  typedef struct PblInt8 PblInt8_T;
+/// PBL Signed Int8 implementation
+typedef struct PblInt8 PblInt8_T;
 
 // ---- UInt8 ---------------------------------------------------------------------------------------------------------
 
@@ -42,12 +38,8 @@ struct PblInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int8_t)
 #define PblUInt8_T_Size sizeof(uint8_t)
 /// Returns the declaration default for the type 'PblUInt8_T'
 #define PblUInt8_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUInt8_T)
-/// Returns the definition default, for the type 'PblUInt8_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUInt8_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUInt8_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUInt8_T'
-#define PblUInt8_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt8_T, 0)
+/// Returns the definition default, for the type 'PblUInt8_T', where only value itself has been created
+#define PblUInt8_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt8_T, 0)
 
 /// PBL Unsigned Int8 implementation
 struct PblUInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint8_t)
@@ -61,12 +53,8 @@ struct PblUInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint8_t)
 #define PblInt16_T_Size sizeof(int16_t)
 /// Returns the declaration default for the type 'PblInt16_T'
 #define PblInt16_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblInt16_T)
-/// Returns the definition default, for the type 'PblInt16_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblInt16_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblInt16_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblInt16_T'
-#define PblInt16_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt16_T, 0)
+/// Returns the definition default, for the type 'PblInt16_T', where only value itself has been created
+#define PblInt16_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt16_T, 0)
 
 /// PBL Int16 implementation
 struct PblInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int16_t)
@@ -80,12 +68,8 @@ struct PblInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int16_t)
 #define PblUInt16_T_Size sizeof(uint16_t)
 /// Returns the declaration default for the type 'PblUInt16_T'
 #define PblUInt16_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUInt16_T)
-/// Returns the definition default, for the type 'PblUInt16_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUInt16_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUInt16_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUInt16_T'
-#define PblUInt16_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt16_T, 0)
+/// Returns the definition default, for the type 'PblUInt16_T', where only value itself has been created
+#define PblUInt16_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt16_T, 0)
 
 /// PBL UInt16 implementation
 struct PblUInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint16_t)
@@ -99,12 +83,8 @@ struct PblUInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint16_t)
 #define PblInt32_T_Size sizeof(int32_t)
 /// Returns the declaration default for the type 'PblInt32_T'
 #define PblInt32_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblInt32_T)
-/// Returns the definition default, for the type 'PblInt32_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblInt32_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblInt32_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblInt32_T'
-#define PblInt32_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt32_T, 0)
+/// Returns the definition default, for the type 'PblInt32_T', where only value itself has been created
+#define PblInt32_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt32_T, 0)
 
 /// PBL Int32 implementation
 struct PblInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int32_t)
@@ -118,12 +98,8 @@ struct PblInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int32_t)
 #define PblUInt32_T_Size sizeof(uint32_t)
 /// Returns the declaration default for the type 'PblUInt32_T'
 #define PblUInt32_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUInt32_T)
-/// Returns the definition default, for the type 'PblUInt32_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUInt32_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUInt32_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUInt32_T'
-#define PblUInt32_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt32_T, 0)
+/// Returns the definition default, for the type 'PblUInt32_T', where only value itself has been created
+#define PblUInt32_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt32_T, 0)
 
 /// PBL UInt32 implementation
 struct PblUInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint32_t)
@@ -137,12 +113,8 @@ struct PblUInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint32_t)
 #define PblInt64_T_Size sizeof(int64_t)
 /// Returns the declaration default for the type 'PblInt64_T'
 #define PblInt64_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblInt64_T)
-/// Returns the definition default, for the type 'PblInt64_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblInt64_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblInt64_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblInt64_T'
-#define PblInt64_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt64_T, 0)
+/// Returns the definition default, for the type 'PblInt64_T', where only value itself has been created
+#define PblInt64_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt64_T, 0)
 
 /// PBL Int64 implementation
 struct PblInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int64_t)
@@ -156,12 +128,8 @@ struct PblInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int64_t)
 #define PblUInt64_T_Size sizeof(uint64_t)
 /// Returns the declaration default for the type 'PblUInt64_T'
 #define PblUInt64_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUInt64_T)
-/// Returns the definition default, for the type 'PblUInt64_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUInt64_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUInt64_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUInt64_T'
-#define PblUInt64_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt64_T, 0)
+/// Returns the definition default, for the type 'PblUInt64_T', where only value itself has been created
+#define PblUInt64_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt64_T, 0)
 
 /// PBL UInt64 implementation
 struct PblUInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint64_t)
@@ -177,12 +145,8 @@ struct PblUInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint64_t)
 #define PblLeastInt8_T_Size sizeof(int_least8_t)
 /// Returns the declaration default for the type 'PblLeastInt8_T'
 #define PblLeastInt8_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLeastInt8_T)
-/// Returns the definition default, for the type 'PblLeastInt8_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblLeastInt8_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLeastInt8_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblLeastInt8_T'
-#define PblLeastInt8_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt8_T, 0)
+/// Returns the definition default, for the type 'PblLeastInt8_T', where only value itself has been created
+#define PblLeastInt8_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt8_T, 0)
 
 /// PBL LeastInt8 implementation
 struct PblLeastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least8_t)
@@ -196,12 +160,8 @@ struct PblLeastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least8_t)
 #define PblULeastInt8_T_Size sizeof(uint_least8_t)
 /// Returns the declaration default for the type 'PblULeastInt8_T'
 #define PblULeastInt8_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULeastInt8_T)
-/// Returns the definition default, for the type 'PblULeastInt8_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblULeastInt8_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblULeastInt8_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblULeastInt8_T'
-#define PblULeastInt8_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt8_T, 0)
+/// Returns the definition default, for the type 'PblULeastInt8_T', where only value itself has been created
+#define PblULeastInt8_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt8_T, 0)
 
 /// PBL ULeastInt8 implementation
 struct PblULeastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least8_t)
@@ -215,12 +175,8 @@ struct PblULeastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least8_t)
 #define PblLeastInt16_T_Size sizeof(int_least16_t)
 /// Returns the declaration default for the type 'PblLeastInt16_T'
 #define PblLeastInt16_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLeastInt16_T)
-/// Returns the definition default, for the type 'PblLeastInt16_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblLeastInt16_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLeastInt16_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblLeastInt16_T'
-#define PblLeastInt16_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt16_T, 0)
+/// Returns the definition default, for the type 'PblLeastInt16_T', where only value itself has been created
+#define PblLeastInt16_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt16_T, 0)
 
 /// PBL LeastInt16 implementation
 struct PblLeastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least16_t)
@@ -234,12 +190,8 @@ struct PblLeastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least16_t)
 #define PblULeastInt16_T_Size sizeof(uint_least16_t)
 /// Returns the declaration default for the type 'PblULeastInt16_T'
 #define PblULeastInt16_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULeastInt16_T)
-/// Returns the definition default, for the type 'PblULeastInt16_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblULeastInt16_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblULeastInt16_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblULeastInt16_T'
-#define PblULeastInt16_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt16_T, 0)
+/// Returns the definition default, for the type 'PblULeastInt16_T', where only value itself has been created
+#define PblULeastInt16_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt16_T, 0)
 
 /// PBL ULeastInt16 implementation
 struct PblULeastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least16_t)
@@ -253,12 +205,8 @@ struct PblULeastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least16_t)
 #define PblLeastInt32_T_Size sizeof(int_least32_t)
 /// Returns the declaration default for the type 'PblLeastInt32_T'
 #define PblLeastInt32_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLeastInt32_T)
-/// Returns the definition default, for the type 'PblLeastInt32_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblLeastInt32_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLeastInt32_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblLeastInt32_T'
-#define PblLeastInt32_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt32_T, 0)
+/// Returns the definition default, for the type 'PblLeastInt32_T', where only value itself has been created
+#define PblLeastInt32_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt32_T, 0)
 
 /// PBL LeastInt32 implementation
 struct PblLeastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least32_t)
@@ -272,12 +220,8 @@ struct PblLeastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least32_t)
 #define PblULeastInt32_T_Size sizeof(uint_least32_t)
 /// Returns the declaration default for the type 'PblULeastInt32_T'
 #define PblULeastInt32_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULeastInt32_T)
-/// Returns the definition default, for the type 'PblULeastInt32_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblULeastInt32_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblULeastInt32_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblULeastInt32_T'
-#define PblULeastInt32_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt32_T, 0)
+/// Returns the definition default, for the type 'PblULeastInt32_T', where only value itself has been created
+#define PblULeastInt32_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt32_T, 0)
 
 /// PBL ULeastInt32 implementation
 struct PblULeastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least32_t)
@@ -291,12 +235,8 @@ struct PblULeastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least32_t)
 #define PblLeastInt64_T_Size sizeof(int_least64_t)
 /// Returns the declaration default for the type 'PblLeastInt64_T'
 #define PblLeastInt64_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLeastInt64_T)
-/// Returns the definition default, for the type 'PblLeastInt64_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblLeastInt64_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLeastInt64_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblLeastInt64_T'
-#define PblLeastInt64_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt64_T, 0)
+/// Returns the definition default, for the type 'PblLeastInt64_T', where only value itself has been created
+#define PblLeastInt64_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLeastInt64_T, 0)
 
 /// PBL LeastInt64 implementation
 struct PblLeastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least64_t)
@@ -310,12 +250,8 @@ struct PblLeastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_least64_t)
 #define PblULeastInt64_T_Size sizeof(uint_least64_t)
 /// Returns the declaration default for the type 'PblULeastInt64_T'
 #define PblULeastInt64_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULeastInt64_T)
-/// Returns the definition default, for the type 'PblULeastInt64_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblULeastInt64_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblULeastInt64_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblULeastInt64_T'
-#define PblULeastInt64_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt64_T, 0)
+/// Returns the definition default, for the type 'PblULeastInt64_T', where only value itself has been created
+#define PblULeastInt64_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULeastInt64_T, 0)
 
 /// PBL ULeastInt64 implementation
 struct PblULeastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least64_t)
@@ -331,12 +267,8 @@ struct PblULeastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_least64_t)
 #define PblFastInt8_T_Size sizeof(int_fast8_t)
 /// Returns the declaration default for the type 'PblFastInt8_T'
 #define PblFastInt8_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFastInt8_T)
-/// Returns the definition default, for the type 'PblFastInt8_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblFastInt8_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblFastInt8_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblFastInt8_T'
-#define PblFastInt8_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt8_T, 0)
+/// Returns the definition default, for the type 'PblFastInt8_T', where only value itself has been created
+#define PblFastInt8_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt8_T, 0)
 
 /// PBL FastInt8 implementation
 struct PblFastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast8_t)
@@ -350,12 +282,8 @@ struct PblFastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast8_t)
 #define PblUFastInt8_T_Size sizeof(uint_fast8_t)
 /// Returns the declaration default for the type 'PblUFastInt8_T'
 #define PblUFastInt8_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUFastInt8_T)
-/// Returns the definition default, for the type 'PblUFastInt8_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUFastInt8_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUFastInt8_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUFastInt8_T'
-#define PblUFastInt8_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt8_T, 0)
+/// Returns the definition default, for the type 'PblUFastInt8_T', where only value itself has been created
+#define PblUFastInt8_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt8_T, 0)
 
 /// PBL UFastInt8 implementation
 struct PblUFastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast8_t)
@@ -369,12 +297,8 @@ struct PblUFastInt8 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast8_t)
 #define PblFastInt16_T_Size sizeof(int_fast16_t)
 /// Returns the declaration default for the type 'PblFastInt16_T'
 #define PblFastInt16_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFastInt16_T)
-/// Returns the definition default, for the type 'PblFastInt16_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblFastInt16_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblFastInt16_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblFastInt16_T'
-#define PblFastInt16_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt16_T, 0)
+/// Returns the definition default, for the type 'PblFastInt16_T', where only value itself has been created
+#define PblFastInt16_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt16_T, 0)
 
 /// PBL FastInt16 implementation
 struct PblFastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast16_t)
@@ -388,12 +312,8 @@ struct PblFastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast16_t)
 #define PblUFastInt16_T_Size sizeof(uint_fast16_t)
 /// Returns the declaration default for the type 'PblUFastInt16_T'
 #define PblUFastInt16_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUFastInt16_T)
-/// Returns the definition default, for the type 'PblUFastInt16_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUFastInt16_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUFastInt16_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUFastInt16_T'
-#define PblUFastInt16_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt16_T, 0)
+/// Returns the definition default, for the type 'PblUFastInt16_T', where only value itself has been created
+#define PblUFastInt16_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt16_T, 0)
 
 /// PBL UFastInt16 implementation
 struct PblUFastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast16_t)
@@ -407,12 +327,8 @@ struct PblUFastInt16 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast16_t)
 #define PblFastInt32_T_Size sizeof(int_fast32_t)
 /// Returns the declaration default for the type 'PblFastInt32_T'
 #define PblFastInt32_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFastInt32_T)
-/// Returns the definition default, for the type 'PblFastInt32_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblFastInt32_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblFastInt32_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblFastInt32_T'
-#define PblFastInt32_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt32_T, 0)
+/// Returns the definition default, for the type 'PblFastInt32_T', where only value itself has been created
+#define PblFastInt32_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt32_T, 0)
 
 /// PBL FastInt32 implementation
 struct PblFastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast32_t)
@@ -426,12 +342,8 @@ struct PblFastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast32_t)
 #define PblUFastInt32_T_Size sizeof(uint_fast32_t)
 /// Returns the declaration default for the type 'PblUFastInt32_T'
 #define PblUFastInt32_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUFastInt32_T)
-/// Returns the definition default, for the type 'PblUFastInt32_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUFastInt32_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUFastInt32_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUFastInt32_T'
-#define PblUFastInt32_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt32_T, 0)
+/// Returns the definition default, for the type 'PblUFastInt32_T', where only value itself has been created
+#define PblUFastInt32_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt32_T, 0)
 
 /// PBL UFastInt32 implementation
 struct PblUFastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast32_t)
@@ -445,12 +357,8 @@ struct PblUFastInt32 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast32_t)
 #define PblFastInt64_T_Size sizeof(int_fast64_t)
 /// Returns the declaration default for the type 'PblFastInt64_T'
 #define PblFastInt64_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFastInt64_T)
-/// Returns the definition default, for the type 'PblFastInt64_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblFastInt64_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblFastInt64_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblFastInt64_T'
-#define PblFastInt64_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt64_T, 0)
+/// Returns the definition default, for the type 'PblFastInt64_T', where only value itself has been created
+#define PblFastInt64_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFastInt64_T, 0)
 
 /// PBL FastInt64 implementation
 struct PblFastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast64_t)
@@ -464,12 +372,8 @@ struct PblFastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(int_fast64_t)
 #define PblUFastInt64_T_Size sizeof(uint_fast64_t)
 /// Returns the declaration default for the type 'PblUFastInt64_T'
 #define PblUFastInt64_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUFastInt64_T)
-/// Returns the definition default, for the type 'PblUFastInt64_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUFastInt64_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUFastInt64_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUFastInt64_T'
-#define PblUFastInt64_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt64_T, 0)
+/// Returns the definition default, for the type 'PblUFastInt64_T', where only value itself has been created
+#define PblUFastInt64_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUFastInt64_T, 0)
 
 /// PBL UFastInt64 implementation
 struct PblUFastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast64_t)
@@ -484,7 +388,7 @@ struct PblUFastInt64 PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(uint_fast64_t)
  * @return The newly created PBL Int8 type
  * @note This is a C to Para-C type conversion function - args are in C therefore
  */
-PblInt8_T PblGetInt8T(int8_t val);
+PblInt8_T* PblGetInt8T(int8_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UInt8 type
@@ -492,7 +396,7 @@ PblInt8_T PblGetInt8T(int8_t val);
 * @return The newly created PBL UInt8 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUInt8_T PblGetUInt8T(uint8_t val);
+PblUInt8_T* PblGetUInt8T(uint8_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Int16 type
@@ -500,7 +404,7 @@ PblUInt8_T PblGetUInt8T(uint8_t val);
 * @return The newly created PBL Int16 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblInt16_T PblGetInt16T(int16_t val);
+PblInt16_T* PblGetInt16T(int16_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UInt16 type
@@ -508,7 +412,7 @@ PblInt16_T PblGetInt16T(int16_t val);
 * @return The newly created PBL UInt16 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUInt16_T PblGetUInt16T(uint16_t val);
+PblUInt16_T* PblGetUInt16T(uint16_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Int32 type
@@ -516,7 +420,7 @@ PblUInt16_T PblGetUInt16T(uint16_t val);
 * @return The newly created PBL Int32 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblInt32_T PblGetInt32T(int32_t val);
+PblInt32_T* PblGetInt32T(int32_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UInt32 type
@@ -524,7 +428,7 @@ PblInt32_T PblGetInt32T(int32_t val);
 * @return The newly created PBL UInt32 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUInt32_T PblGetUInt32T(uint32_t val);
+PblUInt32_T* PblGetUInt32T(uint32_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Int64 type
@@ -532,7 +436,7 @@ PblUInt32_T PblGetUInt32T(uint32_t val);
 * @return The newly created PBL Int64 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblInt64_T PblGetInt64T(int64_t val);
+PblInt64_T* PblGetInt64T(int64_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UInt64 type
@@ -540,7 +444,7 @@ PblInt64_T PblGetInt64T(int64_t val);
 * @return The newly created PBL UInt64 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUInt64_T PblGetUInt64T(uint64_t val);
+PblUInt64_T* PblGetUInt64T(uint64_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL LeastInt8 type
@@ -548,7 +452,7 @@ PblUInt64_T PblGetUInt64T(uint64_t val);
 * @return The newly created PBL LeastInt8 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblLeastInt8_T PblGetLeastInt8T(int_least8_t val);
+PblLeastInt8_T* PblGetLeastInt8T(int_least8_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL ULeastInt8 type
@@ -556,7 +460,7 @@ PblLeastInt8_T PblGetLeastInt8T(int_least8_t val);
 * @return The newly created PBL ULeastInt8 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblULeastInt8_T PblGetULeastInt8T(uint_least8_t val);
+PblULeastInt8_T* PblGetULeastInt8T(uint_least8_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL LeastInt16 type
@@ -564,7 +468,7 @@ PblULeastInt8_T PblGetULeastInt8T(uint_least8_t val);
 * @return The newly created PBL LeastInt16 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblLeastInt16_T PblGetLeastInt16T(int_least16_t val);
+PblLeastInt16_T* PblGetLeastInt16T(int_least16_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL ULeastInt16 type
@@ -572,7 +476,7 @@ PblLeastInt16_T PblGetLeastInt16T(int_least16_t val);
 * @return The newly created PBL ULeastInt16 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblULeastInt16_T PblGetULeastInt16T(uint_least16_t val);
+PblULeastInt16_T* PblGetULeastInt16T(uint_least16_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL LeastInt32 type
@@ -580,7 +484,7 @@ PblULeastInt16_T PblGetULeastInt16T(uint_least16_t val);
 * @return The newly created PBL LeastInt32 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblLeastInt32_T PblGetLeastInt32T(int_least32_t val);
+PblLeastInt32_T* PblGetLeastInt32T(int_least32_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL ULeastInt32 type
@@ -588,7 +492,7 @@ PblLeastInt32_T PblGetLeastInt32T(int_least32_t val);
 * @return The newly created PBL ULeastInt32 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblULeastInt32_T PblGetULeastInt32T(uint_least32_t val);
+PblULeastInt32_T* PblGetULeastInt32T(uint_least32_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL LeastInt64 type
@@ -596,7 +500,7 @@ PblULeastInt32_T PblGetULeastInt32T(uint_least32_t val);
 * @return The newly created PBL LeastInt64 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblLeastInt64_T PblGetLeastInt64T(int_least64_t val);
+PblLeastInt64_T* PblGetLeastInt64T(int_least64_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL ULeastInt64 type
@@ -604,7 +508,7 @@ PblLeastInt64_T PblGetLeastInt64T(int_least64_t val);
 * @return The newly created PBL ULeastInt64 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblULeastInt64_T PblGetULeastInt64T(uint_least64_t val);
+PblULeastInt64_T* PblGetULeastInt64T(uint_least64_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL FastInt8 type
@@ -612,7 +516,7 @@ PblULeastInt64_T PblGetULeastInt64T(uint_least64_t val);
 * @return The newly created PBL FastInt8 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblFastInt8_T PblGetFastInt8T(int_fast8_t val);
+PblFastInt8_T* PblGetFastInt8T(int_fast8_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UFastInt8 type
@@ -620,7 +524,7 @@ PblFastInt8_T PblGetFastInt8T(int_fast8_t val);
 * @return The newly created PBL UFastInt8 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUFastInt8_T PblGetUFastInt8T(uint_fast8_t val);
+PblUFastInt8_T* PblGetUFastInt8T(uint_fast8_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL FastInt16 type
@@ -628,7 +532,7 @@ PblUFastInt8_T PblGetUFastInt8T(uint_fast8_t val);
 * @return The newly created PBL FastInt16 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblFastInt16_T PblGetFastInt16T(int_fast16_t val);
+PblFastInt16_T* PblGetFastInt16T(int_fast16_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UFastInt16 type
@@ -636,7 +540,7 @@ PblFastInt16_T PblGetFastInt16T(int_fast16_t val);
 * @return The newly created PBL UFastInt16 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUFastInt16_T PblGetUFastInt16T(uint_fast16_t val);
+PblUFastInt16_T* PblGetUFastInt16T(uint_fast16_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL FastInt32 type
@@ -644,7 +548,7 @@ PblUFastInt16_T PblGetUFastInt16T(uint_fast16_t val);
 * @return The newly created PBL FastInt32 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblFastInt32_T PblGetFastInt32T(int_fast32_t val);
+PblFastInt32_T* PblGetFastInt32T(int_fast32_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UFastInt32 type
@@ -652,7 +556,7 @@ PblFastInt32_T PblGetFastInt32T(int_fast32_t val);
 * @return The newly created PBL UFastInt32 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUFastInt32_T PblGetUFastInt32T(uint_fast32_t val);
+PblUFastInt32_T* PblGetUFastInt32T(uint_fast32_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL FastInt64 type
@@ -660,7 +564,7 @@ PblUFastInt32_T PblGetUFastInt32T(uint_fast32_t val);
 * @return The newly created PBL FastInt64 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblFastInt64_T PblGetFastInt64T(int_fast64_t val);
+PblFastInt64_T* PblGetFastInt64T(int_fast64_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL UFastInt64 type
@@ -668,7 +572,7 @@ PblFastInt64_T PblGetFastInt64T(int_fast64_t val);
 * @return The newly created PBL UFastInt64 type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUFastInt64_T PblGetUFastInt64T(uint_fast64_t val);
+PblUFastInt64_T* PblGetUFastInt64T(uint_fast64_t val);
 
 #ifdef __cplusplus
 }

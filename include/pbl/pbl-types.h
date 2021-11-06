@@ -9,13 +9,15 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "./pbl-mem.h"
+#include "./additional/va-opt.h"
+
 #ifndef PARAC_MODULES_TYPES_H
 #define PARAC_MODULES_TYPES_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 // ---- Macro Functions -----------------------------------------------------------------------------------------------
 
 /// Returns the effective size of a Para-C type that can be actually used. Must be a Para-C type
@@ -37,35 +39,73 @@ struct PblMetaVarCtx {
 /// Base Meta Type contained in ALL variables
 typedef struct PblMetaVarCtx PblMetaVarCtx_T;
 
+// ---- Get type macro ------------------------------------------------------------------------------------------------
+
+/// @brief This macro initialises an actual instance of a type, instead of allocating it, like the GetTypeT functions
+/// This should be used to save memory in the background, but not actually for the user to preserve the functionality
+/// @note This should only be used when wanting the actual type itself written onto a variable
+#define PBL_GET_ACTUAL_TYPE_INSTANCE(to_write, type, write_val)                                                        \
+  (to_write) = type##_DefDefault;                                                                                      \
+  (to_write).actual = write_val;
+
+/// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
+/// @note This should only be used when creating a declaration
+#define PBL_ALLOC_DECLARATION(to_write, type)                                                                          \
+  type *to_write = (type *) PblMalloc(sizeof(type));                                                                   \
+  *(to_write) = type##_DeclDefault;
+
+/// @brief This macro allocates an instance of type, which has the default initialisation value set
+/// @note This should only be used when creating a definition that shall be empty - if it's a conversion from C to
+/// Para-C use the defined GetTypeT(...) functions, which will properly write onto the variable
+#define PBL_ALLOC_DEFINITION(to_write, type)                                                                           \
+  type *to_write = (type *) PblMalloc(sizeof(type));                                                                   \
+  *(to_write) = type##_DefDefault;
+
 // ---- Constructor Macros --------------------------------------------------------------------------------------------
 
-/// Declaration constructor which initialised the meta data for the passed type
+/// @brief Declaration constructor which initialised the meta data for the passed type
 #define PBL_DECLARATION_CONSTRUCTOR(type)                                                                              \
   (type) {                                                                                                             \
     .meta = {.defined = false }                                                                                        \
   }
 
-/// Definition constructor, which initialises the type with the passed __VA_ARGS__, if they are empty, then it will be
-/// not set
-#define PBL_DEFINITION_UNSET_CONSTRUCTOR(type, ...)                                                                    \
-  (type) { .meta = {.defined = true}, __VA_ARGS__ }
+/// @brief Definition constructor, which initialises the type with the passed __VA_ARGS__, if they are empty, the value
+/// will be only set as defined (meta), but not contain any values
+#define PBL_DEFINITION_IF_VA_ARGS_CONSTRUCTOR(type, ...)                                                               \
+  (type) { .meta = {.defined = true}, IFN(__VA_ARGS__)(__VA_ARGS__) }
 
-/// Definition constructor, which initialises the meta data for the passed type and passes to '.actual' the args as
-/// struct
+/// @brief Definition constructor, which initialises the meta data for the passed type and passes to '.actual' the args
+/// as struct
 #define PBL_DEFINITION_STRUCT_CONSTRUCTOR(type, ...)                                                                   \
   (type) {                                                                                                             \
     .meta = {.defined = true}, .actual = { __VA_ARGS__ }                                                               \
   }
 
-/// Definition constructor, which initialised the meta data for the passed type and passes to '.actual' the single arg
+/// @brief Definition constructor, which initialised the meta data for the passed type and passes to '.actual' the
+/// single arg
 #define PBL_DEFINITION_SINGLE_CONSTRUCTOR(type, var_actual)                                                            \
   (type) { .meta = {.defined = true}, .actual = (var_actual) }
 
-/// Creates the body for a Para-C type definition wrapper - the base_type is the actual value/struct
+/// @brief Creates the body for a Para-C type definition wrapper - the base_type is the actual value/struct
 #define PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(base_type) { \
     PblMetaVarCtx_T meta; \
     base_type actual; \
    };
+
+
+// ---- Local Variable state saving -----------------------------------------------------------------------------------
+
+/// @brief Copies the passed value to a local state copy - This is designed for pointers losing their addresses
+/// @note There may only be a single value copy with this unique_id!
+#define PBL_CREATE_ADDR_COPY(var, type, unique_id) type unique_id##_localcpy = var;
+
+/// @brief Writes back to the original variable the state copy - This is designed for pointers losing their addresses
+/// @note If the var is NULL, then the address will be restored
+#define PBL_PASTE_ADDR_COPY(var, type, unique_id)                                                                      \
+  if (var == NULL) {                                                                                                   \
+    var = unique_id##_localcpy;                                                                                        \
+    unique_id##_localcpy = NULL;                                                                                       \
+  }
 
 // ---- Void Type -----------------------------------------------------------------------------------------------------
 
@@ -74,10 +114,8 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
 #define PblVoid_T_Size 0
 /// Returns the declaration default for the type 'PblVoid_T'
 #define PblVoid_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblVoid_T)
-/// Returns the definition default, for the type 'PblVoid_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblVoid_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblVoid_T, )
+/// Returns the definition default, for the type 'PblVoid_T', where only value itself has been created
+#define PblVoid_T_DefDefault PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblVoid_T, )
 
 /// PBL Void implementation
 struct PblVoid {
@@ -97,12 +135,8 @@ typedef struct PblVoid PblVoid_T;
 #define PblBool_T_Size sizeof(bool)
 /// Returns the declaration default for the type 'PblBool_T'
 #define PblBool_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblBool_T)
-/// Returns the definition default, for the type 'PblBool_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
+/// Returns the definition default, for the type 'PblBool_T', where only value itself has been created
 #define PblBool_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblBool_T, false)
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblBool_T'
-#define PblBool_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblBool_T, false)
 
 /// PBL Bool implementation
 struct PblBool PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(bool)
@@ -116,12 +150,8 @@ typedef struct PblBool PblBool_T;
 #define PblSize_T_Size sizeof(size_t)
 /// Returns the declaration default for the type 'PblSize_T'
 #define PblSize_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblSize_T)
-/// Returns the definition default, for the type 'PblSize_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblSize_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblSize_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblSize_T'
-#define PblSize_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblSize_T, 0)
+/// Returns the definition default, for the type 'PblSize_T', where only value itself has been created
+#define PblSize_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblSize_T, 0)
 
 /// PBL Byte Size implementation
 struct PblSize PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(size_t)
@@ -135,12 +165,8 @@ typedef struct PblSize PblSize_T;
 #define PblChar_T_Size sizeof(signed char)
 /// Returns the declaration default for the type 'PblChar_T'
 #define PblChar_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblChar_T)
-/// Returns the definition default, for the type 'PblChar_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblChar_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblChar_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblChar_T'
-#define PblChar_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblChar_T, 0)
+/// Returns the definition default, for the type 'PblChar_T', where only value itself has been created
+#define PblChar_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblChar_T, 0)
 
 /// PBL Signed Char implementation
 struct PblChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed char)
@@ -154,12 +180,8 @@ typedef struct PblChar PblChar_T;
 #define PblUChar_T_Size sizeof(unsigned char)
 /// Returns the declaration default for the type 'PblUChar_T_Size'
 #define PblUChar_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUChar_T)
-/// Returns the definition default, for the type 'PblUChar_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUChar_T_DefDefault PblUChar_T_DeclDefault
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUChar_T_Size'
-#define PblUChar_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUChar_T, 0)
+/// Returns the definition default, for the type 'PblUChar_T', where only value itself has been created
+#define PblUChar_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUChar_T, 0)
 
 /// PBL Unsigned Char implementation
 struct PblUChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned char)
@@ -173,12 +195,8 @@ typedef struct PblUChar PblUChar_T;
 #define PblShort_T_Size sizeof(signed short)
 /// Returns the declaration default for the type 'PblShort_T'
 #define PblShort_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblShort_T)
-/// Returns the definition default, for the type 'PblShort_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblShort_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblShort_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblShort_T'
-#define PblShort_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblShort_T, 0)
+/// Returns the definition default, for the type 'PblShort_T', where only value itself has been created
+#define PblShort_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblShort_T, 0)
 
 /// PBL Signed Short implementation
 struct PblShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed short)
@@ -192,12 +210,8 @@ typedef struct PblShort PblShort_T;
 #define PblUShort_T_Size sizeof(unsigned short)
 /// Returns the declaration default for the type 'PblUShort_T_Size'
 #define PblUShort_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUShort_T)
-/// Returns the definition default, for the type 'PblUShort_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUShort_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblUShort_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUShort_T_Size'
-#define PblUShort_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUShort_T, 0)
+/// Returns the definition default, for the type 'PblUShort_T', where only value itself has been created
+#define PblUShort_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUShort_T, 0)
 
 /// PBL Unsigned Short implementation
 struct PblUShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned short)
@@ -211,12 +225,8 @@ typedef struct PblUShort PblUShort_T;
 #define PblInt_T_Size sizeof(signed int)
 /// Returns the declaration default for the type 'PblInt_T'
 #define PblInt_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblInt_T)
-/// Returns the definition default, for the type 'PblInt_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblInt_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblInt_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblInt_T'
-#define PblInt_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt_T, 0)
+/// Returns the definition default, for the type 'PblInt_T', where only value itself has been created
+#define PblInt_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblInt_T, 0)
 
 /// PBL Signed Int implementation
 struct PblInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed int)
@@ -230,12 +240,8 @@ typedef struct PblInt PblInt_T;
 #define PblUInt_T_Size sizeof(unsigned int)
 /// Returns the declaration default for the type 'PblUInt_T'
 #define PblUInt_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblUInt_T)
-/// Returns the definition default, for the type 'PblUInt_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblUInt_T_DefDefault PblUInt_T_DeclDefault
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblUInt_T'
-#define PblUInt_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt_T, 0)
+/// Returns the definition default, for the type 'PblUInt_T', where only value itself has been created
+#define PblUInt_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblUInt_T, 0)
 
 /// PBL Unsigned Int implementation
 struct PblUInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned int)
@@ -249,12 +255,8 @@ typedef struct PblUInt PblUInt_T;
 #define PblLong_T_Size sizeof(signed long)
 /// Returns the declaration default for the type 'PblLong_T'
 #define PblLong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLong_T)
-/// Returns the definition default, for the type 'PblLong_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblLong_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLong_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblLong_T'
-#define PblLong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLong_T, 0)
+/// Returns the definition default, for the type 'PblLong_T', where only value itself has been created
+#define PblLong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLong_T, 0)
 
 /// PBL Signed Long implementation
 struct PblLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long)
@@ -268,12 +270,8 @@ typedef struct PblLong PblLong_T;
 #define PblULong_T_Size sizeof(unsigned long)
 /// Returns the declaration default for the type 'PblULong_T'
 #define PblULong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULong_T)
-/// Returns the definition default, for the type 'PblULong_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblULong_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblULong_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblULong_T'
-#define PblULong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULong_T, 0)
+/// Returns the definition default, for the type 'PblULong_T', where only value itself has been created
+#define PblULong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULong_T, 0)
 
 /// PBL Unsigned Long implementation
 struct PblULong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long)
@@ -287,12 +285,8 @@ typedef struct PblULong PblULong_T;
 #define PblLongLong_T_Size sizeof(signed long long)
 /// Returns the declaration default for the type 'PblLongLong_T'
 #define PblLongLong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLongLong_T)
-/// Returns the definition default, for the type 'PblLongLong_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblLongLong_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblLongLong_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblLongLong_T'
-#define PblLongLong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongLong_T, 0)
+/// Returns the definition default, for the type 'PblLongLong_T', where only value itself has been created
+#define PblLongLong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongLong_T, 0)
 
 /// PBL Signed Long Long implementation
 struct PblLongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long long)
@@ -306,12 +300,8 @@ typedef struct PblLongLong PblLongLong_T;
 #define PblULongLong_T_Size sizeof(unsigned long long)
 /// Returns the declaration default for the type 'PblULongLong_T'
 #define PblULongLong_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblULongLong_T)
-/// Returns the definition default, for the type 'PblULongLong_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblULongLong_T_DefDefault PblULongLong_T_DeclDefault
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblULongLong_T'
-#define PblULongLong_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULongLong_T, 0)
+/// Returns the definition default, for the type 'PblULongLong_T', where only value itself has been created
+#define PblULongLong_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblULongLong_T, 0)
 
 /// PBL Unsigned Long Long implementation
 struct PblULongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long long)
@@ -325,12 +315,8 @@ typedef struct PblULongLong PblULongLong_T;
 #define PblFloat_T_Size sizeof(float)
 /// Returns the declaration default for the type 'PblFloat_T'
 #define PblFloat_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFloat_T)
-/// Returns the definition default, for the type 'PblFloat_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblFloat_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblFloat_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblFloat_T'
-#define PblFloat_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFloat_T, 0)
+/// Returns the definition default, for the type 'PblFloat_T', where only value itself has been created
+#define PblFloat_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFloat_T, 0)
 
 /// PBL Float implementation
 struct PblFloat PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(float)
@@ -344,12 +330,8 @@ typedef struct PblFloat PblFloat_T;
 #define PblDouble_T_Size sizeof(double)
 /// Returns the declaration default for the type 'PblDouble_T'
 #define PblDouble_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblDouble_T)
-/// Returns the definition default, for the type 'PblDouble_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblDouble_T_DefDefault PBL_DEFINITION_UNSET_CONSTRUCTOR(PblDouble_T, )
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblDouble_T'
-#define PblDouble_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblDouble_T, 0)
+/// Returns the definition default, for the type 'PblDouble_T', where only value itself has been created
+#define PblDouble_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblDouble_T, 0)
 
 /// PBL Double implementation
 struct PblDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(double)
@@ -363,12 +345,8 @@ typedef struct PblDouble PblDouble_T;
 #define PblLongDouble_T_Size sizeof(long double)
 /// Returns the declaration default for the type 'PblLongDouble_T'
 #define PblLongDouble_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblLongDouble_T)
-/// Returns the definition default, for the type 'PblLongDouble_T', where the children have not been set yet and only the
-/// value itself 'exists' already. This means when accessing the actual value the Declaration Default is returned,
-/// unless the value has been altered/set
-#define PblLongDouble_T_DefDefault PblLongDouble_T_DeclDefault
-/// Returns the definition default, with the children having been as well initialised, for the type 'PblLongDouble_T'
-#define PblLongDouble_T_DefWithSetChildrenDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongDouble_T, 0)
+/// Returns the definition default, for the type 'PblLongDouble_T', where only value itself has been created
+#define PblLongDouble_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblLongDouble_T, 0)
 
 /// PBL Long Double implementation
 struct PblLongDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(long double)
@@ -380,9 +358,10 @@ typedef struct PblLongDouble PblLongDouble_T;
 /// This a macro function definition body constructor, which should be used to directly convert C types into their
 /// Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this does
 /// not support complex initialisation.
-#define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type) {                                                  \
-    parac_type conv = parac_type##_DefWithSetChildrenDefault;                                                          \
-    conv.actual = val;                                                                                                 \
+#define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type) { \
+    parac_type* conv = PblMalloc(sizeof(parac_type));                                                                  \
+    *conv = parac_type##_DefDefault;                                                                                   \
+    conv->actual = (c_type) val;                                                                                       \
     return conv;                                                                                                       \
   }
 
@@ -393,7 +372,7 @@ typedef struct PblLongDouble PblLongDouble_T;
  * @note This is a C to Para-C type conversion function - args are in C therefore
  * @
  */
-PblBool_T PblGetBoolT(bool val);
+PblBool_T* PblGetBoolT(bool val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Byte Size type
@@ -401,7 +380,7 @@ PblBool_T PblGetBoolT(bool val);
 * @return The newly created PBL Byte Size type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblSize_T PblGetSizeT(size_t val);
+PblSize_T* PblGetSizeT(size_t val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Char type
@@ -409,7 +388,7 @@ PblSize_T PblGetSizeT(size_t val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblChar_T PblGetCharT(signed char val);
+PblChar_T* PblGetCharT(signed char val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Unsigned Char type
@@ -417,7 +396,7 @@ PblChar_T PblGetCharT(signed char val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUChar_T PblGetUCharT(unsigned char val);
+PblUChar_T* PblGetUCharT(unsigned char val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Short type
@@ -425,7 +404,7 @@ PblUChar_T PblGetUCharT(unsigned char val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblShort_T PblGetShortT(signed short val);
+PblShort_T* PblGetShortT(signed short val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Unsigned Short type
@@ -433,7 +412,7 @@ PblShort_T PblGetShortT(signed short val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUShort_T PblGetUShortT(unsigned short val);
+PblUShort_T* PblGetUShortT(unsigned short val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Int type
@@ -441,7 +420,7 @@ PblUShort_T PblGetUShortT(unsigned short val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblInt_T PblGetIntT(signed int val);
+PblInt_T* PblGetIntT(signed int val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Unsigned Int type
@@ -449,7 +428,7 @@ PblInt_T PblGetIntT(signed int val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblUInt_T PblGetUIntT(unsigned int val);
+PblUInt_T* PblGetUIntT(unsigned int val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Long type
@@ -457,7 +436,7 @@ PblUInt_T PblGetUIntT(unsigned int val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblLong_T PblGetLongT(signed long val);
+PblLong_T* PblGetLongT(signed long val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Unsigned Long type
@@ -465,7 +444,7 @@ PblLong_T PblGetLongT(signed long val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblULong_T PblGetULongT(unsigned long val);
+PblULong_T* PblGetULongT(unsigned long val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Long Long type
@@ -473,7 +452,7 @@ PblULong_T PblGetULongT(unsigned long val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblLongLong_T PblGetLongLongT(signed long long val);
+PblLongLong_T* PblGetLongLongT(signed long long val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Unsigned Long Long type
@@ -481,7 +460,7 @@ PblLongLong_T PblGetLongLongT(signed long long val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblULongLong_T PblGetULongLongT(unsigned long long val);
+PblULongLong_T* PblGetULongLongT(unsigned long long val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Float type
@@ -489,7 +468,7 @@ PblULongLong_T PblGetULongLongT(unsigned long long val);
 * @return The newly created PBL Char type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblFloat_T PblGetFloatT(float val);
+PblFloat_T* PblGetFloatT(float val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Double type
@@ -497,7 +476,7 @@ PblFloat_T PblGetFloatT(float val);
 * @return The newly created PBL Double type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblDouble_T PblGetDoubleT(double val);
+PblDouble_T* PblGetDoubleT(double val);
 
 /**
 * @brief Converts the low level C-Type to a PBL Long Double type
@@ -505,7 +484,7 @@ PblDouble_T PblGetDoubleT(double val);
 * @return The newly created PBL Long Double type
 * @note This is a C to Para-C type conversion function - args are in C therefore
 */
-PblLongDouble_T PblGetLongDoubleT(long double val);
+PblLongDouble_T* PblGetLongDoubleT(long double val);
 
 #ifdef __cplusplus
 }

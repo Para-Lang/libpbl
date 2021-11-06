@@ -7,17 +7,17 @@
 #include "gtest/gtest.h"
 
 TEST(BaseTypesTest, PblInt8) {
-  PblInt8_T v = PblGetInt8T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblInt8_T* v = PblGetInt8T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblInt8_T_Size, sizeof(int8_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUInt8) {
-  PblUInt8_T v = PblGetUInt8T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUInt8_T* v = PblGetUInt8T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUInt8_T_Size, sizeof(int8_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblInt8Defaults) {
@@ -26,7 +26,7 @@ TEST(BaseTypesTest, PblInt8Defaults) {
   EXPECT_EQ(PblInt8_T_Size, sizeof(int8_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblInt8_T v_2 = PblInt8_T_DefWithSetChildrenDefault;
+  PblInt8_T v_2 = PblInt8_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblInt8_T_Size, sizeof(int8_t));
@@ -39,7 +39,7 @@ TEST(BaseTypesTest, PblUInt8Defaults) {
   EXPECT_EQ(PblUInt8_T_Size, sizeof(int8_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUInt8_T v_2 = PblUInt8_T_DefWithSetChildrenDefault;
+  PblUInt8_T v_2 = PblUInt8_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUInt8_T_Size, sizeof(int8_t));
@@ -47,17 +47,17 @@ TEST(BaseTypesTest, PblUInt8Defaults) {
 }
 
 TEST(BaseTypesTest, PblInt16) {
-  PblInt16_T v = PblGetInt16T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblInt16_T* v = PblGetInt16T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblInt16_T_Size, sizeof(int16_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUInt16) {
-  PblUInt16_T v = PblGetUInt16T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUInt16_T* v = PblGetUInt16T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUInt16_T_Size, sizeof(int16_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblInt16Defaults) {
@@ -66,7 +66,7 @@ TEST(BaseTypesTest, PblInt16Defaults) {
   EXPECT_EQ(PblInt16_T_Size, sizeof(int16_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblInt16_T v_2 = PblInt16_T_DefWithSetChildrenDefault;
+  PblInt16_T v_2 = PblInt16_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblInt16_T_Size, sizeof(int16_t));
@@ -79,7 +79,7 @@ TEST(BaseTypesTest, PblUInt16Defaults) {
   EXPECT_EQ(PblUInt16_T_Size, sizeof(int16_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUInt16_T v_2 = PblUInt16_T_DefWithSetChildrenDefault;
+  PblUInt16_T v_2 = PblUInt16_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUInt16_T_Size, sizeof(int16_t));
@@ -87,17 +87,17 @@ TEST(BaseTypesTest, PblUInt16Defaults) {
 }
 
 TEST(BaseTypesTest, PblInt32) {
-  PblInt32_T v = PblGetInt32T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblInt32_T* v = PblGetInt32T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblInt32_T_Size, sizeof(int32_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUInt32) {
-  PblUInt32_T v = PblGetUInt32T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUInt32_T* v = PblGetUInt32T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUInt32_T_Size, sizeof(int32_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblInt32Defaults) {
@@ -106,7 +106,7 @@ TEST(BaseTypesTest, PblInt32Defaults) {
   EXPECT_EQ(PblInt32_T_Size, sizeof(int32_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblInt32_T v_2 = PblInt32_T_DefWithSetChildrenDefault;
+  PblInt32_T v_2 = PblInt32_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblInt32_T_Size, sizeof(int32_t));
@@ -119,7 +119,7 @@ TEST(BaseTypesTest, PblUInt32Defaults) {
   EXPECT_EQ(PblUInt32_T_Size, sizeof(int32_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUInt32_T v_2 = PblUInt32_T_DefWithSetChildrenDefault;
+  PblUInt32_T v_2 = PblUInt32_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUInt32_T_Size, sizeof(int32_t));
@@ -127,17 +127,17 @@ TEST(BaseTypesTest, PblUInt32Defaults) {
 }
 
 TEST(BaseTypesTest, PblInt64) {
-  PblInt64_T v = PblGetInt64T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblInt64_T* v = PblGetInt64T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblInt64_T_Size, sizeof(int64_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUInt64) {
-  PblUInt64_T v = PblGetUInt64T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUInt64_T* v = PblGetUInt64T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUInt64_T_Size, sizeof(int64_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblInt64Defaults) {
@@ -146,7 +146,7 @@ TEST(BaseTypesTest, PblInt64Defaults) {
   EXPECT_EQ(PblInt64_T_Size, sizeof(int64_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblInt64_T v_2 = PblInt64_T_DefWithSetChildrenDefault;
+  PblInt64_T v_2 = PblInt64_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblInt64_T_Size, sizeof(int64_t));
@@ -159,7 +159,7 @@ TEST(BaseTypesTest, PblUInt64Defaults) {
   EXPECT_EQ(PblUInt64_T_Size, sizeof(int64_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUInt64_T v_2 = PblUInt64_T_DefWithSetChildrenDefault;
+  PblUInt64_T v_2 = PblUInt64_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUInt64_T_Size, sizeof(int64_t));
@@ -167,17 +167,17 @@ TEST(BaseTypesTest, PblUInt64Defaults) {
 }
 
 TEST(BaseTypesTest, PblLeastInt8) {
-  PblLeastInt8_T v = PblGetLeastInt8T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblLeastInt8_T* v = PblGetLeastInt8T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblLeastInt8_T_Size, sizeof(int_least8_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblULeastInt8) {
-  PblULeastInt8_T v = PblGetULeastInt8T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblULeastInt8_T* v = PblGetULeastInt8T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblULeastInt8_T_Size, sizeof(int_least8_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblLeastInt8Defaults) {
@@ -186,7 +186,7 @@ TEST(BaseTypesTest, PblLeastInt8Defaults) {
   EXPECT_EQ(PblLeastInt8_T_Size, sizeof(int_least8_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblLeastInt8_T v_2 = PblLeastInt8_T_DefWithSetChildrenDefault;
+  PblLeastInt8_T v_2 = PblLeastInt8_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblLeastInt8_T_Size, sizeof(int_least8_t));
@@ -199,7 +199,7 @@ TEST(BaseTypesTest, PblULeastInt8Defaults) {
   EXPECT_EQ(PblULeastInt8_T_Size, sizeof(int_least8_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblULeastInt8_T v_2 = PblULeastInt8_T_DefWithSetChildrenDefault;
+  PblULeastInt8_T v_2 = PblULeastInt8_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblULeastInt8_T_Size, sizeof(int_least8_t));
@@ -207,17 +207,17 @@ TEST(BaseTypesTest, PblULeastInt8Defaults) {
 }
 
 TEST(BaseTypesTest, PblLeastInt16) {
-  PblLeastInt16_T v = PblGetLeastInt16T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblLeastInt16_T* v = PblGetLeastInt16T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblLeastInt16_T_Size, sizeof(int_least16_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblULeastInt16) {
-  PblULeastInt16_T v = PblGetULeastInt16T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblULeastInt16_T* v = PblGetULeastInt16T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblULeastInt16_T_Size, sizeof(int_least16_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblLeastInt16Defaults) {
@@ -226,7 +226,7 @@ TEST(BaseTypesTest, PblLeastInt16Defaults) {
   EXPECT_EQ(PblLeastInt16_T_Size, sizeof(int_least16_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblLeastInt16_T v_2 = PblLeastInt16_T_DefWithSetChildrenDefault;
+  PblLeastInt16_T v_2 = PblLeastInt16_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblLeastInt16_T_Size, sizeof(int_least16_t));
@@ -239,7 +239,7 @@ TEST(BaseTypesTest, PblULeastInt16Defaults) {
   EXPECT_EQ(PblULeastInt16_T_Size, sizeof(int_least16_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblULeastInt16_T v_2 = PblULeastInt16_T_DefWithSetChildrenDefault;
+  PblULeastInt16_T v_2 = PblULeastInt16_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblULeastInt16_T_Size, sizeof(int_least16_t));
@@ -247,17 +247,17 @@ TEST(BaseTypesTest, PblULeastInt16Defaults) {
 }
 
 TEST(BaseTypesTest, PblLeastInt32) {
-  PblLeastInt32_T v = PblGetLeastInt32T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblLeastInt32_T* v = PblGetLeastInt32T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblLeastInt32_T_Size, sizeof(int_least32_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblULeastInt32) {
-  PblULeastInt32_T v = PblGetULeastInt32T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblULeastInt32_T* v = PblGetULeastInt32T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblULeastInt32_T_Size, sizeof(int_least32_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblLeastInt32Defaults) {
@@ -266,7 +266,7 @@ TEST(BaseTypesTest, PblLeastInt32Defaults) {
   EXPECT_EQ(PblLeastInt32_T_Size, sizeof(int_least32_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblLeastInt32_T v_2 = PblLeastInt32_T_DefWithSetChildrenDefault;
+  PblLeastInt32_T v_2 = PblLeastInt32_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblLeastInt32_T_Size, sizeof(int_least32_t));
@@ -279,7 +279,7 @@ TEST(BaseTypesTest, PblULeastInt32Defaults) {
   EXPECT_EQ(PblULeastInt32_T_Size, sizeof(int_least32_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblULeastInt32_T v_2 = PblULeastInt32_T_DefWithSetChildrenDefault;
+  PblULeastInt32_T v_2 = PblULeastInt32_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblULeastInt32_T_Size, sizeof(int_least32_t));
@@ -287,17 +287,17 @@ TEST(BaseTypesTest, PblULeastInt32Defaults) {
 }
 
 TEST(BaseTypesTest, PblLeastInt64) {
-  PblLeastInt64_T v = PblGetLeastInt64T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblLeastInt64_T* v = PblGetLeastInt64T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblLeastInt64_T_Size, sizeof(int_least64_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblULeastInt64) {
-  PblULeastInt64_T v = PblGetULeastInt64T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblULeastInt64_T* v = PblGetULeastInt64T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblULeastInt64_T_Size, sizeof(int_least64_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblLeastInt64Defaults) {
@@ -306,7 +306,7 @@ TEST(BaseTypesTest, PblLeastInt64Defaults) {
   EXPECT_EQ(PblLeastInt64_T_Size, sizeof(int_least64_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblLeastInt64_T v_2 = PblLeastInt64_T_DefWithSetChildrenDefault;
+  PblLeastInt64_T v_2 = PblLeastInt64_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblLeastInt64_T_Size, sizeof(int_least64_t));
@@ -319,7 +319,7 @@ TEST(BaseTypesTest, PblULeastInt64Defaults) {
   EXPECT_EQ(PblULeastInt64_T_Size, sizeof(int_least64_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblULeastInt64_T v_2 = PblULeastInt64_T_DefWithSetChildrenDefault;
+  PblULeastInt64_T v_2 = PblULeastInt64_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblULeastInt64_T_Size, sizeof(int_least64_t));
@@ -327,17 +327,17 @@ TEST(BaseTypesTest, PblULeastInt64Defaults) {
 }
 
 TEST(BaseTypesTest, PblFastInt8) {
-  PblFastInt8_T v = PblGetFastInt8T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblFastInt8_T* v = PblGetFastInt8T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblFastInt8_T_Size, sizeof(int_fast8_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUFastInt8) {
-  PblUFastInt8_T v = PblGetUFastInt8T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUFastInt8_T* v = PblGetUFastInt8T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUFastInt8_T_Size, sizeof(int_fast8_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblFastInt8Defaults) {
@@ -346,7 +346,7 @@ TEST(BaseTypesTest, PblFastInt8Defaults) {
   EXPECT_EQ(PblFastInt8_T_Size, sizeof(int_fast8_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblFastInt8_T v_2 = PblFastInt8_T_DefWithSetChildrenDefault;
+  PblFastInt8_T v_2 = PblFastInt8_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblFastInt8_T_Size, sizeof(int_fast8_t));
@@ -359,7 +359,7 @@ TEST(BaseTypesTest, PblUFastInt8Defaults) {
   EXPECT_EQ(PblUFastInt8_T_Size, sizeof(int_fast8_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUFastInt8_T v_2 = PblUFastInt8_T_DefWithSetChildrenDefault;
+  PblUFastInt8_T v_2 = PblUFastInt8_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUFastInt8_T_Size, sizeof(int_fast8_t));
@@ -367,17 +367,17 @@ TEST(BaseTypesTest, PblUFastInt8Defaults) {
 }
 
 TEST(BaseTypesTest, PblFastInt16) {
-  PblFastInt16_T v = PblGetFastInt16T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblFastInt16_T* v = PblGetFastInt16T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblFastInt16_T_Size, sizeof(int_fast16_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUFastInt16) {
-  PblUFastInt16_T v = PblGetUFastInt16T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUFastInt16_T* v = PblGetUFastInt16T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUFastInt16_T_Size, sizeof(int_fast16_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblFastInt16Defaults) {
@@ -386,7 +386,7 @@ TEST(BaseTypesTest, PblFastInt16Defaults) {
   EXPECT_EQ(PblFastInt16_T_Size, sizeof(int_fast16_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblFastInt16_T v_2 = PblFastInt16_T_DefWithSetChildrenDefault;
+  PblFastInt16_T v_2 = PblFastInt16_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblFastInt16_T_Size, sizeof(int_fast16_t));
@@ -399,7 +399,7 @@ TEST(BaseTypesTest, PblUFastInt16Defaults) {
   EXPECT_EQ(PblUFastInt16_T_Size, sizeof(int_fast16_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUFastInt16_T v_2 = PblUFastInt16_T_DefWithSetChildrenDefault;
+  PblUFastInt16_T v_2 = PblUFastInt16_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUFastInt16_T_Size, sizeof(int_fast16_t));
@@ -407,17 +407,17 @@ TEST(BaseTypesTest, PblUFastInt16Defaults) {
 }
 
 TEST(BaseTypesTest, PblFastInt32) {
-  PblFastInt32_T v = PblGetFastInt32T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblFastInt32_T* v = PblGetFastInt32T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblFastInt32_T_Size, sizeof(int_fast32_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUFastInt32) {
-  PblUFastInt32_T v = PblGetUFastInt32T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUFastInt32_T* v = PblGetUFastInt32T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUFastInt32_T_Size, sizeof(int_fast32_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblFastInt32Defaults) {
@@ -426,7 +426,7 @@ TEST(BaseTypesTest, PblFastInt32Defaults) {
   EXPECT_EQ(PblFastInt32_T_Size, sizeof(int_fast32_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblFastInt32_T v_2 = PblFastInt32_T_DefWithSetChildrenDefault;
+  PblFastInt32_T v_2 = PblFastInt32_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblFastInt32_T_Size, sizeof(int_fast32_t));
@@ -439,7 +439,7 @@ TEST(BaseTypesTest, PblUFastInt32Defaults) {
   EXPECT_EQ(PblUFastInt32_T_Size, sizeof(int_fast32_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUFastInt32_T v_2 = PblUFastInt32_T_DefWithSetChildrenDefault;
+  PblUFastInt32_T v_2 = PblUFastInt32_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUFastInt32_T_Size, sizeof(int_fast32_t));
@@ -447,17 +447,17 @@ TEST(BaseTypesTest, PblUFastInt32Defaults) {
 }
 
 TEST(BaseTypesTest, PblFastInt64) {
-  PblFastInt64_T v = PblGetFastInt64T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblFastInt64_T* v = PblGetFastInt64T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblFastInt64_T_Size, sizeof(int_fast64_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUFastInt64) {
-  PblUFastInt64_T v = PblGetUFastInt64T(0);
-  EXPECT_EQ(v.actual, 0);
+  PblUFastInt64_T* v = PblGetUFastInt64T(0);
+  EXPECT_EQ(v->actual, 0);
   EXPECT_EQ(PblUFastInt64_T_Size, sizeof(int_fast64_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblFastInt64Defaults) {
@@ -466,7 +466,7 @@ TEST(BaseTypesTest, PblFastInt64Defaults) {
   EXPECT_EQ(PblFastInt64_T_Size, sizeof(int_fast64_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblFastInt64_T v_2 = PblFastInt64_T_DefWithSetChildrenDefault;
+  PblFastInt64_T v_2 = PblFastInt64_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblFastInt64_T_Size, sizeof(int_fast64_t));
@@ -479,7 +479,7 @@ TEST(BaseTypesTest, PblUFastInt64Defaults) {
   EXPECT_EQ(PblUFastInt64_T_Size, sizeof(int_fast64_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUFastInt64_T v_2 = PblUFastInt64_T_DefWithSetChildrenDefault;
+  PblUFastInt64_T v_2 = PblUFastInt64_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUFastInt64_T_Size, sizeof(int_fast64_t));

@@ -16,10 +16,10 @@ TEST(MacroTypesTest, CSizeof) {
 }
 
 TEST(BaseTypesTest, PblBool) {
-  PblBool_T v = PblGetBoolT(true);
-  EXPECT_EQ(v.actual, true);
+  PblBool_T* v = PblGetBoolT(true);
+  EXPECT_EQ(v->actual, true);
   EXPECT_EQ(PblBool_T_Size, sizeof(bool));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblBoolDefaults) {
@@ -28,7 +28,7 @@ TEST(BaseTypesTest, PblBoolDefaults) {
   EXPECT_EQ(PblBool_T_Size, sizeof(bool));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblBool_T v_2 = PblBool_T_DefWithSetChildrenDefault;
+  PblBool_T v_2 = PblBool_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblBool_T_Size, sizeof(bool));
@@ -36,10 +36,10 @@ TEST(BaseTypesTest, PblBoolDefaults) {
 }
 
 TEST(BaseTypesTest, PblSize) {
-  PblSize_T v = PblGetSizeT(sizeof(int));
-  EXPECT_EQ(v.actual, sizeof(int));
+  PblSize_T* v = PblGetSizeT(sizeof(int));
+  EXPECT_EQ(v->actual, sizeof(int));
   EXPECT_EQ(PblSize_T_Size, sizeof(size_t));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblSizeDefaults) {
@@ -48,7 +48,7 @@ TEST(BaseTypesTest, PblSizeDefaults) {
   EXPECT_EQ(PblSize_T_Size, sizeof(size_t));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblSize_T v_2 = PblSize_T_DefWithSetChildrenDefault;
+  PblSize_T v_2 = PblSize_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblSize_T_Size, sizeof(size_t));
@@ -56,21 +56,21 @@ TEST(BaseTypesTest, PblSizeDefaults) {
 }
 
 TEST(BaseTypesTest, PblChar) {
-  PblChar_T v = PblGetCharT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblChar_T* v = PblGetCharT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblChar_T_Size, sizeof(unsigned char));
   EXPECT_EQ(PblChar_T_Size, sizeof(signed char));
   EXPECT_EQ(PblChar_T_Size, sizeof(char));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUChar) {
-  PblUChar_T v = PblGetUCharT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblUChar_T* v = PblGetUCharT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblUChar_T_Size, sizeof(unsigned char));
   EXPECT_EQ(PblUChar_T_Size, sizeof(signed char));
   EXPECT_EQ(PblUChar_T_Size, sizeof(char));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblCharDefaults) {
@@ -79,7 +79,7 @@ TEST(BaseTypesTest, PblCharDefaults) {
   EXPECT_EQ(PblChar_T_Size, sizeof(char));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblChar_T v_2 = PblChar_T_DefWithSetChildrenDefault;
+  PblChar_T v_2 = PblChar_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblChar_T_Size, sizeof(char));
@@ -92,7 +92,7 @@ TEST(BaseTypesTest, PblUCharDefaults) {
   EXPECT_EQ(PblUChar_T_Size, sizeof(char));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUChar_T v_2 = PblUChar_T_DefWithSetChildrenDefault;
+  PblUChar_T v_2 = PblUChar_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUChar_T_Size, sizeof(char));
@@ -100,21 +100,21 @@ TEST(BaseTypesTest, PblUCharDefaults) {
 }
 
 TEST(BaseTypesTest, PblShort) {
-  PblShort_T v = PblGetShortT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblShort_T* v = PblGetShortT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblShort_T_Size, sizeof(unsigned short));
   EXPECT_EQ(PblShort_T_Size, sizeof(signed short));
   EXPECT_EQ(PblShort_T_Size, sizeof(short));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUShort) {
-  PblUShort_T v = PblGetUShortT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblUShort_T* v = PblGetUShortT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblShort_T_Size, sizeof(unsigned short));
   EXPECT_EQ(PblShort_T_Size, sizeof(signed short));
   EXPECT_EQ(PblShort_T_Size, sizeof(short));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblShortDefaults) {
@@ -123,7 +123,7 @@ TEST(BaseTypesTest, PblShortDefaults) {
   EXPECT_EQ(PblShort_T_Size, sizeof(short));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblShort_T v_2 = PblShort_T_DefWithSetChildrenDefault;
+  PblShort_T v_2 = PblShort_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblShort_T_Size, sizeof(short));
@@ -136,7 +136,7 @@ TEST(BaseTypesTest, PblUShortDefaults) {
   EXPECT_EQ(PblUShort_T_Size, sizeof(short));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUShort_T v_2 = PblUShort_T_DefWithSetChildrenDefault;
+  PblUShort_T v_2 = PblUShort_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUShort_T_Size, sizeof(short));
@@ -144,21 +144,21 @@ TEST(BaseTypesTest, PblUShortDefaults) {
 }
 
 TEST(BaseTypesTest, PblInt) {
-  PblInt_T v = PblGetIntT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblInt_T* v = PblGetIntT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblInt_T_Size, sizeof(unsigned int));
   EXPECT_EQ(PblInt_T_Size, sizeof(signed int));
   EXPECT_EQ(PblInt_T_Size, sizeof(int));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblUInt) {
-  PblUInt_T v = PblGetUIntT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblUInt_T* v = PblGetUIntT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblUInt_T_Size, sizeof(unsigned int));
   EXPECT_EQ(PblUInt_T_Size, sizeof(signed int));
   EXPECT_EQ(PblUInt_T_Size, sizeof(int));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblIntDefaults) {
@@ -167,7 +167,7 @@ TEST(BaseTypesTest, PblIntDefaults) {
   EXPECT_EQ(PblInt_T_Size, sizeof(int));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblInt_T v_2 = PblInt_T_DefWithSetChildrenDefault;
+  PblInt_T v_2 = PblInt_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblInt_T_Size, sizeof(int));
@@ -180,7 +180,7 @@ TEST(BaseTypesTest, PblUIntDefaults) {
   EXPECT_EQ(PblUInt_T_Size, sizeof(int));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblUInt_T v_2 = PblUInt_T_DefWithSetChildrenDefault;
+  PblUInt_T v_2 = PblUInt_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblUInt_T_Size, sizeof(int));
@@ -188,21 +188,21 @@ TEST(BaseTypesTest, PblUIntDefaults) {
 }
 
 TEST(BaseTypesTest, PblLong) {
-  PblLong_T v = PblGetLongT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblLong_T* v = PblGetLongT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblLong_T_Size, sizeof(unsigned long));
   EXPECT_EQ(PblLong_T_Size, sizeof(signed long));
   EXPECT_EQ(PblLong_T_Size, sizeof(long));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblULong) {
-  PblULong_T v = PblGetULongT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblULong_T* v = PblGetULongT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblULong_T_Size, sizeof(unsigned long));
   EXPECT_EQ(PblULong_T_Size, sizeof(signed long));
   EXPECT_EQ(PblULong_T_Size, sizeof(long));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblLongDefaults) {
@@ -211,7 +211,7 @@ TEST(BaseTypesTest, PblLongDefaults) {
   EXPECT_EQ(PblLong_T_Size, sizeof(long));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblLong_T v_2 = PblLong_T_DefWithSetChildrenDefault;
+  PblLong_T v_2 = PblLong_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblLong_T_Size, sizeof(long));
@@ -224,7 +224,7 @@ TEST(BaseTypesTest, PblULongDefaults) {
   EXPECT_EQ(PblULong_T_Size, sizeof(long));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblULong_T v_2 = PblULong_T_DefWithSetChildrenDefault;
+  PblULong_T v_2 = PblULong_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblULong_T_Size, sizeof(long));
@@ -232,21 +232,21 @@ TEST(BaseTypesTest, PblULongDefaults) {
 }
 
 TEST(BaseTypesTest, PblLongLong) {
-  PblLongLong_T v = PblGetLongLongT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblLongLong_T* v = PblGetLongLongT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblLongLong_T_Size, sizeof(unsigned long long));
   EXPECT_EQ(PblLongLong_T_Size, sizeof(signed long long));
   EXPECT_EQ(PblLongLong_T_Size, sizeof(long long));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblULongLong) {
-  PblULongLong_T v = PblGetULongLongT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblULongLong_T* v = PblGetULongLongT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblULongLong_T_Size, sizeof(unsigned long long));
   EXPECT_EQ(PblULongLong_T_Size, sizeof(signed long long));
   EXPECT_EQ(PblULongLong_T_Size, sizeof(long long));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblLongLongDefaults) {
@@ -255,7 +255,7 @@ TEST(BaseTypesTest, PblLongLongDefaults) {
   EXPECT_EQ(PblLongLong_T_Size, sizeof(long long));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblLongLong_T v_2 = PblLongLong_T_DefWithSetChildrenDefault;
+  PblLongLong_T v_2 = PblLongLong_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblLongLong_T_Size, sizeof(long long));
@@ -268,7 +268,7 @@ TEST(BaseTypesTest, PblULongLongDefaults) {
   EXPECT_EQ(PblULongLong_T_Size, sizeof(long long));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblULongLong_T v_2 = PblULongLong_T_DefWithSetChildrenDefault;
+  PblULongLong_T v_2 = PblULongLong_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblULongLong_T_Size, sizeof(long long));
@@ -276,10 +276,10 @@ TEST(BaseTypesTest, PblULongLongDefaults) {
 }
 
 TEST(BaseTypesTest, PblFloat) {
-  PblFloat_T v = PblGetFloatT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblFloat_T* v = PblGetFloatT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblFloat_T_Size, sizeof(float));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblFloatDefaults) {
@@ -288,7 +288,7 @@ TEST(BaseTypesTest, PblFloatDefaults) {
   EXPECT_EQ(PblFloat_T_Size, sizeof(float));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblFloat_T v_2 = PblFloat_T_DefWithSetChildrenDefault;
+  PblFloat_T v_2 = PblFloat_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblFloat_T_Size, sizeof(float));
@@ -296,10 +296,10 @@ TEST(BaseTypesTest, PblFloatDefaults) {
 }
 
 TEST(BaseTypesTest, PblDouble) {
-  PblDouble_T v = PblGetDoubleT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblDouble_T* v = PblGetDoubleT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblDouble_T_Size, sizeof(double));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblDoubleDefaults) {
@@ -308,7 +308,7 @@ TEST(BaseTypesTest, PblDoubleDefaults) {
   EXPECT_EQ(PblDouble_T_Size, sizeof(double));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblDouble_T v_2 = PblDouble_T_DefWithSetChildrenDefault;
+  PblDouble_T v_2 = PblDouble_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblDouble_T_Size, sizeof(double));
@@ -316,10 +316,10 @@ TEST(BaseTypesTest, PblDoubleDefaults) {
 }
 
 TEST(BaseTypesTest, PblLongDouble) {
-  PblLongDouble_T v = PblGetLongDoubleT('x');
-  EXPECT_EQ(v.actual, 'x');
+  PblLongDouble_T* v = PblGetLongDoubleT('x');
+  EXPECT_EQ(v->actual, 'x');
   EXPECT_EQ(PblLongDouble_T_Size, sizeof(long double));
-  EXPECT_EQ(v.meta.defined, true);
+  EXPECT_EQ(v->meta.defined, true);
 }
 
 TEST(BaseTypesTest, PblLongDoubleDefaults) {
@@ -328,7 +328,7 @@ TEST(BaseTypesTest, PblLongDoubleDefaults) {
   EXPECT_EQ(PblLongDouble_T_Size, sizeof(long double));
   EXPECT_EQ(v_1.meta.defined, false);
 
-  PblLongDouble_T v_2 = PblLongDouble_T_DefWithSetChildrenDefault;
+  PblLongDouble_T v_2 = PblLongDouble_T_DefDefault;
 
   EXPECT_EQ(v_2.actual, 0);
   EXPECT_EQ(PblLongDouble_T_Size, sizeof(long double));

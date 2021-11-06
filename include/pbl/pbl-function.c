@@ -6,18 +6,18 @@
 #include "./pbl-function.h"
 
 PblMetaFunctionCallCtx_T *PblAllocateMetaFunctionCallCtxT() {
-  PblMetaFunctionCallCtx_T* ptr = PblMalloc(PblGetSizeT(sizeof(PblMetaFunctionCallCtx_T)));
-  *ptr = PblMetaFunctionCallCtx_T_DefWithSetChildrenDefault;
+  PblMetaFunctionCallCtx_T* ptr = PblMalloc(sizeof(PblMetaFunctionCallCtx_T));
+  *ptr = PblMetaFunctionCallCtx_T_DefDefault;
   return ptr;
 }
 
-PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T function_identifier, PblBool_T is_failure,
-                                                     PblUInt_T arg_amount, PblBool_T is_threaded,
+PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_identifier, PblBool_T *is_failure,
+                                                     PblUInt_T *arg_amount, PblBool_T *is_threaded,
                                                      PblMetaFunctionCallCtx_T *failure_origin_ctx,
                                                      PblMetaFunctionCallCtx_T *call_origin_ctx,
                                                      PblException_T *exception) {
   PblMetaFunctionCallCtx_T *ptr = PblAllocateMetaFunctionCallCtxT();
-  *ptr = PblMetaFunctionCallCtx_T_DefWithSetChildrenDefault;
+  *ptr = PblMetaFunctionCallCtx_T_DefDefault;
 
   ptr->actual = (struct PblMetaFunctionCallCtx_Base) {
     .function_identifier=function_identifier, .is_failure=is_failure, .arg_amount=arg_amount,
@@ -33,7 +33,7 @@ PblVoid_T PblSafeDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
 
   if (ctx->meta.defined) {
     if (ctx->actual.exception != NULL) PblSafeDeallocateExceptionT(ctx->actual.exception);
-    PblSafeDeallocateStringT(&(ctx->actual.function_identifier));
+    if (ctx->actual.function_identifier != NULL) PblSafeDeallocateStringT(ctx->actual.function_identifier);
 
     // resetting the values
     *ctx = PblMetaFunctionCallCtx_T_DeclDefault;
@@ -43,17 +43,17 @@ PblVoid_T PblSafeDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
 }
 
 PblException_T *PblAllocateExceptionType() {
-  PblException_T *ptr = PblMalloc(PblGetSizeT(sizeof(PblException_T)));
+  PblException_T *ptr = PblMalloc(sizeof(PblException_T));
   *ptr = PblException_T_DeclDefault;
   return ptr;
 }
 
-PblException_T *PblGetExceptionT(PblString_T msg, PblString_T name, PblString_T filename, PblUInt_T line,
-                                 PblString_T line_content, PblVoid_T *parent_exc, PblVoid_T *child_exc) {
+PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_T *filename, PblUInt_T *line,
+                                 PblString_T *line_content, PblVoid_T *parent_exc, PblVoid_T *child_exc) {
   PblException_T *ptr = PblAllocateExceptionType();
 
   // Using the Definition Default
-  *ptr = PblException_T_DefWithSetChildrenDefault;
+  *ptr = PblException_T_DefDefault;
   ptr->actual = (struct PblException_Base){
     .msg = msg, .name = name, .filename = filename, .line = line,
     .line_content = line_content, .parent_exc = parent_exc, .child_exc = child_exc
@@ -83,10 +83,15 @@ PblVoid_T PblSafeDeallocateExceptionT(PblException_T *exc) {
   if (exc->meta.defined)
   {
     // deallocate if the values are defined -> if not, skip de-allocation
-    if (exc->actual.msg.meta.defined) PblSafeDeallocateStringT(&(exc->actual.msg));
-    if (exc->actual.msg.meta.defined) PblSafeDeallocateStringT(&(exc->actual.name));
-    if (exc->actual.msg.meta.defined) PblSafeDeallocateStringT(&(exc->actual.filename));
-    if (exc->actual.msg.meta.defined) PblSafeDeallocateStringT(&(exc->actual.line_content));
+
+    if (exc->actual.msg != NULL && exc->actual.msg->meta.defined)
+      PblSafeDeallocateStringT(exc->actual.msg);
+    if (exc->actual.name != NULL && exc->actual.name->meta.defined)
+      PblSafeDeallocateStringT(exc->actual.name);
+    if (exc->actual.filename != NULL && exc->actual.filename->meta.defined)
+      PblSafeDeallocateStringT(exc->actual.filename);
+    if (exc->actual.line_content != NULL && exc->actual.line_content->meta.defined)
+      PblSafeDeallocateStringT(exc->actual.line_content);
 
     *exc = PblException_T_DeclDefault;
     PblFree(exc);
