@@ -3,12 +3,21 @@
 /// Styling and naming are similar to the Google C++ style guide
 /// @see https://google.github.io/styleguide/cppguide.html
 ///
-/// Headers of the library:
-/// - pbl-io.h
-/// - pbl-types.h
-/// - pbl-string.h
-/// - pbl-int.h
-/// - pbl-function.h
+///    Para-C Base Library - Base Library and implementation for the Para-C language
+///    Copyright (C) 2021  Luna Klatzer
+///
+///    This program is free software: you can redistribute it and/or modify
+///    it under the terms of the GNU General Public License as published by
+///    the Free Software Foundation, either version 3 of the License, or
+///    (at your option) any later version.
+///
+///    This program is distributed in the hope that it will be useful,
+///    but WITHOUT ANY WARRANTY; without even the implied warranty of
+///    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+///    GNU General Public License for more details.
+///
+///    You should have received a copy of the GNU General Public License
+///    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
 /// @author Luna-Klatzer
 /// @note The styling guide for the PBL is as following:
