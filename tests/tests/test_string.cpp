@@ -18,7 +18,7 @@ TEST(StringTypesTest, GetStringConversion) {
 
   EXPECT_EQ(
     PblString_T_Size,
-    sizeof(size_t) + sizeof(unsigned int) + sizeof(unsigned int) + sizeof(char *)
+    sizeof(PblSize_T *) + sizeof(PblUInt_T *) + sizeof(PblUInt_T *) + sizeof(char *)
   );
   EXPECT_EQ(string_1->actual.len->actual, 5);
   EXPECT_EQ(string_1->actual.allocated_len->actual, 51);
@@ -27,7 +27,7 @@ TEST(StringTypesTest, GetStringConversion) {
 
   EXPECT_EQ(
     PblString_T_Size,
-    sizeof(size_t) + sizeof(unsigned int) + sizeof(unsigned int) + sizeof(char *)
+    sizeof(PblSize_T *) + sizeof(PblUInt_T *) + sizeof(PblUInt_T *) + sizeof(char *)
   );
   EXPECT_EQ(string_2->actual.len->actual, 5);
   EXPECT_EQ(string_2->actual.allocated_len->actual, 51);
