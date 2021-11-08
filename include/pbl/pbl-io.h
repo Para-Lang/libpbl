@@ -35,7 +35,7 @@ typedef struct PblFile PblFile_T;
 // ---- Stream --------------------------------------------------------------------------------------------------------
 
 /// Size of the type 'PblStream_T' in bytes
-#define PblStream_T_Size (PblUInt_T_Size + PblFile_T_Size + PblBool_T_Size + PblString_T_Size)
+#define PblStream_T_Size (sizeof(PblUInt_T*) + sizeof(PblFile_T*) + sizeof(PblBool_T*) + sizeof(PblString_T*))
 /// Returns the declaration default for the type 'PblStream_T'
 #define PblStream_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblStream_T)
 /// Returns the definition default, for the type 'PblStream_T', where the children have not been set yet and only the

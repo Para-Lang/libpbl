@@ -5,18 +5,12 @@
 
 #include "./pbl-function.h"
 
-PblMetaFunctionCallCtx_T *PblAllocateMetaFunctionCallCtxT() {
-  PblMetaFunctionCallCtx_T* ptr = PblMalloc(sizeof(PblMetaFunctionCallCtx_T));
-  *ptr = PblMetaFunctionCallCtx_T_DefDefault;
-  return ptr;
-}
-
 PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_identifier, PblBool_T *is_failure,
                                                      PblUInt_T *arg_amount, PblBool_T *is_threaded,
                                                      PblMetaFunctionCallCtx_T *failure_origin_ctx,
                                                      PblMetaFunctionCallCtx_T *call_origin_ctx,
                                                      PblException_T *exception) {
-  PblMetaFunctionCallCtx_T *ptr = PblAllocateMetaFunctionCallCtxT();
+  PBL_ALLOC_DEFINITION(ptr, PblMetaFunctionCallCtx_T);
   *ptr = PblMetaFunctionCallCtx_T_DefDefault;
 
   ptr->actual = (struct PblMetaFunctionCallCtx_Base) {
@@ -27,30 +21,25 @@ PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_ident
   return ptr;
 }
 
-PblVoid_T PblSafeDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
+PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
   // Validate the pointer for safety measures
   ctx = PblValPtr((void *) ctx);
 
   if (ctx->meta.defined) {
-    if (ctx->actual.exception != NULL) PblSafeDeallocateExceptionT(ctx->actual.exception);
-    if (ctx->actual.function_identifier != NULL) PblSafeDeallocateStringT(ctx->actual.function_identifier);
+    if (ctx->actual.exception != NULL) PblDeallocateExceptionT(ctx->actual.exception);
+    if (ctx->actual.function_identifier != NULL) PblDeallocateStringT(ctx->actual.function_identifier);
 
     // resetting the values
     *ctx = PblMetaFunctionCallCtx_T_DeclDefault;
     PblFree(ctx);
+    ctx = NULL;
   }
   return PblVoid_T_DeclDefault;
 }
 
-PblException_T *PblAllocateExceptionType() {
-  PblException_T *ptr = PblMalloc(sizeof(PblException_T));
-  *ptr = PblException_T_DeclDefault;
-  return ptr;
-}
-
 PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_T *filename, PblUInt_T *line,
                                  PblString_T *line_content, PblVoid_T *parent_exc, PblVoid_T *child_exc) {
-  PblException_T *ptr = PblAllocateExceptionType();
+  PBL_ALLOC_DEFINITION(ptr, PblException_T);
 
   // Using the Definition Default
   *ptr = PblException_T_DefDefault;
@@ -75,7 +64,7 @@ PblVoid_T PblRaiseNewException(PblMetaFunctionCallCtx_T* this_call_meta, PblExce
 
 // TODO! Add Deallocating function for deallocating exception parents and children
 
-PblVoid_T PblSafeDeallocateExceptionT(PblException_T *exc) {
+PblVoid_T PblDeallocateExceptionT(PblException_T *exc) {
   // Validate the pointer for safety measures
   exc = PblValPtr((void *) exc);
 
@@ -85,16 +74,17 @@ PblVoid_T PblSafeDeallocateExceptionT(PblException_T *exc) {
     // deallocate if the values are defined -> if not, skip de-allocation
 
     if (exc->actual.msg != NULL && exc->actual.msg->meta.defined)
-      PblSafeDeallocateStringT(exc->actual.msg);
+      PblDeallocateStringT(exc->actual.msg);
     if (exc->actual.name != NULL && exc->actual.name->meta.defined)
-      PblSafeDeallocateStringT(exc->actual.name);
+      PblDeallocateStringT(exc->actual.name);
     if (exc->actual.filename != NULL && exc->actual.filename->meta.defined)
-      PblSafeDeallocateStringT(exc->actual.filename);
+      PblDeallocateStringT(exc->actual.filename);
     if (exc->actual.line_content != NULL && exc->actual.line_content->meta.defined)
-      PblSafeDeallocateStringT(exc->actual.line_content);
+      PblDeallocateStringT(exc->actual.line_content);
 
     *exc = PblException_T_DeclDefault;
     PblFree(exc);
+    exc = NULL;
   }
   return PblVoid_T_DeclDefault;
 }

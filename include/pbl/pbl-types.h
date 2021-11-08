@@ -61,6 +61,16 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
   type *to_write = (type *) PblMalloc(sizeof(type));                                                                   \
   *(to_write) = type##_DefDefault;
 
+/// @brief This macro should serve as a helper for writing static arrays that shall be used to store types
+/// @note This should not be used as a replacement to Iterable, but only as a memory-efficient helper for copying or
+/// setting memory values
+#define PBL_ALLOC_ARRAY_DEFINITION(to_write, type, amount)                                                             \
+  type *to_write = (type *) PblMalloc(sizeof(type) * amount);                                                          \
+  for (int i = 0; i < amount; i++) {                                                                                   \
+    to_write[i] = type##_DefDefault;                                                                                   \
+  }
+
+
 // ---- Constructor Macros --------------------------------------------------------------------------------------------
 
 /// @brief Declaration constructor which initialised the meta data for the passed type

@@ -15,7 +15,7 @@ extern "C" {
 // ---- Declaration ---------------------------------------------------------------------------------------------------
 
 /// Size of the type 'PblString_T' in bytes
-#define PblString_T_Size (PblSize_T_Size + PblUInt_T_Size + PblUInt_T_Size + sizeof(char *))
+#define PblString_T_Size (sizeof(PblSize_T*) + sizeof(PblUInt_T*) + sizeof(PblUInt_T*) + sizeof(char *))
 /// Returns the declaration default for the type 'PblString_T'
 #define PblString_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblString_T)
 /// Returns the definition default, for the type 'PblString_T', where the children have not been set yet and only the
@@ -27,9 +27,11 @@ extern "C" {
 struct PblString_Base {
   /// Amount of the chars that can be written to - includes null char (\0). This does not include the meta info
   PblUInt_T *allocated_len;
-  /// The length of the string
+  /// The length of the string - this is the length that it will take to reach the null character '\0'
   PblUInt_T *len;
-  /// The char* pointer to the allocated memory
+  /// The char* pointer to the allocated memory - the entire memory represents the array, meaning it's not an array
+  /// of PblChar_T pointers, but an actual block of PblChar_T types being stuck together in memory, meaning array
+  /// arithmetics are valid!
   PblChar_T *str;
 };
 
@@ -72,6 +74,13 @@ PblString_T *PblGetStringT(const char *content);
 PblBool_T *PblCompareStringT(PblString_T *str_1, PblString_T *str_2);
 
 /**
+ * @brief Gets the required minimum array size for the string
+ * @param len The length of the string that should be allocated
+ * @return The length as PblUInt_T
+ */
+PblUInt_T* PblGetMinimumArrayLen(PblUInt_T* len);
+
+/**
  * @brief Gets the required byte_size for an allocation based on the passed length of the string.
  * @note The algorithm will always be a multiple of 50 + 1 (for null char '\0').
  * The calculated size is the next biggest multiple of 50 + 1, which is still bigger than the passed length.
@@ -90,12 +99,34 @@ PblSize_T *PblGetAllocSizeStringT(PblUInt_T *len);
 PblVoid_T PblResizeStringT(PblString_T *str, PblUInt_T *len);
 
 /**
+ * @brief Converts the passed PblChar_T array into a native C char array
+ * @param str The string that should be used
+ * @return The char* array
+ */
+char* PblGetCCharArrayFromCharT(PblChar_T* char_arr, PblUInt_T* len);
+
+/**
+ * @brief Converts the passed string into a native C char array
+ * @param str The string that should be used
+ * @return The char* array
+ */
+char* PblGetCCharArrayFromString(PblString_T* str);
+
+/**
+ * @brief Writes onto the allocated memory the passed string content (PblChar_T)
+ * @param len Length of the string (should not include null char)
+ * @param content The content of the string that should be written to the allocated memory - C type as this should be
+ * used in the back of the program
+ */
+PblVoid_T PblWriteCharArrayToStringT(PblString_T *str, PblChar_T *content, PblUInt_T *len_to_write);
+
+/**
  * @brief Writes onto the allocated memory the passed string content
  * @param len Length of the string (should not include null char)
  * @param content The content of the string that should be written to the allocated memory - C type as this should be
  * used in the back of the program
  */
-PblVoid_T PblWriteToStringT(PblString_T *str, PblChar_T *content, PblUInt_T *len_to_write);
+PblVoid_T PblWriteStringToStringT(PblString_T *str, PblString_T *content, PblUInt_T *len_to_write);
 
 /**
  * @brief Allocates new memory for a new string
@@ -108,18 +139,18 @@ PblVoid_T PblWriteToStringT(PblString_T *str, PblChar_T *content, PblUInt_T *len
 PblString_T *PblCreateStringT(PblChar_T *content, PblUInt_T *len);
 
 /**
- * @brief Allocates new memory for a new string
+ * @brief Allocates new memory for a new string - this function automatically calculates the minimum allocation size
  * @param byte_size The byte_size that should be allocated
  * @returns The char* pointer to the memory
  */
-PblChar_T *PblAllocateStringContentT(PblSize_T *byte_size);
+PblChar_T *PblAllocateStringContentT(PblUInt_T *len);
 
 /**
  * @brief Deallocates the entire memory for the string and resets it's struct properties
  * @note Writes to the string with '\0' before freeing the memory
  * @param lvalue The value that should be de-allocated
  */
-PblVoid_T PblSafeDeallocateStringT(PblString_T *lvalue);
+PblVoid_T PblDeallocateStringT(PblString_T *lvalue);
 
 #ifdef __cplusplus
 }

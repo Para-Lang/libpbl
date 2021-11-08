@@ -6,6 +6,15 @@
 #include "./pbl-mem.h"
 #include "./pbl-types.h"
 
+void* PblMemCpy(void* dest, const void * src, size_t bytes) {
+  if (dest == NULL) { PBL_LOG_CPY_FROM_NULL_PTR }
+  if (src == NULL) { PBL_LOG_CPY_TO_NULL_PTR }
+
+  void* ret_ptr = memcpy(dest, src, bytes);
+  if (ret_ptr == NULL) { PBL_LOG_CPY_RECEIVE_NULL_PTR }
+  return ret_ptr;
+}
+
 void *PblValPtr(void *ptr) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (ptr == NULL) { PBL_LOG_ACCESS_ERR_NULL_PTR }

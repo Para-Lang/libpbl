@@ -28,8 +28,8 @@ TEST(IOStreamTest, ConversionCheck) {
   EXPECT_EQ(stream->meta.defined, true);
   EXPECT_EQ(
     PblStream_T_Size,
-    PblString_T_Size + PblUInt_T_Size + PblFile_T_Size + PblBool_T_Size
-    );
+    sizeof(PblString_T *) + sizeof(PblUInt_T *) + sizeof(PblFile_T *) + sizeof(PblBool_T *)
+  );
 }
 
 TEST(IOPrintTest, SimplePrint) {
@@ -42,7 +42,7 @@ TEST(IOPrintTest, SimplePrint) {
   PblPrint(str);
 
   // deallocating the string
-  PblSafeDeallocateStringT(str);
+  PblDeallocateStringT(str);
 }
 
 TEST(IOPrintTest, SimplePrintWithSetStream) {
@@ -56,6 +56,6 @@ TEST(IOPrintTest, SimplePrintWithSetStream) {
   PblPrint(.out = str, .stream=stream);
 
   // deallocating the string
-  PblSafeDeallocateStringT(str);
+  PblDeallocateStringT(str);
 }
 

@@ -11,7 +11,7 @@ TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
 
   EXPECT_EQ(
     PblMetaFunctionCallCtx_T_Size,
-    sizeof(bool) + sizeof(unsigned int) + sizeof(bool) + 2 * sizeof(PblMetaFunctionCallCtx_T* ) + sizeof(NULL)
+    sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblMetaFunctionCallCtx_T* ) + sizeof(NULL)
     );
   EXPECT_EQ(v_1->meta.defined, false);
 
@@ -25,7 +25,7 @@ TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
   EXPECT_TRUE(v_2->actual.function_identifier == NULL);
   EXPECT_EQ(
     PblMetaFunctionCallCtx_T_Size,
-    sizeof(bool) + sizeof(unsigned int) + sizeof(bool) + 2 * sizeof(PblMetaFunctionCallCtx_T* ) + sizeof(NULL)
+    sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblMetaFunctionCallCtx_T* ) + sizeof(NULL)
     );
   EXPECT_TRUE(v_2->meta.defined);
 }
@@ -33,7 +33,7 @@ TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
 TEST(ExceptionTest, PblExceptionDefaults) {
   PBL_ALLOC_DECLARATION(v_1, PblException_T);
 
-  EXPECT_EQ(PblException_T_Size, 4 * PblString_T_Size + sizeof(unsigned int) + 2 * sizeof(void*));
+  EXPECT_EQ(PblException_T_Size, 4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void*));
   EXPECT_EQ(v_1->meta.defined, false);
 
   PBL_ALLOC_DEFINITION(v_2, PblException_T);
@@ -45,7 +45,7 @@ TEST(ExceptionTest, PblExceptionDefaults) {
   EXPECT_TRUE(v_2->actual.filename == NULL);
   EXPECT_TRUE(v_2->actual.line_content == NULL);
   EXPECT_TRUE(v_2->actual.line  == NULL);
-  EXPECT_EQ(PblException_T_Size, 4 * PblString_T_Size + PblUInt_T_Size + 2 * sizeof(void*));
+  EXPECT_EQ(PblException_T_Size, 4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void*));
   EXPECT_EQ(v_2->meta.defined, true);
 }
 

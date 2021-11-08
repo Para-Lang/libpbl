@@ -6,6 +6,7 @@
 
 #include "gc.h"
 #include "./pbl-main.h"
+#include "./string.h"
 
 #ifndef PARAC_MODULES_MEM_H
 #define PARAC_MODULES_MEM_H
@@ -18,6 +19,11 @@ extern "C" {
 
 // Log Mem error
 #define PBL_LOG_MEM_ERR(...) PblAbortWithCriticalError(1, __VA_ARGS__)
+
+// Mem-Cpy
+#define PBL_LOG_CPY_FROM_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to copy from an invalid memory address (NULL)");
+#define PBL_LOG_CPY_TO_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to copy to an invalid memory address (NULL)");
+#define PBL_LOG_CPY_RECEIVE_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Failed to cpy memory (Received NULL)");
 
 // Ptr-Access
 #define PBL_LOG_ACCESS_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to access invalid memory address (NULL)");
@@ -35,6 +41,15 @@ extern "C" {
 #define PBL_LOG_REALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("PARA-C: Failed to re-allocate memory (Received NULL)");
 
 // ---- Helper functions ----------------------------------------------------------------------------------------------
+
+/**
+ * @brief This is the Pbl equivalent of memcpy(), but in this case additional checking is applied for safety measures
+ * @param dest The destination where the memory should be copied to
+ * @param src The source/origin that should be copied
+ * @param bytes The amount of bytes to be copied
+ * @return The pointer of the passed dest variable
+ */
+void* PblMemCpy(void* dest, const void * src, size_t bytes);
 
 /**
  * @brief Validates the pointer given as parameter and checks whether it's save to access, if it's not safe it will
@@ -58,6 +73,9 @@ void PblFree(void *ptr);
  * @param size The size of the memory to allocate
  * @return The pointer returned by the GC malloc call
  * @note This will crash the program if the size of the value is invalid!
+ * @warning It is discouraged to directly use this function to allocate memory, unless for explicit cases. For general
+ * usage of allocating a type please use 'PBL_ALLOC_DEFINITION(to_write, type)', which will safely allocate and
+ * initialise the value!
  */
 void* PblMalloc(size_t size);
 
@@ -67,6 +85,9 @@ void* PblMalloc(size_t size);
  * @param size The size of the memory to allocate
  * @return The pointer returned by the GC atomic malloc call
  * @note This will crash the program if the size of the value is invalid!
+ * @warning It is discouraged to directly use this function to allocate memory, unless for explicit cases. For general
+ * usage of allocating a type please use 'PBL_ALLOC_DEFINITION(to_write, type)', which will safely allocate and
+ * initialise the value!
  */
 void* PblMallocAtomic(size_t size);
 

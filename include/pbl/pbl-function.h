@@ -131,10 +131,10 @@ extern "C" {
 
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Long Double type
-#define PblException_T_Size (4 * PblString_T_Size + PblUInt_T_Size + 2 * sizeof(void *))
+#define PblException_T_Size (4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *))
 /// Returns the declaration default for the type 'PblException_T'
 #define PblException_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblException_T)
-/// Returns the definition default, for the type 'PblREPLACE_T', where the children have not been set yet and only the
+/// Returns the definition default, for the type 'PblException_T', where the children have not been set yet and only the
 /// value itself 'exists' already.
 #define PblException_T_DefDefault                                                                                      \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblException_T, .msg = NULL, .name = NULL, .filename = NULL, .line = NULL,         \
@@ -161,8 +161,8 @@ struct PblException_Base {
 
 /// Exception implementation
 struct PblException PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_Base)
-  /// Exception implementation
-  typedef struct PblException PblException_T;
+/// Exception implementation
+typedef struct PblException PblException_T;
 
 
 // ---- Function Meta Type --------------------------------------------------------------------------------------------
@@ -170,10 +170,10 @@ struct PblException PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_
 /// (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL MetaFunctionCallCtx type
 #define PblMetaFunctionCallCtx_T_Size                                                                                  \
-  (PblBool_T_Size + PblUInt_T_Size + PblBool_T_Size + 2 * sizeof(PblMetaFunctionCallCtx_T *) + sizeof(NULL))
+  (sizeof(PblBool*) + sizeof(PblUInt_T*) + sizeof(PblBool_T*) + 2 * sizeof(PblMetaFunctionCallCtx_T *) + sizeof(NULL))
 /// Returns the declaration default for the type 'PblMetaFunctionCallCtx_T'
 #define PblMetaFunctionCallCtx_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblMetaFunctionCallCtx_T)
-/// Returns the definition default, for the type 'PblREPLACE_T', where the children have not been set yet and only the
+/// Returns the definition default, for the type 'PblMetaFunctionCallCtx_T', where the children have not been set yet and only the
 /// value itself 'exists' already.
 #define PblMetaFunctionCallCtx_T_DefDefault                                                                            \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblMetaFunctionCallCtx_T, .function_identifier = NULL, .is_failure = NULL,         \
@@ -211,13 +211,6 @@ struct PblMetaFunctionCallCtx PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct Pbl
 // ---- Helper Functions ----------------------------------------------------------------------------------------------
 
 /**
- * @brief Allocates a new function call ctx, which will be located in the heap to store the function info publicly
- * as long as necessary, and avoid the destruction after leaving the function stack
- * @return The new allocated ctx (pointer)
- */
-PblMetaFunctionCallCtx_T *PblAllocateMetaFunctionCallCtxT();
-
-/**
  * @brief Gets a new function call ctx, which will be located in the heap
  * @return The newly created function call ctx (pointer)
  */
@@ -231,13 +224,7 @@ PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_ident
  * @brief Deallocates the passed function call ctx and safely resets all values
  * @param ctx The function call ctx to deallocate
  */
-PblVoid_T PblSafeDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx);
-
-/**
- * @brief Allocates a new Exception type ctx, which is located in the heap
- * @return The new allocated exception (pointer)
- */
-PblException_T *PblAllocateExceptionType();
+PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx);
 
 /**
  * @brief Gets a new Exception Type, which is located in the heap
@@ -258,7 +245,7 @@ PblVoid_T PblRaiseNewException(PblMetaFunctionCallCtx_T *this_call_meta, PblExce
  * @param exc The exception to deallocate
  * @notes This function will de-allocate the children and parents exceptions as well
  */
-PblVoid_T PblSafeDeallocateExceptionT(PblException_T *exc);
+PblVoid_T PblDeallocateExceptionT(PblException_T *exc);
 
 /**
  * @brief Cleanups the current exception Context and deallocates the memory that isn't used anymore
