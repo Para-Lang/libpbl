@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 
 TEST(IOFileTest, ConversionCheck) {
-  FILE* val = fdopen(2, "w+");
+  FILE* val = fdopen(1, "a");
   PblFile_T* stream = PblGetFileT(val);
 
   EXPECT_EQ(stream->actual, val);
@@ -19,10 +19,10 @@ TEST(IOFileTest, ConversionCheck) {
 }
 
 TEST(IOStreamTest, ConversionCheck) {
-  PblStream_T* stream = PblGetStreamT(1, "w+");
+  PblStream_T* stream = PblGetStreamT(1, "a");
 
   EXPECT_EQ(stream->actual.fd->actual, 1);
-  PblString_T* mode = PblGetStringT("w+");
+  PblString_T* mode = PblGetStringT("a");
   EXPECT_TRUE(PblCompareStringT(stream->actual.mode, mode)->actual);
   EXPECT_EQ(stream->actual.open->actual, true);
   EXPECT_EQ(stream->meta.defined, true);
