@@ -7,8 +7,6 @@
 This is the repository containing the c-implementation library (Para-C Core Library, and partly Para-C Built-In Library),
 which is used for the built-in functions, keywords and items, which are required for the base language.
 
-For the Para-C Extension Library, go [to the lib folder](https://github.com/Para-C/Para-C/tree/dev/lib)
-
 *For proper documentation and info on Para-C visit the main repo [here](https://github.com/Para-C/Para-C).
 This also includes issues or requesting changes. These should be done on the main branch, while the issues
 here will be maintainers-only*
