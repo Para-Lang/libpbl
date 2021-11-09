@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Removed
+
+## [v0.1.dev5] - 2021-11-09
+
+### Added
 - Base types in `pbl-types.h` that wrap the low-level C types, including conversion functions which allow simply one-line
   conversion
 - Proper meta-tracking for all Para-C types using `PblVarMeta_T`
@@ -25,8 +33,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Handler macros `PBL_GET_ACTUAL_TYPE_INSTANCE` (getting type instance), `PBL_ALLOC_DECLARATION` (Para-C Declarations)
   and `PBL_ALLOC_DEFINITION` (Para-C Definitions) which standardise the initialisation of Para-C values
 
-### Changed
-
-### Removed
-
-[unreleased]: https://github.com/Para-C/Para-C-Base-Library
+[unreleased]: https://github.com/Para-C/Para-C-Base-Library/tree/dev
+[v0.1.dev5]: https://github.com/Para-C/Para-C-Base-Library/tag/v0.1.dev5
