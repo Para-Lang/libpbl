@@ -14,8 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Disabled `pthreads.h` usage on Windows for gtest and enabled usage of WIN32 threads
 
 ### Removed
+
+## [v0.1.dev6] - 2021-11-10
+
+### Changed
+- Made the PBL properly fetchable for the build script `build.py` in [Para-C](https://github.com/Para-C/Para-C)
+
 
 ## [v0.1.dev5] - 2021-11-09
 
@@ -34,4 +41,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `PBL_ALLOC_DEFINITION` (Para-C Definitions) which standardise the initialisation of Para-C values
 
 [unreleased]: https://github.com/Para-C/Para-C-Base-Library/tree/dev
+[v0.1.dev6]: https://github.com/Para-C/Para-C-Base-Library/compare/v0.1.dev5...v0.1.dev6
 [v0.1.dev5]: https://github.com/Para-C/Para-C-Base-Library/tag/v0.1.dev5

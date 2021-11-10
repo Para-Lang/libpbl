@@ -50,7 +50,7 @@ extern "C" {
 // ---- Macros --------------------------------------------------------------------------------------------------------
 
 /// The current release identifier
-#define __parac "0.1.dev5"
+#define __parac "0.1.dev6"
 /// Indicates the current library version being a development version
 #define __parac_dev true
 /// Indicates the current library version being a stable version
