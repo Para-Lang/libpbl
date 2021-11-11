@@ -15,6 +15,85 @@
 extern "C" {
 #endif
 
+// ---- Basic Function Macros -----------------------------------------------------------------------------------------
+
+/// As reference, this implementation of counting arguments is inspired by https://stackoverflow.com/a/35693080/13076191
+
+/// @brief This macro function get fed 128 named parameters, which are eaten and used to get the off-set aka. N as the
+/// true number of args passed.
+/// @note This function also officially restricts the usage of functions with more than 127 parameters
+#define PBL_COUNT_VA_ARGS_128TH_ARG(                                                                                   \
+  _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25,  \
+  _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42, _43, _44, _45, _46, _47, _48,   \
+  _49, _50, _51, _52, _53, _54, _55, _56, _57, _58, _59, _60, _61, _62, _63, _64, _65, _66, _67, _68, _69, _70, _71,   \
+  _72, _73, _74, _75, _76, _77, _78, _79, _80, _81, _82, _83, _84, _85, _86, _87, _88, _89, _90, _91, _92, _93, _94,   \
+  _95, _96, _97, _98, _99, _100, _101, _102, _103, _104, _105, _106, _107, _108, _109, _110, _111, _112, _113, _114,   \
+  _115, _116, _117, _118, _119, _120, _121, _122, _123, _124, _125, _126, _127, N, ...)                                \
+  N
+
+/// @brief This macro returns the sequence used in 'PBL_COUNT_VA_ARGS_128TH_ARG' for greeting the offset
+/// @note This function also officially restricts the usage of functions with more than 127 parameters
+#define PBL_COUNT_VA_ARGS_128_ARG_SEQ()                                                                                \
+  127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105,   \
+    104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78,   \
+    77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50,    \
+    49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22,    \
+    21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+/// @brief This function returns as integer value the number of arguments that were passed to this macro
+/// @note This function also officially restricts the usage of functions with more than 127 parameters
+#define PBL_COUNT_VA_ARGS(...) PBL_COUNT_VA_ARGS_GET_ARG_COUNT(__VA_ARGS__, PBL_COUNT_VA_ARGS_128_ARG_SEQ())
+/// @brief This macro function is fed both the actual '__VA_ARGS__' and the 128 long sequence, which is then used to
+/// properly calculate the offset to 128, aka. N - 128 = offset / true amount of args
+#define PBL_COUNT_VA_ARGS_WRAP_GET_128TH_LOCATION(...) PBL_COUNT_VA_ARGS_128TH_ARG(__VA_ARGS__)
+
+/// @brief Specifier for a Para-C function, which is then formatted aka. to per default set the value passed to NULL, as
+/// in Para-C all values are pointers inherently and only declarations are not valid.
+#define PBL_FUNC_ARG(arg, val) IFNE(val)(arg=val, .arg=NULL)
+
+/// @brief This creates the overhead function for the passed new function, by declaring it and generating a struct type,
+/// which defines the arguments that may be passed
+#define PBL_CREATE_FUNC_OVERHEAD(signature, identifier, args...)
+
+// TODO! Implement the above or entirely remove it/implement better solution to streamline the Para-C function creation
+//  process
+
+// ---- Exception Implementation --------------------------------------------------------------------------------------
+
+/// (Never use this for malloc - this only indicates the usable memory space)
+/// Returns the size in bytes of the PBL Long Double type
+#define PblException_T_Size (4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *))
+/// Returns the declaration default for the type 'PblException_T'
+#define PblException_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblException_T)
+/// Returns the definition default, for the type 'PblException_T', where the children have not been set yet and only the
+/// value itself 'exists' already.
+#define PblException_T_DefDefault                                                                                      \
+  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblException_T, .msg = NULL, .name = NULL, .filename = NULL, .line = NULL,         \
+                                    .line_content = NULL, .parent_exc = NULL, .child_exc = NULL)
+
+struct PblException_Base {
+  /// Returns the message of the exception
+  PblString_T *msg;
+  /// Returns the name of the exception
+  PblString_T *name;
+  /// Returns the filename where the exception occurred
+  PblString_T *filename;
+  /// Returns the line where the exception occurred
+  PblUInt_T *line;
+  /// Returns the content of the line - macro inserted
+  PblString_T *line_content;
+  /// Returns the parent exception if it exists
+  /// (Reserved for PblException_T)
+  void *parent_exc;
+  /// Returns the child exception if it exists
+  /// (Reserved for PblException_T)
+  void *child_exc;
+};
+
+/// Exception implementation
+struct PblException PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_Base)
+/// Exception implementation
+typedef struct PblException PblException_T;
+
 // ---- Raise Exception Macros ----------------------------------------------------------------------------------------
 
 /// @brief This a "one-liner" constructor, which will allocate a new exception and raise it (return to the caller of the
@@ -126,44 +205,6 @@ extern "C" {
     block_identifier##_except_handled = PblGetBoolT(true);                                                             \
     goto block_identifier##_finish_up;                                                                                 \
   }
-
-// ---- Exception Implementation --------------------------------------------------------------------------------------
-
-/// (Never use this for malloc - this only indicates the usable memory space)
-/// Returns the size in bytes of the PBL Long Double type
-#define PblException_T_Size (4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *))
-/// Returns the declaration default for the type 'PblException_T'
-#define PblException_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblException_T)
-/// Returns the definition default, for the type 'PblException_T', where the children have not been set yet and only the
-/// value itself 'exists' already.
-#define PblException_T_DefDefault                                                                                      \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblException_T, .msg = NULL, .name = NULL, .filename = NULL, .line = NULL,         \
-                                    .line_content = NULL, .parent_exc = NULL, .child_exc = NULL)
-
-struct PblException_Base {
-  /// Returns the message of the exception
-  PblString_T *msg;
-  /// Returns the name of the exception
-  PblString_T *name;
-  /// Returns the filename where the exception occurred
-  PblString_T *filename;
-  /// Returns the line where the exception occurred
-  PblUInt_T *line;
-  /// Returns the content of the line - macro inserted
-  PblString_T *line_content;
-  /// Returns the parent exception if it exists
-  /// (Reserved for PblException_T)
-  void *parent_exc;
-  /// Returns the child exception if it exists
-  /// (Reserved for PblException_T)
-  void *child_exc;
-};
-
-/// Exception implementation
-struct PblException PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_Base)
-/// Exception implementation
-typedef struct PblException PblException_T;
-
 
 // ---- Function Meta Type --------------------------------------------------------------------------------------------
 
