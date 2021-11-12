@@ -1,5 +1,5 @@
 ///
-/// Function-related types
+/// Function-related types, macros, implementaion and handling
 ///
 /// @author Luna-Klatzer
 
@@ -7,6 +7,7 @@
 #include "./pbl-mem.h"
 #include "./pbl-string.h"
 #include "./pbl-types.h"
+#include "./pbl-apply-macro.h"
 
 #ifndef PARAC_MODULES_FUNCTION_H
 #define PARAC_MODULES_FUNCTION_H
@@ -15,7 +16,7 @@
 extern "C" {
 #endif
 
-// ---- Basic Function Macros -----------------------------------------------------------------------------------------
+// ---- Helper Macros -------------------------------------------------------------------------------------------------
 
 /// As reference, this implementation of counting arguments is inspired by https://stackoverflow.com/a/35693080/13076191
 
@@ -39,23 +40,33 @@ extern "C" {
     77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50,    \
     49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22,    \
     21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+
 /// @brief This function returns as integer value the number of arguments that were passed to this macro
 /// @note This function also officially restricts the usage of functions with more than 127 parameters
 #define PBL_COUNT_VA_ARGS(...) PBL_COUNT_VA_ARGS_GET_ARG_COUNT(__VA_ARGS__, PBL_COUNT_VA_ARGS_128_ARG_SEQ())
+
 /// @brief This macro function is fed both the actual '__VA_ARGS__' and the 128 long sequence, which is then used to
 /// properly calculate the offset to 128, aka. N - 128 = offset / true amount of args
 #define PBL_COUNT_VA_ARGS_WRAP_GET_128TH_LOCATION(...) PBL_COUNT_VA_ARGS_128TH_ARG(__VA_ARGS__)
+
+// ---- Basic Function Macros -----------------------------------------------------------------------------------------
 
 /// @brief Specifier for a Para-C function, which is then formatted aka. to per default set the value passed to NULL, as
 /// in Para-C all values are pointers inherently and only declarations are not valid.
 #define PBL_FUNC_ARG(arg, val) IFNE(val)(arg=val, .arg=NULL)
 
+#define PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD(arg) arg;
+
 /// @brief This creates the overhead function for the passed new function, by declaring it and generating a struct type,
 /// which defines the arguments that may be passed
-#define PBL_CREATE_FUNC_OVERHEAD(signature, identifier, args...)
+/// @note At max. 127 args are allowed
+#define PBL_CREATE_FUNC_OVERHEAD(signature, identifier, _attribute_, args...)                                          \
+  struct identifier##_Args {                                                                                           \
+    PBL_APPLY_MACRO(PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD, args)                                                \
+  };                                                                                                                   \
+  signature identifier##_Base(args) _attribute_;                                                                       \
+  signature identifier##_Overhead(struct identifier##_Args in) _attribute_;
 
-// TODO! Implement the above or entirely remove it/implement better solution to streamline the Para-C function creation
-//  process
 
 // ---- Exception Implementation --------------------------------------------------------------------------------------
 
