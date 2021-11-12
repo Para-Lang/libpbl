@@ -93,7 +93,7 @@ extern "C" {
   PblMetaFunctionCallCtx_T *unique_id_##func##_CALLCTX = PblGetMetaFunctionCallCtxT(                                   \
     PblGetStringT(#func),                                                                                              \
     PblGetBoolT(false),                                                                                                \
-    IFNE(args)(PBL_COUNT_VA_ARGS(args), PblGetUIntT(0)),                                                               \
+    PblGetUIntT(IFNE(args)(PBL_COUNT_VA_ARGS(args), 0)),                                                               \
     is_threaded,                                                                                                       \
     NULL,                                                                                                              \
     meta_ctx,                                                                                                          \
