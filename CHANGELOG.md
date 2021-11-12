@@ -12,16 +12,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `pbl-apply-macro.h` for defining a macro function, which allows for iterating through macro args and apply
+  another macro to them
+- Macros `PBL_GET_FUNC_ARGS_IDENTIFIER`, `PBL_GET_FUNC_BASE_IDENTIFIER` and `PBL_GET_FUNC_OVERHEAD_IDENTIFIER` for
+  getting standardised macros 
+- `PBL_COUNT_VA_ARGS` for counting the amount of arguments passed to this specific macro
+- `PBL_FUNC_ARG` for creating the effect of arguments being `NULL` per default
+- `PBL_CREATE_FUNC_OVERHEAD` for creating overhead of a Para-C function, which can support default arguments and 
+  struct-like initialisation
+- `PBL_CALL_FUNC` for calling a Para-C function and properly handling it
 
 ### Changed
 - Disabled `pthreads.h` usage on Windows for gtest and enabled usage of WIN32 threads
+- Updated macro `PBL_CALL_FUNC`, which handles now also the amount of args properly
 
 ### Removed
+- Outdated macro `PBL_CALL_FUNC_WITH_META_CTX`, which is now replaced by `PBL_CALL_FUNC` as the general method to
+  call Para-C functions
 
 ## [v0.1.dev6] - 2021-11-10
 
 ### Changed
-- Made the PBL properly fetchable for the build script `build.py` in [Para-C](https://github.com/Para-C/Para-C)
+- Made the PBL properly fetch-able for the build script `build.py` in [Para-C](https://github.com/Para-C/Para-C)
 
 
 ## [v0.1.dev5] - 2021-11-09

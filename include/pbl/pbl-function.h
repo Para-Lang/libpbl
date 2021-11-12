@@ -41,13 +41,13 @@ extern "C" {
     49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22,    \
     21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
 
-/// @brief This function returns as integer value the number of arguments that were passed to this macro
-/// @note This function also officially restricts the usage of functions with more than 127 parameters
-#define PBL_COUNT_VA_ARGS(...) PBL_COUNT_VA_ARGS_GET_ARG_COUNT(__VA_ARGS__, PBL_COUNT_VA_ARGS_128_ARG_SEQ())
-
 /// @brief This macro function is fed both the actual '__VA_ARGS__' and the 128 long sequence, which is then used to
 /// properly calculate the offset to 128, aka. N - 128 = offset / true amount of args
 #define PBL_COUNT_VA_ARGS_WRAP_GET_128TH_LOCATION(...) PBL_COUNT_VA_ARGS_128TH_ARG(__VA_ARGS__)
+
+/// @brief This function returns as integer value the number of arguments that were passed to this macro
+/// @note This function also officially restricts the usage of functions with more than 127 parameters
+#define PBL_COUNT_VA_ARGS(...) PBL_COUNT_VA_ARGS_WRAP_GET_128TH_LOCATION(__VA_ARGS__, PBL_COUNT_VA_ARGS_128_ARG_SEQ())
 
 // ---- Basic Function Macros -----------------------------------------------------------------------------------------
 
@@ -55,18 +55,50 @@ extern "C" {
 /// in Para-C all values are pointers inherently and only declarations are not valid.
 #define PBL_FUNC_ARG(arg, val) IFNE(val)(arg=val, .arg=NULL)
 
+/// @brief Creates based on the passed declaration signature a viable struct child aka. add ';'
 #define PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD(arg) arg;
+
+/// @brief Macro Function to get the standardised identifier for the 'Args' struct of a PBL function
+/// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
+#define PBL_GET_FUNC_ARGS_IDENTIFIER(func_identifier) func_identifier##_Args
+
+/// @brief Macro Function to get the standardised identifier for the 'Base' of a PBL function
+/// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
+#define PBL_GET_FUNC_BASE_IDENTIFIER(func_identifier) func_identifier##_Base
+
+/// @brief Macro Function to get the standardised identifier for the 'Overhead' of a PBL function
+/// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
+#define PBL_GET_FUNC_OVERHEAD_IDENTIFIER(func_identifier) func_identifier##_Overhead
 
 /// @brief This creates the overhead function for the passed new function, by declaring it and generating a struct type,
 /// which defines the arguments that may be passed
 /// @note At max. 127 args are allowed
+/// @note Both the macro for accessing the base and overhead have to be defined yourself!
 #define PBL_CREATE_FUNC_OVERHEAD(signature, identifier, _attribute_, args...)                                          \
-  struct identifier##_Args {                                                                                           \
+  struct PBL_GET_FUNC_ARGS_IDENTIFIER(identifier) {                                                                    \
     PBL_APPLY_MACRO(PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD, args)                                                \
   };                                                                                                                   \
-  signature identifier##_Base(args) _attribute_;                                                                       \
-  signature identifier##_Overhead(struct identifier##_Args in) _attribute_;
+  signature PBL_GET_FUNC_BASE_IDENTIFIER(identifier)(args) _attribute_;                                                \
+  signature PBL_GET_FUNC_OVERHEAD_IDENTIFIER(identifier)(struct identifier##_Args in) _attribute_;
 
+/// @brief Calls a function, passes the args and creates the appropriate unique identifier for the function call.
+/// @param func The function that should be called with the passed variadic arguments.
+/// @param var_to_pass The variable the return of the function should be passed to.
+/// @param unique_id The unique id the call ctx should be declared as. It follows the following scheme: unique##_##func.
+/// @param is_threaded Whether this macro is invoked in a threaded context. This variable is directly passed to the
+/// created context.
+/// @param meta_ctx The meta_ctx that should be used as a parent ctx (invocation context) of the child function
+/// @param args The arguments to pass to the local function
+#define PBL_CALL_FUNC(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)                                       \
+  PblMetaFunctionCallCtx_T *unique_id_##func##_CALLCTX = PblGetMetaFunctionCallCtxT(                                   \
+    PblGetStringT(#func),                                                                                              \
+    PblGetBoolT(false),                                                                                                \
+    IFNE(args)(PBL_COUNT_VA_ARGS(args), PblGetUIntT(0)),                                                               \
+    is_threaded,                                                                                                       \
+    NULL,                                                                                                              \
+    meta_ctx,                                                                                                          \
+    NULL);                                                                                                             \
+  (var_to_pass) = func(unique_id_##func##_CALLCTX IFN(args)(, args));
 
 // ---- Exception Implementation --------------------------------------------------------------------------------------
 
@@ -117,21 +149,6 @@ typedef struct PblException PblException_T;
   PBL_ALLOC_DECLARATION(raise_exc_ret, call_return_type)                                                               \
   return raise_exc_ret;
 
-// ---- Invoke with Exception handling (in C or Para-C context) -------------------------------------------------------
-
-/// @brief Calls a function, passes the args and creates the appropriate unique identifier for the function call.
-/// @param func The function that should be called with the passed variadic arguments.
-/// @param var_to_pass The variable the return of the function should be passed to.
-/// @param unique_id The unique id the call ctx should be declared as. It follows the following scheme: unique##_##func.
-/// @param is_threaded Whether this macro is invoked in a threaded context. This variable is directly passed to the
-/// created context.
-/// @param meta_ctx The meta_ctx that should be used as a parent ctx (invocation context) of the child function
-/// @param args The arguments to pass to the local function
-#define PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)                         \
-  PblMetaFunctionCallCtx_T *unique_id_##func##_CALLCTX = PblGetMetaFunctionCallCtxT(                                   \
-    PblGetStringT(#func), PblGetBoolT(false), PblGetUIntT(0), is_threaded, NULL, meta_ctx, NULL);                      \
-  (var_to_pass) = func(unique_id_##func##_CALLCTX IFN(args)(, args));
-
 // ---- Invoke and Catch Exception handling ---------------------------------------------------------------------------
 
 /// @brief This is a "one-liner" constructor for Para-C functions, which will call the passed function with the args
@@ -143,7 +160,7 @@ typedef struct PblException PblException_T;
 /// created context.
 /// @param args the arguments to pass to the function, leave empty if none shall be passed.
 #define PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)              \
-  PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, is_threaded, meta_ctx, IFN(args)(args))                    \
+  PBL_CALL_FUNC(func, var_to_pass, unique_id, is_threaded, meta_ctx, IFN(args)(args))                                  \
   if (unique_id_##func##_CALLCTX->actual.is_failure->actual) {                                                         \
     (meta_ctx)->actual.is_failure = PblGetBoolT(true);                                                                 \
     (meta_ctx)->actual.exception = unique_id_##func##_CALLCTX->actual.exception;                                       \
@@ -161,8 +178,7 @@ typedef struct PblException PblException_T;
 /// @param unique_id The unique id the call ctx should be declared as. It follows the following scheme: unique##_##func.
 /// @note This requires the existence of 'this_call_meta' of type 'PblMetaFunctionCallCtx_T'
 #define PBL_EXCEPTION_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, args...)                         \
-  PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta,        \
-                              IFN(args)(args))                                                                         \
+  PBL_CALL_FUNC(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta, IFN(args)(args))                                                                         \
   if (unique_id_##func##_CALLCTX->actual.is_failure->actual) {                                                         \
     this_call_meta->actual.is_failure = PblGetBoolT(true);                                                             \
     this_call_meta->actual.exception = unique_id_##func##_CALLCTX->actual.exception;                                   \
@@ -200,8 +216,7 @@ typedef struct PblException PblException_T;
 /// @note This requires the existence of 'this_call_meta' of type 'PblMetaFunctionCallCtx_T'
 #define PBL_EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, block_identifier,      \
                                                        args...)                                                        \
-  PBL_CALL_FUNC_WITH_META_CTX(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta,        \
-                              IFN(args)(args))                                                                         \
+  PBL_CALL_FUNC(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta, IFN(args)(args))     \
   if (unique_id_##func##_CALLCTX->actual.is_failure->actual) {                                                         \
     block_identifier##_local_catched_exc = *((PblException_T *) unique_id_##func##_CALLCTX->actual.exception);         \
     block_identifier##_invoke_except = PblGetBoolT(true);                                                              \
