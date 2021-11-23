@@ -1,7 +1,8 @@
-///
-/// Int Implementation based on stdint.h
-///
+/// @file pbl-int.c
+/// @brief Int Type Implementation based on stdint.h
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "./pbl-int.h"
 

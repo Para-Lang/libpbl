@@ -1,7 +1,10 @@
-///
-/// String Implementation based on dynamic memory allocation
-///
+/// @file pbl-string.c
+/// @brief String Implementation based on dynamic memory allocation - This is an optimised form of char[], which is
+/// though not equal to PblChar_T[], as it does not contain meta-data tracking for each char, but altogether as an
+/// entire type to save memory.
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include <stdbool.h>
 #include <string.h>

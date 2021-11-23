@@ -1,12 +1,15 @@
-///
-/// String Implementation based on dynamic memory allocation
-///
+/// @file pbl-string.h
+/// @brief String Implementation based on dynamic memory allocation - This is an optimised form of char[], which is
+/// though not equal to PblChar_T[], as it does not contain meta-data tracking for each char, but altogether as an
+/// entire type to save memory.
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "./pbl-types.h"
 
-#ifndef PARAC_MODULES_STRING_H
-#define PARAC_MODULES_STRING_H
+#ifndef PBL_MODULES_STRING_H
+#define PBL_MODULES_STRING_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,28 +17,28 @@ extern "C" {
 
 // ---- Declaration ---------------------------------------------------------------------------------------------------
 
-/// Size of the type 'PblString_T' in bytes
+/// @brief Size of the type 'PblString_T' in bytes
 #define PblString_T_Size (sizeof(PblSize_T*) + sizeof(PblUInt_T*) + sizeof(PblUInt_T*) + sizeof(char *))
-/// Returns the declaration default for the type 'PblString_T'
+/// @brief Returns the declaration default for the type 'PblString_T'
 #define PblString_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblString_T)
-/// Returns the definition default, for the type 'PblString_T', where the children have not been set yet and only the
-/// value itself 'exists' already.
+/// @brief Returns the definition default, for the type 'PblString_T', where the children have not been set yet and
+/// only the value itself 'exists' already.
 #define PblString_T_DefDefault                                                                                         \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblString_T, .allocated_len = NULL, .len = NULL, .str = NULL)
 
-/// Base Struct of PblString - avoid using this type
+/// @brief Base Struct of PblString - avoid using this type
 struct PblString_Base {
-  /// Amount of the chars that can be written to - includes null char (\0). This does not include the meta info
+  /// @brief Amount of the chars that can be written to - includes null char (\0). This does not include the meta info
   PblUInt_T *allocated_len;
-  /// The length of the string - this is the length that it will take to reach the null character '\0'
+  /// @brief The length of the string - this is the length that it will take to reach the null character '\0'
   PblUInt_T *len;
-  /// The char* pointer to the allocated memory - the entire memory represents the array, meaning it's not an array
-  /// of PblChar_T pointers, but an actual block of PblChar_T types being stuck together in memory, meaning array
+  /// @brief The char* pointer to the allocated memory - the entire memory represents the array, meaning it's not an
+  /// array of PblChar_T pointers, but an actual block of PblChar_T types being stuck together in memory, meaning array
   /// arithmetics are valid!
   PblChar_T *str;
 };
 
-/// PBL String implementation - uses dynamic memory allocation -> located in heap
+/// @brief PBL String implementation - uses dynamic memory allocation -> located in heap
 struct PblString PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblString_Base)
 typedef struct PblString PblString_T;
 
@@ -156,4 +159,4 @@ PblVoid_T PblDeallocateStringT(PblString_T *lvalue);
 }
 #endif
 
-#endif//PARAC_MODULES_STRING_H
+#endif //PBL_MODULES_STRING_H

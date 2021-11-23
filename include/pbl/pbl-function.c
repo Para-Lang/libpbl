@@ -1,7 +1,9 @@
-///
-/// Function-related types and exception implementation
-///
+/// @file pbl-function.c
+/// @brief Function-related types and exception implementation. This includes meta data tracking for functions calls,
+/// function states, exceptions and tracebacks.
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "./pbl-function.h"
 

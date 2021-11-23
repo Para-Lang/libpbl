@@ -1,8 +1,9 @@
-///
-/// The any type, which allows values to be dynamically allocated and converted with ease.
-/// The any type, will track it's type, so that direct conversion is easier.
-///
+/// @file pbl-any.c
+/// @brief Implementation for the any type, which allows values to be dynamically allocated and converted using
+/// pre-defined conversion functions.
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "pbl-any.h"
 

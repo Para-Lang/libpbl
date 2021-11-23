@@ -1,10 +1,10 @@
-///
-/// Base Para-C Types Implementation, which implement default declaration and default definition types. This also
-/// includes meta-data tracking based on the 'PblMetaVarCtx_T' type.
-///
+/// @file pbl-types.c
+/// @brief Para-C Base Types Implementation, which contains handler macros, conversion functions, default declaration,
+/// default definition types and default size macros. This also includes meta-data tracking based on the
+/// 'PblMetaVarCtx_T' type.
 /// @author Luna-Klatzer
-/// @note The TYPE_T_Size macros define the actual size of the C-elements, without the meta struct - This is only used
-/// to know the actual size that can be used from the user.
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "./pbl-types.h"
 

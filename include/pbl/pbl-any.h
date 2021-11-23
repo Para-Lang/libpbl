@@ -1,8 +1,9 @@
-///
-/// The any type, which allows values to be dynamically allocated and converted with ease.
-/// The any type, will track it's type, so that direct conversion is easier.
-///
+/// @file pbl-any.h
+/// @brief Implementation header for the any type, which allows values to be dynamically allocated and converted using
+/// pre-defined conversion functions.
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "./pbl-types.h"
 #include "pbl-string.h"
@@ -16,13 +17,13 @@ extern "C" {
 
 // ---- Exception Implementation --------------------------------------------------------------------------------------
 
-/// (Never use this for malloc - this only indicates the usable memory space)
+/// @brief (Never use this for malloc - this only indicates the usable memory space)
 /// Returns the size in bytes of the PBL Long Double type
 #define PblAny_T_Size (sizeof(void *) + sizeof(PblString_T *) + sizeof(PblSize_T *))
-/// Returns the declaration default for the type 'PblAny_T'
+/// @brief Returns the declaration default for the type 'PblAny_T'
 #define PblAny_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblAny_T)
-/// Returns the definition default, for the type 'PblAny_T', where the children have not been set yet and only the
-/// value itself 'exists' already.
+/// @brief Returns the definition default, for the type 'PblAny_T', where the children have not been set yet and only
+/// the value itself 'exists' already.
 #define PblAny_T_DefDefault                                                                                            \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblAny_T, .val = NULL, .type_name = NULL, .byte_size = NULL)
 
@@ -32,9 +33,10 @@ struct PblAny_Base {
   PblSize_T* byte_size;
 };
 
-/// Any implementation
+/// @brief Any implementation
 struct PblAny PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblAny_Base);
-/// Any implementation - This type allows for a dynamic allocation and every type to be passed onto the allocated memory
+/// @brief Any implementation - This type allows for a dynamic allocation and every type to be passed onto the allocated
+/// memory
 typedef struct PblAny PblAny_T;
 
 // ---- Helper Functions ----------------------------------------------------------------------------------------------

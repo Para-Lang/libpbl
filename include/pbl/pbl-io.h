@@ -1,7 +1,8 @@
-///
-/// IO Implementation based on stdio.h
-///
+/// @file pbl-io.h
+/// @brief IO Implementation based on stdio.h
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,8 +10,8 @@
 #include "./pbl-string.h"
 #include "./pbl-types.h"
 
-#ifndef PARAC_MODULES_IO_H
-#define PARAC_MODULES_IO_H
+#ifndef PBL_MODULES_IO_H
+#define PBL_MODULES_IO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,59 +21,61 @@ extern "C" {
 
 // ---- File ----------------------------------------------------------------------------------------------------------
 
-/// Size of the type 'PblFile_T' in bytes
+/// @brief (Never use this for malloc - this only indicates the usable memory space)
+/// @returns The size of the type 'PblFile_T' in bytes
 #define PblFile_T_Size sizeof(FILE *)
-/// Returns the declaration default for the type 'PblFile_T'
+/// @brief Returns the declaration default for the type 'PblFile_T'
 #define PblFile_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFile_T)
-/// Returns the definition default, for the type 'PblFile_T', where only value itself has been created
+/// @brief Returns the definition default for the type 'PblFile_T', where only value itself has been created
 #define PblFile_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFile_T, NULL)
 
-/// File Descriptor used to perform I/O actions on a file
+/// @brief File Descriptor used to perform I/O actions on a file
 struct PblFile PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(FILE*)
-/// Stream type, which is a unique alias for PBLFileDescriptor_T
+/// @brief File Descriptor used to perform I/O actions on a file
 typedef struct PblFile PblFile_T;
 
 // ---- Stream --------------------------------------------------------------------------------------------------------
 
-/// Size of the type 'PblStream_T' in bytes
+/// @brief (Never use this for malloc - this only indicates the usable memory space)
+/// @returns The size of the type 'PblStream_T' in bytes
 #define PblStream_T_Size (sizeof(PblUInt_T*) + sizeof(PblFile_T*) + sizeof(PblBool_T*) + sizeof(PblString_T*))
-/// Returns the declaration default for the type 'PblStream_T'
+/// @brief Returns the declaration default for the type 'PblStream_T'
 #define PblStream_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblStream_T)
-/// Returns the definition default, for the type 'PblStream_T', where the children have not been set yet and only the
+/// @brief Returns the definition default for the type 'PblStream_T', where the children have not been set yet and only the
 /// value itself 'exists' already.
 #define PblStream_T_DefDefault                                                                                         \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = NULL, .file = NULL, .open = NULL, .mode = NULL)
 
-/// Base Struct of PblString - avoid using this type
+/// @brief Base Struct of PblString - avoid using this type
 struct PblStream_Base {
-  /// The unique integer identifier associated with the file Descriptor
+  /// @brief The unique integer identifier associated with the file Descriptor
   PblUInt_T *fd;
-  /// The FILE pointer, which points to the stream/file - defined if the stream was opened
+  /// @brief The FILE pointer, which points to the stream/file - defined if the stream was opened
   PblFile_T *file;
-  /// Describes whether the file descriptor is currently in use
+  /// @brief Describes whether the file descriptor is currently in use
   PblBool_T *open;
-  /// The mode the FILE* was opened
+  /// @brief The mode the FILE* was opened
   PblString_T *mode;
 };
 
-/// File Descriptor used to perform I/O actions on a file
+/// @brief File Stream used to perform I/O actions on a file
 struct PblStream PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblStream_Base)
-/// Stream type, which is a unique alias for PBLFileDescriptor_T
+/// @brief File Stream used to perform I/O actions on a file
 typedef struct PblStream PblStream_T;
 
 // ---- Streams -------------------------------------------------------------------------------------------------------
 
-/// Standard stream for getting input on the default program console
+/// @brief Standard stream for getting input on the default program console
 #define PBL_STREAM_STDIN                                                                                               \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(0), .file = PblGetFileT(stdin),                     \
                                     .open = PblGetBoolT(true), .mode = PblGetStringT("a"))
 
-/// Standard stream for outputting to the default program console
+/// @brief Standard stream for outputting to the default program console
 #define PBL_STREAM_STDOUT                                                                                              \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(1), .file = PblGetFileT(stdout),                    \
                                     .open = PblGetBoolT(true), .mode = PblGetStringT("a"))
 
-/// Standard stream for outputting error messages to the default program console
+/// @brief Standard stream for outputting error messages to the default program console
 #define PBL_STREAM_STDERR                                                                                              \
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(2), .file = PblGetFileT(stderr),                    \
                                     .open = PblGetBoolT(true), .mode = PblGetStringT("a"))
@@ -130,4 +133,4 @@ PblVoid_T PblPrint_Overhead(struct PblPrint_Args in);
 }
 #endif
 
-#endif//PARAC_MODULES_IO_H
+#endif //PBL_MODULES_IO_H
