@@ -8,5 +8,5 @@
 
 TEST(MacroTest, SimpleCheckForExistances) {
   EXPECT_TRUE(__parac);
-  EXPECT_STREQ(__parac, "0.1.dev5");
+  EXPECT_STREQ(__parac, "0.1.dev6");
 }
