@@ -18,7 +18,25 @@ is used in an C++ environment, which will simply include the C-files and run the
 
 In actual code usage, the Para-C Compiler will use the code as regular C, and only for testing C++ will/must be used.
 
-# Basic Concepts
+# Basic Overview
+
+## Styling and Formatting
+
+The styling guide for the PBL is as following:
+ - Structs/Enums: PascalCase with leading 'Pbl'
+ - Struct Properties: snake_case
+ - Constants and Enum Properties: PascalCase with leading 'k' (copied from the Google C++ Styling Guide)
+ - Typedef: PascalCase with leading 'Pbl' and trailing '_T'
+ - Local Variables: snake_case
+ - Parameters: snake_case
+ - Macros: SCREAMING_SNAKE_CASE (exceptions are function definition macros, where PascalCase is applied)
+ - Functions: PascalCase
+ - Indention is set to 2 spaces
+
+## `_DefDefault` and `_DeclDefault` for PBL-Types
+
+When declaring a built-in type that should be used inside Para-C, the style of the general types should
+be replicated, to allow for the proper usage of defaults aka. `_DefDefault` and `_DeclDefault`
 
 ## Meta-Data Tracking - `pbl-types.h`
 
@@ -33,28 +51,32 @@ In Para-C, there are two different states a variable can exist in; It is either 
 
 ### Declared Variable
 
-A declared variable is, unlike in C, still allocated and has a value set, though with meta-data tracking their 
-meta-property 'defined' is set to 'false', which means the program knows it is invalid to be accessed. This is the
-default handling for a declared variable, though there are two major differences which are different in the PBL:
-
-- User Pointers (Pointer to PBL Allocated Memory) are always going to be defined when their value is set, aka. they 
-  can only be null, as they are pointers and not actual PBL types. This must be watched out for.
+A declared variable is, unlike in C, can be appearing in two forms:
+- Allocated and with a value set, though their meta-property `.meta.defined` is set to `false`, which means the program
+  knows it is invalid to be accessed. 
+- The value is `NULL` aka. this is usually what is passed to a function as args to indicate the value is not set. This
+  is in this case a *True `NULL`*, as it is not a pointer set to NULL or a value with their memory set to `NULL`
 
 This must be watched out for when writing PBL code, as both NULL and .meta.defined == false mean a variable is declared.
-As a another note, a double-pointer (user-created pointer) to a variable is always going to be NULL, aka. there is no 
+
+As a note, a double-pointer (user-created pointer) to a variable is always going to be NULL, aka. there is no 
 way to properly determine whether the variable is declared or defined, meaning the compiler will work out whether the
 user-created variable is declared. This means user-pointers are by default defined in the generated source code.
+
+(This will be changed later, by implementing `PblPointer_T` as a new type and as such pointers will be like variables, 
+meaning a `PblPointer_T` can be undefined with NULL and declared, but with `.meta.defined == false`)
  
 ### Defined Variable
 
-The defined variables on the other hand will always be initialised with a default value, usually 0, except for struct
+The defined variables on the other hand will always be initialised with a default value, usually `0`, except for struct
 types, which will have all their property-pointers set to NULL, aka. they are also only 'declared' but not initialised.
 
 ### Function Return Type Handling
 
 For functions, returns will always be pointers no matter what, since all variables are dynamically allocated and the
-actual storage in the stack is the pointer itself. This means that returning NULL will always be valid in Para-C aka.
-it's the `None` (from Python) of Para-C.
+actual storage in the stack is the pointer itself. 
+
+This means that returning NULL will always be valid in Para-C aka. it's the `None` (from Python) of Para-C, 
 
 ### Global Variable handling
 

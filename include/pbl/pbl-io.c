@@ -1,7 +1,8 @@
-///
-/// IO Implementation based on stdio.h
-///
+/// @file pbl-io.c
+/// @brief IO Implementation based on stdio.h
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include <stdio.h>
 

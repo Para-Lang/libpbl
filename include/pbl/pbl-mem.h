@@ -1,15 +1,15 @@
-///
-/// Para-GC memory management and handling implementation. This file uses low-level C types, as this serves as a base
-/// implementation which the entire library bases on
-///
+/// @file pbl-mem.h
+/// @brief Para-C memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
+/// collector)
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "gc.h"
 #include "./pbl-main.h"
-#include "./string.h"
 
-#ifndef PARAC_MODULES_MEM_H
-#define PARAC_MODULES_MEM_H
+#ifndef PBL_MODULES_MEM_H
+#define PBL_MODULES_MEM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,27 +17,44 @@ extern "C" {
 
 // ---- Helper Macro --------------------------------------------------------------------------------------------------
 
-// Log Mem error
+/// @brief Logs the entered error / string and aborts the program with the exit status '1'
 #define PBL_LOG_MEM_ERR(...) PblAbortWithCriticalError(1, __VA_ARGS__)
 
-// Mem-Cpy
+// ---- Mem-Cpy -------------------------------------------------------------------------------------------------------
+
+/// @brief Logs an error for attempting to copy from an invalid memory address (NULL) and aborts with exit status '1'
 #define PBL_LOG_CPY_FROM_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to copy from an invalid memory address (NULL)");
+/// @brief Logs an error for attempting to copy to an invalid memory address (NULL) and aborts with exit status '1'
 #define PBL_LOG_CPY_TO_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to copy to an invalid memory address (NULL)");
+/// @brief Logs an error for receiving 'NULL' from the call of the C function 'memcpy' and aborts with exit status '1'
 #define PBL_LOG_CPY_RECEIVE_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Failed to cpy memory (Received NULL)");
 
-// Ptr-Access
+// ---- Ptr-Access ----------------------------------------------------------------------------------------------------
+
+/// @brief Logs an error for attempting to use an invalid pointer address (NULL) and aborts with exit status '1'
 #define PBL_LOG_ACCESS_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to access invalid memory address (NULL)");
 
-// Free
+// ---- Free ----------------------------------------------------------------------------------------------------------
+
+/// @brief Logs an error for attempting to free an invalid pointer address (NULL) and aborts with exit status '1'
 #define PBL_LOG_FREE_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to free invalid memory address (NULL)");
 
-// Alloc
+// ---- Alloc ---------------------------------------------------------------------------------------------------------
+
+/// @brief Logs an error for attempting to allocate 0 bytes and aborts with exit status '1'
 #define PBL_LOG_ALLOC_ERR_NULL_SZ PBL_LOG_MEM_ERR("PARA-C: Attempted to allocate invalid amounts of memory (0)");
+/// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_MALLOC' or 'GC_MALLOC_ATOMIC' and
+/// aborts with exit status '1'
 #define PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("PARA-C: Failed to allocate memory (Received NULL)");
 
-// Re-Alloc
-#define PBL_LOG_REALLOC_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to access invalid memory address (NULL)");
+// ---- Re-Alloc ------------------------------------------------------------------------------------------------------
+
+/// @brief Logs an error for attempting to realloc an invalid pointer address (NULL) and aborts with exit status '1'
+#define PBL_LOG_REALLOC_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to re-allocate invalid memory address (NULL)");
+/// @brief Logs an error for attempting to realloc 0 bytes and aborts with exit status '1'
 #define PBL_LOG_REALLOC_ERR_NULL_SZ PBL_LOG_MEM_ERR("PARA-C: Attempted to re-allocate invalid amounts of memory (0)");
+/// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_REALLOC' and aborts with exit status
+/// '1'
 #define PBL_LOG_REALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("PARA-C: Failed to re-allocate memory (Received NULL)");
 
 // ---- Helper functions ----------------------------------------------------------------------------------------------
@@ -106,4 +123,4 @@ void* PblRealloc(void* ptr, size_t size);
 }
 #endif
 
-#endif//PARAC_MODULES_MEM_H
+#endif //PBL_MODULES_MEM_H
