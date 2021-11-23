@@ -1,8 +1,9 @@
-///
-/// This file defines the macro 'PBL_APPLY_MACRO', which allows for up to 127 args to be processed using the passed
-/// macro function 't'
-///
+/// @file pbl-apply-macro.c
+/// @brief This file defines the macro 'PBL_APPLY_MACRO', which allows for up to 127 args to be processed using the passed
+///// macro function 't'
 /// @author Luna-Klatzer
+/// @date 2021-11-23
+/// @copyright Copyright (c) 2021
 
 #include "./additional/va-opt.h"
 
