@@ -49,25 +49,25 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
   (to_write).actual = write_val;
 
 /// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
-/// @note This should only be used when creating a declaration
+/// @note This should only be used when creating a declaration of a Para-C type
 #define PBL_ALLOC_DECLARATION(to_write, type)                                                                          \
   type *to_write = (type *) PblMalloc(sizeof(type));                                                                   \
   *(to_write) = type##_DeclDefault;
 
 /// @brief This macro allocates an instance of type, which has the default initialisation value set
-/// @note This should only be used when creating a definition that shall be empty - if it's a conversion from C to
-/// Para-C use the defined GetTypeT(...) functions, which will properly write onto the variable
+/// @note This should only be used when creating a definition that shall be empty - if it's though a conversion from C
+/// to Para-C the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable
 #define PBL_ALLOC_DEFINITION(to_write, type)                                                                           \
   type *to_write = (type *) PblMalloc(sizeof(type));                                                                   \
   *(to_write) = type##_DefDefault;
 
 /// @brief This macro should serve as a helper for writing static arrays that shall be used to store types
-/// @note This should not be used as a replacement to Iterable, but only as a memory-efficient helper for copying or
-/// setting memory values
+/// @note This should not be used as a replacement to PblIterable_T, but only as a memory-efficient helper for copying
+/// or setting memory values
 #define PBL_ALLOC_ARRAY_DEFINITION(to_write, type, amount)                                                             \
-  type *to_write = (type *) PblMalloc(sizeof(type) * amount);                                                          \
-  for (int i = 0; i < amount; i++) {                                                                                   \
-    to_write[i] = type##_DefDefault;                                                                                   \
+  type *to_write = (type *) PblMalloc(sizeof(type) * (amount));                                                        \
+  for (int i = 0; i < (amount); i++) {                                                                                 \
+    (to_write)[i] = type##_DefDefault;                                                                                 \
   }
 
 
