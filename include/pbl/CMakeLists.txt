@@ -1,5 +1,8 @@
 project(pbl)
 
+# Hinting the usage of built-in atomic types (since we use C11 as an enforced base standard)
+add_compile_definitions(GC_BUILTIN_ATOMIC)
+
 include(FetchContent)
 FetchContent_Declare(
         gc-8.0.6
