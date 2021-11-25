@@ -18,25 +18,35 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-// ---- Macro Functions -----------------------------------------------------------------------------------------------
 
-/// @brief Returns the effective size of a Para-C type that can be actually used. Must be a Para-C type
-#define PBL_SIZEOF(type) (type##_Size)
+// ---- Meta Types ----------------------------------------------------------------------------------------------------
 
-/// @brief Returns the effective C size of a type. This also includes meta data
-#define PBL_C_SIZEOF(type) (sizeof(type))
+/// @brief The Type type, which is used as a meta-type for tracking of types in types like 'PblAny_T' and to allow for
+/// dynamic casting, conversion and type checking.
+struct PblTypeMeta {
+  /// @brief The size of the variable, which is stored *once*. This allows for dynamic size checking on runtime
+  /// @note For optimisation always prefer to use the macro 'type##_Size'
+  size_t size;
+  /// @brief The default template that should be used to initialise a new type from.
+  void *type_template;
+  /// @brief The unique identifier for the type, that will be used to compare against. This is NULL char terminated.
+  char *name;
+};
 
-// ---- All Base types implemented in the Para-C style ----------------------------------------------------------------
+/// @brief The Type type, which is used as a meta-type for tracking of types in types like 'PblAny_T' and to allow for
+/// dynamic casting, conversion and type checking.
+typedef struct PblTypeMeta PblTypeMeta_T;
 
 /// @brief Base Meta Type contained in ALL variables - has no DeclDefault or DefDefault
 struct PblMetaVarCtx {
-  /// @brief Returns whether the variable is defined. This defaults to false (unless a declaration is use, where accessing the
-  /// variable is undefined behaviour. This means it should IN NO CASE BE accessed when it's only declared)
-  /// This variable is used to also validate whether a variable can be accessed without raising an error!
+  /// @brief Is true when the variable is defined (not declared). This variable is used to also validate whether a
+  /// variable's memory can be accessed without raising an error!
   bool defined;
+  /// @brief The size of the variable, which is defined by the 'PblTypeMeta_T' global type
+  size_t *size;
 };
 
-/// @brief Base Meta Type contained in ALL variables
+/// @brief Base Meta Type contained in ALL variables - has no DeclDefault or DefDefault
 typedef struct PblMetaVarCtx PblMetaVarCtx_T;
 
 // ---- Get type macro ------------------------------------------------------------------------------------------------
@@ -70,7 +80,6 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
     (to_write)[i] = type##_DefDefault;                                                                                 \
   }
 
-
 // ---- Constructor Macros --------------------------------------------------------------------------------------------
 
 /// @brief Declaration constructor which initialised the meta data for the passed type
@@ -102,7 +111,6 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
     base_type actual; \
    };
 
-
 // ---- Local Variable state saving -----------------------------------------------------------------------------------
 
 /// @brief Copies the passed value to a local state copy - This is designed for pointers losing their addresses
@@ -116,6 +124,14 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
     var = unique_id##_localcpy;                                                                                        \
     unique_id##_localcpy = NULL;                                                                                       \
   }
+
+// ---- Sizeof --------------------------------------------------------------------------------------------------------
+
+/// @brief Returns the effective size of a Para-C type that can be actually used. Must be a Para-C type
+#define PBL_SIZEOF(type) (type##_Size)
+
+/// @brief Returns the effective C size of a type. This also includes meta data
+#define PBL_C_SIZEOF(type) (sizeof(type))
 
 // ---- Void Type -----------------------------------------------------------------------------------------------------
 

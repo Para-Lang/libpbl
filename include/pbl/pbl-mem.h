@@ -6,6 +6,7 @@
 /// @copyright Copyright (c) 2021
 
 #include "gc.h"
+
 #include "./pbl-main.h"
 
 #ifndef PBL_MODULES_MEM_H
