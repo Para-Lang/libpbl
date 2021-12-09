@@ -10,7 +10,8 @@ set(HEADER_FILES
         pbl/pbl-main.h
         pbl/pbl-mem.h
         pbl/pbl-any.h
-        pbl/pbl-apply-macro.h)
+        pbl/pbl-apply-macro.h
+        pbl/pbl-advanced-mem.h)
 
 set(SOURCE_FILES
         pbl/pbl-io.c
@@ -21,7 +22,8 @@ set(SOURCE_FILES
         pbl/pbl-function.c
         pbl/pbl-main.c
         pbl/pbl-mem.c
-        pbl/pbl-any.c)
+        pbl/pbl-any.c
+        pbl/pbl-advanced-mem.c)
 
 set(INCLUDED_EXTENSIONS
         pbl/additional/va-opt.h)
