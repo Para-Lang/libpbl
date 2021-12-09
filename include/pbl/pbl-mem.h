@@ -73,7 +73,7 @@ extern "C" {
  * @param bytes The amount of bytes to be copied
  * @return The pointer of the passed dest variable
  */
-void* PblMemCpy(void* dest, const void * src, size_t bytes);
+void *PblMemCpy(void *dest, const void *src, size_t bytes);
 
 /**
  * @brief Validates the pointer given as parameter and checks whether it's save to access, if it's not safe it will
@@ -83,7 +83,13 @@ void* PblMemCpy(void* dest, const void * src, size_t bytes);
  * @note Only use this function to validate whether the pointer is valid for accessing! This function will count NULL
  * as invalid, meaning this should not be used for pointers that will be defined later!
  */
-void* PblValPtr(void* ptr);
+void *PblValPtr(void *ptr);
+
+/**
+ * @brief Frees the passed pointer if it is not NULL. Used as the function for __attribute__ (__cleanup__)
+ * @param ptr The double-pointer pointing to the local pointer variable
+ */
+void PblCleanupLocal(void **ptr);
 
 /**
  * @brief Frees the passed value and applies checks to avoid faulty freeing of memory.
@@ -111,7 +117,7 @@ __attribute__((unused)) void *PblMallocUncollectable(size_t size);
  * usage of allocating a type please use 'PBL_ALLOC_DEFINITION(to_write, type)', which will safely allocate and
  * initialise the value!
  */
-void* PblMalloc(size_t size);
+void *PblMalloc(size_t size);
 
 /**
  * @brief Allocates an atomic variable - Objects of atomic types are the only objects that are free from data races;
@@ -123,7 +129,7 @@ void* PblMalloc(size_t size);
  * usage of allocating a type please use 'PBL_ALLOC_DEFINITION(to_write, type)', which will safely allocate and
  * initialise the value!
  */
-void* PblMallocAtomic(size_t size);
+__attribute__((unused)) void *PblMallocAtomic(size_t size);
 
 /**
  * @brief Re-allocates the memory to the size given.
@@ -134,10 +140,10 @@ void* PblMallocAtomic(size_t size);
  * @note Unlike the low-level GC realloc(), this may not be used to malloc or free memory and it will raise a critical
  * exception if attempted to secure the memory management process
  */
-void* PblRealloc(void* ptr, size_t size);
+void *PblRealloc(void *ptr, size_t size);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //PBL_MODULES_MEM_H
+#endif//PBL_MODULES_MEM_H

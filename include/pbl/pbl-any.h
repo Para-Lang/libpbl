@@ -6,7 +6,7 @@
 /// @copyright Copyright (c) 2021
 
 #include "./pbl-types.h"
-#include "pbl-string.h"
+#include "./pbl-string.h"
 
 #ifndef PBL_INCLUDE_ANY_H
 #define PBL_INCLUDE_ANY_H
@@ -25,11 +25,11 @@ extern "C" {
 /// @brief Returns the definition default, for the type 'PblAny_T', where the children have not been set yet and only
 /// the value itself 'exists' already.
 #define PblAny_T_DefDefault                                                                                            \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblAny_T, .val = NULL, .type_name = NULL, .byte_size = NULL)
+  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblAny_T, .val = NULL, .type = NULL, .byte_size = NULL)
 
 struct PblAny_Base {
   void* val;
-  PblString_T* type_name;
+  PblTypeMeta_T* type;
   PblSize_T* byte_size;
 };
 
@@ -38,6 +38,14 @@ struct PblAny PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblAny_Base);
 /// @brief Any implementation - This type allows for a dynamic allocation and every type to be passed onto the allocated
 /// memory
 typedef struct PblAny PblAny_T;
+
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblAny_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblAny_T_Cleanup(PblAny_T **value);
 
 // ---- Helper Functions ----------------------------------------------------------------------------------------------
 
@@ -48,7 +56,7 @@ typedef struct PblAny PblAny_T;
  * @return The new PblAny_T
  * @note This is a C to Para-C type conversion function - args are in C therefore
  */
-PblAny_T* PblGetAnyT(void* val, size_t size);
+PblAny_T* PblGetAnyT(void* val, PblTypeMeta_T* type);
 
 /**
  * @brief Force-deallocates the entire any-type

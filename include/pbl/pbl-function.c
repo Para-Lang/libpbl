@@ -7,6 +7,22 @@
 
 #include "./pbl-function.h"
 
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblMetaFunctionCallCtx_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblMetaFunctionCallCtx_T_Cleanup(PblMetaFunctionCallCtx_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
+
+/**
+ * @brief Cleanups a local function 'PblException_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblException_T_Cleanup(PblException_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
+
+// ---- Helper Functions ----------------------------------------------------------------------------------------------
+
 PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_identifier, PblBool_T *is_failure,
                                                      PblUInt_T *arg_amount, PblBool_T *is_threaded,
                                                      PblMetaFunctionCallCtx_T *failure_origin_ctx,
@@ -23,7 +39,7 @@ PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_ident
   return ptr;
 }
 
-PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
+__attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
   // Validate the pointer for safety measures
   ctx = PblValPtr((void *) ctx);
 

@@ -277,6 +277,20 @@ struct PblMetaFunctionCallCtx PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct Pbl
 /// @brief Base Meta Type passed to all functions
 typedef struct PblMetaFunctionCallCtx PblMetaFunctionCallCtx_T;
 
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblMetaFunctionCallCtx_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblMetaFunctionCallCtx_T_Cleanup(PblMetaFunctionCallCtx_T **value);
+
+/**
+ * @brief Cleanups a local function 'PblException_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblException_T_Cleanup(PblException_T **value);
+
 // ---- Helper Functions ----------------------------------------------------------------------------------------------
 
 /**
@@ -315,13 +329,6 @@ PblVoid_T PblRaiseNewException(PblMetaFunctionCallCtx_T *this_call_meta, PblExce
  * @notes This function will de-allocate the children and parents exceptions as well
  */
 PblVoid_T PblDeallocateExceptionT(PblException_T *exc);
-
-/**
- * @brief Cleanups the current exception Context and deallocates the memory that isn't used anymore
- * @param cleanup_ctx The function call ctx that should be cleaned up (including all of it's children)
- */
-PblVoid_T PblCleanupExceptionContext(PblMetaFunctionCallCtx_T *cleanup_ctx);
-
 
 #ifdef __cplusplus
 }

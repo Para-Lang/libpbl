@@ -13,6 +13,16 @@
 #include "./pbl-types.h"
 #include "./pbl-mem.h"
 
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblString_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblString_T_Cleanup(PblString_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
+
+// ---- Handler Functions ---------------------------------------------------------------------------------------------
+
 PblUInt_T* PblGetLengthOfCString(const char *content) {
   // Validate the pointer for safety measures
   content = PblValPtr((void*) content);

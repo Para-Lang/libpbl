@@ -47,7 +47,7 @@ This is due to meta-data also taking up a bit of memory space.
 
 ## Declared and Defined handling - `pbl-types.h`
 
-In Para-C, there are two different states a variable can exist in; It is either declared or defined. 
+In Para-C, there are two different states a variable can exist in; It is either declared or defined.
 
 ### Declared Variable
 
@@ -87,6 +87,12 @@ defined and the code is executed that was written before.
 This means that in the compiled code the globals will simply be pointer declarations with no interference. To that,
 all declarations will be on runtime set to NULL, unless they have been defined.
 
+## Automatic Cleanup for local variables
+
+When allocating a local variable, the PBL will automatically define the `__cleanup__` attribute of the variable, meaning
+when it goes out of scope the generated cleanup function for the type is called (`__<PBL_TYPE>_Cleanup`) and the type
+is automatically de-allocated. This is to automatically handle garbage collection / deallocation when possible!
+
 ## Memory accessing - `pbl-mem.h`
 
 (Currently in work - to be decided)
@@ -100,7 +106,7 @@ as the first argument to every function, which contain:
 - The data necessary to track [exception meta-data](#exceptions---pbl-functionh)
 
 These meta-data variables will be dynamically created for every invocation and will be allocated in the heap.
-Meaning they can be accessed outside of the context, and used to create crash-tracebacks to 
+Meaning they can be accessed outside the context, and used to create crash-tracebacks to 
 get extensive execution info on the failure of the program.
 
 ## Exceptions - `pbl-function.h`

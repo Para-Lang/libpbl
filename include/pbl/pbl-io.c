@@ -10,6 +10,22 @@
 #include "./pbl-string.h"
 #include "./pbl-mem.h"
 
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblFile_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblFile_T_Cleanup(PblFile_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
+
+/**
+ * @brief Cleanups a local function 'PblStream_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblStream_T_Cleanup(PblStream_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
+
+// ---- Handler Functions ---------------------------------------------------------------------------------------------
+
 PblFile_T* PblGetFileT(FILE *val) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);

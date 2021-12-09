@@ -7,20 +7,25 @@
 
 #include "pbl-any.h"
 
-PblAny_T* PblGetAnyT(void* val, size_t bytes) {
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+__attribute__((unused)) void __PblAny_T_Cleanup(PblAny_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
+
+// ---- Helper Functions ----------------------------------------------------------------------------------------------
+
+PblAny_T* PblGetAnyT(void* val, PblTypeMeta_T* type) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);
 
   PBL_ALLOC_DEFINITION(ptr, PblAny_T);
 
   // copying the memory to the destination address (the new type)
-  ptr->actual.val = PblMalloc(bytes);
-  PblMemCpy(ptr->actual.val, val, bytes);
+  ptr->actual.val = PblMalloc(type->size);
+  PblMemCpy(ptr->actual.val, val, type->size);
 
   // initialising the remaining properties
-  ptr->actual.byte_size = PblGetSizeT(bytes);
-  // NI = not implemented! type-dict in work!
-  ptr->actual.type_name = PblGetStringT("NI");
+  ptr->actual.byte_size = PblGetSizeT(type->size);
+  ptr->actual.type = type;
 
   return ptr;
 }
@@ -36,10 +41,8 @@ PblVoid_T PblDeallocateAnyType(PblAny_T *val) {
   if (val->actual.byte_size != NULL) {
     PblFree(val->actual.byte_size);
   }
-  if (val->actual.type_name != NULL) {
-    PblDeallocateStringT(val->actual.type_name);
-    val->actual.type_name = NULL;
-  }
+
+  // Note, we don't deallocate type, as it's a global pointer which **must** be kept alive
 
   *val = PblAny_T_DeclDefault;
   PblFree(val);

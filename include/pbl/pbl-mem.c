@@ -24,6 +24,11 @@ void *PblValPtr(void *ptr) {
   return ptr;
 }
 
+void PblCleanupLocal(void **ptr)
+{
+  // TODO! Implement Cleanup
+}
+
 void PblFree(void *ptr) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (ptr == NULL) { PBL_LOG_FREE_ERR_NULL_PTR }
@@ -45,7 +50,6 @@ __attribute__((unused)) void *PblMallocUncollectable(size_t size) {
   return ptr;
 }
 
-
 void *PblMalloc(size_t size) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (size <= 0) {
@@ -58,7 +62,7 @@ void *PblMalloc(size_t size) {
   return ptr;
 }
 
-void *PblMallocAtomic(size_t size) {
+__attribute__((unused)) void *PblMallocAtomic(size_t size) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (size <= 0) {
     PBL_LOG_ALLOC_ERR_NULL_SZ

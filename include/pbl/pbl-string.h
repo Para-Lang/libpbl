@@ -42,7 +42,15 @@ struct PblString_Base {
 struct PblString PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblString_Base)
 typedef struct PblString PblString_T;
 
-// ---- Handler functions ---------------------------------------------------------------------------------------------
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblString_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblString_T_Cleanup(PblString_T **value);
+
+// ---- Handler Functions ---------------------------------------------------------------------------------------------
 
 /**
  * @brief Gets the Length of a C string (const char*)

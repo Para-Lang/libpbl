@@ -80,7 +80,21 @@ typedef struct PblStream PblStream_T;
   PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(2), .file = PblGetFileT(stderr),                    \
                                     .open = PblGetBoolT(true), .mode = PblGetStringT("a"))
 
-// ---- Handler functions ---------------------------------------------------------------------------------------------
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblFile_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblFile_T_Cleanup(PblFile_T **value);
+
+/**
+ * @brief Cleanups a local function 'PblStream_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblStream_T_Cleanup(PblStream_T **value);
+
+// ---- Handler Functions ---------------------------------------------------------------------------------------------
 
 /**
  * @brief Converts the low level C-Type to a PBL File type

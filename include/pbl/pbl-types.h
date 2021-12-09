@@ -29,7 +29,8 @@ struct PblTypeMeta {
   size_t size;
   /// @brief The default template that should be used to initialise a new type from.
   void *type_template;
-  /// @brief The unique identifier for the type, that will be used to compare against. This is NULL char terminated.
+  /// @brief The unique identifier for the type, that will be used to compare against. This is null char (\0)
+  /// terminated.
   char *name;
 };
 
@@ -61,21 +62,21 @@ typedef struct PblMetaVarCtx PblMetaVarCtx_T;
 /// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
 /// @note This should only be used when creating a declaration of a Para-C type
 #define PBL_ALLOC_DECLARATION(to_write, type)                                                                          \
-  type *to_write = (type *) PblMalloc(sizeof(type));                                                                   \
+  type *to_write __attribute__((__cleanup__(__##type##_Cleanup))) = (type *) PblMalloc(sizeof(type));                  \
   *(to_write) = type##_DeclDefault;
 
 /// @brief This macro allocates an instance of type, which has the default initialisation value set
 /// @note This should only be used when creating a definition that shall be empty - if it's though a conversion from C
 /// to Para-C the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable
 #define PBL_ALLOC_DEFINITION(to_write, type)                                                                           \
-  type *to_write = (type *) PblMalloc(sizeof(type));                                                                   \
+  type *to_write __attribute__((__cleanup__(__##type##_Cleanup))) = (type *) PblMalloc(sizeof(type));                  \
   *(to_write) = type##_DefDefault;
 
 /// @brief This macro should serve as a helper for writing static arrays that shall be used to store types
 /// @note This should not be used as a replacement to PblIterable_T, but only as a memory-efficient helper for copying
 /// or setting memory values
 #define PBL_ALLOC_ARRAY_DEFINITION(to_write, type, amount)                                                             \
-  type *to_write = (type *) PblMalloc(sizeof(type) * (amount));                                                        \
+  type *to_write __attribute__((__cleanup__(__##type##_Cleanup))) = (type *) PblMalloc(sizeof(type) * (amount));       \
   for (int i = 0; i < (amount); i++) {                                                                                 \
     (to_write)[i] = type##_DefDefault;                                                                                 \
   }
@@ -380,18 +381,115 @@ struct PblLongDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(long double)
 /// @brief PBL Long Double implementation
 typedef struct PblLongDouble PblLongDouble_T;
 
-// ---- Helper Functions ----------------------------------------------------------------------------------------------
+// ---- Helper Function Constructor Macros ----------------------------------------------------------------------------
 
-/// This a macro function definition body constructor, which should be used to directly convert C types into their
-/// Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this does
-/// not support complex initialisation.
+/// @brief Constructs the default cleanup constructor
+#define PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value) { PblCleanupLocal((void**) value); }
+
+/// @brief This a macro function definition body constructor, which should be used to directly convert C types into
+/// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
+/// does not support complex initialisation.
 #define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type)                                                    \
   {                                                                                                                    \
-    parac_type* conv = PblMalloc(sizeof(parac_type));                                                                \
+    parac_type* conv = PblMalloc(sizeof(parac_type));                                                                  \
     *conv = parac_type##_DefDefault;                                                                                   \
     conv->actual = (c_type) val;                                                                                       \
     return conv;                                                                                                       \
   }
+
+// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'PblBool_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblBool_T_Cleanup(PblBool_T **value);
+
+/**
+ * @brief Cleanups a local function 'Size_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblSize_T_Cleanup(PblSize_T **value);
+
+/**
+ * @brief Cleanups a local function 'Char_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblChar_T_Cleanup(PblChar_T **value);
+
+/**
+ * @brief Cleanups a local function 'UChar_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblUChar_T_Cleanup(PblUChar_T **value);
+
+/**
+ * @brief Cleanups a local function 'Short_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblShort_T_Cleanup(PblShort_T **value);
+
+/**
+ * @brief Cleanups a local function 'UShort_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblUShort_T_Cleanup(PblUShort_T **value);
+
+/**
+ * @brief Cleanups a local function 'Int_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblInt_T_Cleanup(PblInt_T **value);
+
+/**
+ * @brief Cleanups a local function 'UInt_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblUInt_T_Cleanup(PblUInt_T **value);
+
+/**
+ * @brief Cleanups a local function 'Long_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblLong_T_Cleanup(PblLong_T **value);
+
+/**
+ * @brief Cleanups a local function 'ULong_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+__attribute__((unused)) void __PblULong_T_Cleanup(PblULong_T **value);
+
+// ---- Helper Functions ----------------------------------------------------------------------------------------------
+
+/**
+ * @brief Cleanups a local function 'LongLong_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+void __PblLongLong_T_Cleanup(PblLongLong_T **value);
+
+/**
+ * @brief Cleanups a local function 'ULongLong_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+void __PblULongLong_T_Cleanup(PblULongLong_T **value);
+
+/**
+ * @brief Cleanups a local function 'Float_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+void __PblFloat_T_Cleanup(PblFloat_T **value);
+
+/**
+ * @brief Cleanups a local function 'Double_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+void __PblDouble_T_Cleanup(PblDouble_T **value);
+
+/**
+ * @brief Cleanups a local function 'LongDouble_T' variable
+ * @param value The pointer to the variable wrapper / pointer
+ */
+void __PblLongDouble_T_Cleanup(PblLongDouble_T **value);
 
 /**
  * @brief Converts the low level C-Type to a PBL Bool type
