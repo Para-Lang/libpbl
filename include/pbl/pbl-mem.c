@@ -33,6 +33,19 @@ void PblFree(void *ptr) {
   ptr = NULL;
 }
 
+__attribute__((unused)) void *PblMallocUncollectable(size_t size) {
+  // Crash on invalid input - Don't bother raising exceptions on this low-level area
+  if (size <= 0) {
+    PBL_LOG_ALLOC_ERR_NULL_SZ
+  }
+
+  // allocating the memory
+  void *ptr = GC_MALLOC_UNCOLLECTABLE(size);
+  if (ptr == NULL) { PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET }
+  return ptr;
+}
+
+
 void *PblMalloc(size_t size) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (size <= 0) {

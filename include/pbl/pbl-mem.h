@@ -61,7 +61,13 @@ extern "C" {
 // ---- Helper functions ----------------------------------------------------------------------------------------------
 
 /**
- * @brief This is the Pbl equivalent of memcpy(), but in this case additional checking is applied for safety measures
+ * @brief This is the Pbl equivalent of memcpy(), but in this case additional checking is applied for safety measures.
+ * This may be used to copy bytes from one destination to the other, though it should be watched out the byte sizes are
+ * properly fetched using sizeof(PBL_TYPE | C_TYPE), as it **only** copies 1 byte at a time, and as such does NOT check
+ * for proper sizing.
+ *
+ * For proper checking you may use 'PblTypedMemCpy' (from 'pbl-advanced-mem.h'), which will copy a type one at a time,
+ * and not allow incomplete ones!
  * @param dest The destination where the memory should be copied to
  * @param src The source/origin that should be copied
  * @param bytes The amount of bytes to be copied
@@ -87,9 +93,19 @@ void* PblValPtr(void* ptr);
 void PblFree(void *ptr);
 
 /**
+ * @brief Allocates the passed value and applies checks to avoid faulty allocations of memory. The allocated variable
+ * will not be checked for garbage collection, meaning it has to be manually de-allocated. This is intended for
+ * variables that are used globally and will be needed until the end of the program.
+ * @param size The size of the memory to allocate
+ * @return he pointer returned by the 'GC_MALLOC_UNCOLLECTABLE' call
+ * @note This will crash the program if the size of the value is invalid!
+ */
+__attribute__((unused)) void *PblMallocUncollectable(size_t size);
+
+/**
  * @brief Allocates the passed value and applies checks to avoid faulty allocations of memory.
  * @param size The size of the memory to allocate
- * @return The pointer returned by the GC malloc call
+ * @return The pointer returned by the 'GC_MALLOC()' call
  * @note This will crash the program if the size of the value is invalid!
  * @warning It is discouraged to directly use this function to allocate memory, unless for explicit cases. For general
  * usage of allocating a type please use 'PBL_ALLOC_DEFINITION(to_write, type)', which will safely allocate and

@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PBL_CREATE_FUNC_OVERHEAD` for creating overhead of a Para-C function, which can support default arguments and 
   struct-like initialisation
 - `PBL_CALL_FUNC` for calling a Para-C function and properly handling it
+- Header `pbl-advanced-mem.h` for exception-supported and advanced memory handling with Para-C types
+- Function `PblMallocUncollectable()` in `pbl-mem.h` for allocating a variable that will not be automatically collected
+  aka. will exist until the user deallocates it or the program ends. This will be used for global variables that are
+  used throughout the entire program, and are essential to running properly, which means they should not be checked for
+  Garbage Collection.
 
 ### Changed
 - Disabled `pthreads.h` usage on Windows for gtest and enabled usage of WIN32 threads
