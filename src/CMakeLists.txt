@@ -36,7 +36,7 @@ set(HEADER_FILES
     )
 
 # Setting the output for the static library (.a)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${libpbl_SOURCE_DIR}/lib")
 
 # Adding the static Library
 add_library(pbl STATIC ${SOURCE_FILES} ${HEADER_FILES})
