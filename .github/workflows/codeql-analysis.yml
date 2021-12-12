@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: |
           cmake .
-          cmake --build . --target runParacModulesTests -- -j 9
+          cmake --build . --target runPblTests -- -j 9
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1

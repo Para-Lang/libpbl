@@ -13,10 +13,10 @@ jobs:
       - name: Build GTest Tests
         run: |
           cmake .
-          cmake --build . --target runParacModulesTests -- -j 9
+          cmake --build . --target runPblTests -- -j 9
       - name: Run C-Coverage
         run: |
-          ./tests/tests/runParacModulesTests
+          ./tests/tests/runPblTests
           gcov -abcfu ./include/CMakeFiles/parac-modules.dir/*.gc*
           tree .
       - name: Upload C coverage to Codecov
