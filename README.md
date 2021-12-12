@@ -40,7 +40,7 @@ be replicated, to allow for the proper usage of defaults aka. `_DefDefault` and 
 
 ## Meta-Data Tracking - `pbl-types.h`
 
-Para-C implements meta-data tracking using `PblMetaVarCtx_T` and pre-defined macros, tracking things like:
+Para-C implements meta-data tracking using `PblVarMetaData_T` and pre-defined macros, tracking things like:
 - If the variable has been defined yet
 - Effective space the user has to utilise. Note that effective space does not include actual space that is allocated! 
 This is due to meta-data also taking up a bit of memory space.
@@ -99,7 +99,7 @@ is automatically de-allocated. This is to automatically handle garbage collectio
 
 ## Function Meta-Data Tracking - `pbl-function.h`
 
-Inside Para-C, when calling a Para-C function, so-called `PblMetaFunctionCallCtx_T` types are passed
+Inside Para-C, when calling a Para-C function, so-called `PblFunctionCallMetaData_T` types are passed
 as the first argument to every function, which contain:
 
 - The meta-data of the invocation aka. call context, 
@@ -116,6 +116,6 @@ Exceptions in Para-C are very similarly implemented to the exceptions in C#.
 Exceptions can be raised, re-raised with a parent-exception and child-exception, caught using an `except` block
 and also used to pre-maturely abort the program. 
 
-Inside Para-C these are though implemented using the `PblMetaFunctionCallCtx_T` types, which will
+Inside Para-C these are though implemented using the `PblFunctionCallMetaData_T` types, which will
 store the traceback and exception information. All macros for exceptions have been implemented in this header
 and should be always used when implementing higher level functions.

@@ -13,14 +13,6 @@
 #include "./pbl-types.h"
 #include "./pbl-mem.h"
 
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-/**
- * @brief Cleanups a local function 'PblString_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblString_T_Cleanup(PblString_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
 // ---- Handler Functions ---------------------------------------------------------------------------------------------
 
 PblUInt_T* PblGetLengthOfCString(const char *content) {
@@ -73,11 +65,10 @@ PblChar_T* PblGetCharTArray(const char* content) {
   PblChar_T* pbl_chars = PblMalloc(
 sizeof(PblChar_T) * (len->actual + 1) // Min. size is 1 -> plus end-char: \0
     );
-  for (int i = 0; i < len->actual; i++) {
-    PBL_GET_ACTUAL_TYPE_INSTANCE(pbl_chars[i], PblChar_T, content[i]);
+  for (int i = 0; i < len->actual; i++) { PBL_ASSIGN_TO_VAR(pbl_chars[i], PblChar_T, content[i]);
   }
   // adding null character
-  PBL_GET_ACTUAL_TYPE_INSTANCE(pbl_chars[len->actual], PblChar_T, '\0');
+  PBL_ASSIGN_TO_VAR(pbl_chars[len->actual], PblChar_T, '\0');
   return pbl_chars;
 }
 
@@ -153,7 +144,7 @@ PblVoid_T PblWriteStringToStringT(PblString_T *str, PblString_T *content, PblUIn
   content = PblValPtr((void*) content);
   len_to_write = PblValPtr((void*) len_to_write);
 
-  PBL_ALLOC_ARRAY_DEFINITION(char_arr, PblChar_T, len_to_write->actual);
+  PBL_CREATE_NEW_ARRAY(char_arr, PblChar_T, len_to_write->actual);
   for (int i = 0; i < len_to_write->actual; i++)
     // Using MemCpy to properly copy the value, aka. to be certain it is copied properly
     PblMemCpy(&char_arr[i], &content->actual.str[i], sizeof(PblChar_T));
@@ -197,7 +188,7 @@ PblString_T* PblCreateStringT(PblChar_T *content, PblUInt_T *len) {
   len = PblValPtr((void*) len);
 
   // Using the DeclDefault to avoid recursion when 'DefDefault' is 'PblGetStringT("")' aka. an empty string
-  PBL_ALLOC_DEFINITION(str, PblString_T);
+  PBL_DEFINE_VAR(str, PblString_T);
 
   str->actual.allocated_len = PblGetMinimumArrayLen(len);
   str->actual.len = len;
@@ -229,7 +220,7 @@ PblVoid_T PblDeallocateStringT(PblString_T *lvalue) {
 
   if (lvalue->meta.defined) {
     // writing \0 onto the entire space of memory
-    PBL_ALLOC_ARRAY_DEFINITION(nullify, PblChar_T, lvalue->actual.len->actual);
+    PBL_CREATE_NEW_ARRAY(nullify, PblChar_T, lvalue->actual.len->actual);
     for (int i = 0; i < lvalue->actual.len->actual; i++)
       nullify[i].actual = '\0';
     PblWriteCharArrayToStringT(lvalue, nullify, lvalue->actual.len);

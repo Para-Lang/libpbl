@@ -7,31 +7,17 @@
 
 #include "./pbl-function.h"
 
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-/**
- * @brief Cleanups a local function 'PblMetaFunctionCallCtx_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblMetaFunctionCallCtx_T_Cleanup(PblMetaFunctionCallCtx_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-/**
- * @brief Cleanups a local function 'PblException_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblException_T_Cleanup(PblException_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
 // ---- Helper Functions ----------------------------------------------------------------------------------------------
 
-PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_identifier, PblBool_T *is_failure,
+PblFunctionCallMetaData_T *PblGetMetaFunctionCallCtxT(PblString_T *function_identifier, PblBool_T *is_failure,
                                                      PblUInt_T *arg_amount, PblBool_T *is_threaded,
-                                                     PblMetaFunctionCallCtx_T *failure_origin_ctx,
-                                                     PblMetaFunctionCallCtx_T *call_origin_ctx,
+                                                      PblFunctionCallMetaData_T *failure_origin_ctx,
+                                                      PblFunctionCallMetaData_T *call_origin_ctx,
                                                      PblException_T *exception) {
-  PBL_ALLOC_DEFINITION(ptr, PblMetaFunctionCallCtx_T);
-  *ptr = PblMetaFunctionCallCtx_T_DefDefault;
+  PBL_DEFINE_VAR(ptr, PblFunctionCallMetaData_T);
+  *ptr = PblFunctionCallMetaData_T_DefDefault;
 
-  ptr->actual = (struct PblMetaFunctionCallCtx_Base) {
+  ptr->actual = (struct PblFunctionCallMetaData_Base) {
     .function_identifier=function_identifier, .is_failure=is_failure, .arg_amount=arg_amount,
     .is_threaded=is_threaded, .failure_origin_ctx=failure_origin_ctx, .call_origin_ctx=call_origin_ctx,
     .exception=exception
@@ -39,7 +25,7 @@ PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_ident
   return ptr;
 }
 
-__attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx) {
+__attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblFunctionCallMetaData_T *ctx) {
   // Validate the pointer for safety measures
   ctx = PblValPtr((void *) ctx);
 
@@ -48,7 +34,7 @@ __attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunct
     if (ctx->actual.function_identifier != NULL) PblDeallocateStringT(ctx->actual.function_identifier);
 
     // resetting the values
-    *ctx = PblMetaFunctionCallCtx_T_DeclDefault;
+    *ctx = PblFunctionCallMetaData_T_DeclDefault;
     PblFree(ctx);
     ctx = NULL;
   }
@@ -57,7 +43,7 @@ __attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunct
 
 PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_T *filename, PblUInt_T *line,
                                  PblString_T *line_content, PblVoid_T *parent_exc, PblVoid_T *child_exc) {
-  PBL_ALLOC_DEFINITION(ptr, PblException_T);
+  PBL_DEFINE_VAR(ptr, PblException_T);
 
   // Using the Definition Default
   *ptr = PblException_T_DefDefault;
@@ -69,7 +55,7 @@ PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_
   return ptr;
 }
 
-PblVoid_T PblRaiseNewException(PblMetaFunctionCallCtx_T* this_call_meta, PblException_T *exception) {
+PblVoid_T PblRaiseNewException(PblFunctionCallMetaData_T * this_call_meta, PblException_T *exception) {
   // Validate the pointer for safety measures
   this_call_meta = PblValPtr((void *) this_call_meta);
   exception = PblValPtr((void *) exception);

@@ -44,7 +44,6 @@ __attribute__((unused)) void* PblSafeMemCpy(PblAny_T* dest, PblAny_T* src, PblUI
   * @note This function will raise an exception if either types are of invalid size (both must be equal). For example
   * copying 4 bytes to a 2 byte variable.
  */
-__attribute__((unused)) void* PblTypedMemCpy(void* dest, const void * src, PblTypeMeta_T* dest_type,
-                                             PblTypeMeta_T* src_type, PblUInt_T amount);
+__attribute__((unused)) void* PblTypedMemCpy(void* dest, const void * src, PblType_T * dest_type, PblType_T * src_type, PblUInt_T amount);
 
 #endif//PBL_INCLUDE_ADVANCED_MEM_H_

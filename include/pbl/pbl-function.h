@@ -92,7 +92,7 @@ extern "C" {
 /// @param meta_ctx The meta_ctx that should be used as a parent ctx (invocation context) of the child function
 /// @param args The arguments to pass to the local function
 #define PBL_CALL_FUNC(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)                                       \
-  PblMetaFunctionCallCtx_T *unique_id_##func##_CALLCTX = PblGetMetaFunctionCallCtxT(                                   \
+  PblFunctionCallMetaData_T *unique_id_##func##_CALLCTX = PblGetMetaFunctionCallCtxT(                                   \
     PblGetStringT(#func),                                                                                              \
     PblGetBoolT(false),                                                                                                \
     PblGetUIntT(IFNE(args)(PBL_COUNT_VA_ARGS(args), 0)),                                                               \
@@ -108,11 +108,11 @@ extern "C" {
 /// @returns The size in bytes of the PBL Long Double type
 #define PblException_T_Size (4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *))
 /// @brief Returns the declaration default for the type 'PblException_T'
-#define PblException_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblException_T)
+#define PblException_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblException_T)
 /// @brief Returns the definition default for the type 'PblException_T', where the children have not been set yet and only the
 /// value itself 'exists' already.
 #define PblException_T_DefDefault                                                                                      \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblException_T, .msg = NULL, .name = NULL, .filename = NULL, .line = NULL,         \
+  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblException_T, .msg = NULL, .name = NULL, .filename = NULL, .line = NULL,         \
                                     .line_content = NULL, .parent_exc = NULL, .child_exc = NULL)
 
 struct PblException_Base {
@@ -148,7 +148,7 @@ typedef struct PblException PblException_T;
 /// @note This requires the existence of 'this_call_meta' of type 'PblMetaFunctionCallCtx_T'.
 #define PBL_RAISE_EXCEPTION(exception, call_return_type)                                                               \
   PblRaiseNewException(this_call_meta, exception);                                                                     \
-  PBL_ALLOC_DECLARATION(raise_exc_ret, call_return_type)                                                               \
+  PBL_DECLARE_VAR(raise_exc_ret, call_return_type)                                                               \
   return raise_exc_ret;
 
 // ---- Invoke and Catch Exception handling ---------------------------------------------------------------------------
@@ -161,7 +161,7 @@ typedef struct PblException PblException_T;
 /// @param is_threaded Whether this macro is invoked in a threaded context. This variable is directly passed to the
 /// created context.
 /// @param args the arguments to pass to the function, leave empty if none shall be passed.
-#define PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)              \
+#define PBL_BASE_CALL_AND_CATCH_EXCEPTION(func, var_to_pass, unique_id, is_threaded, meta_ctx, args)                   \
   PBL_CALL_FUNC(func, var_to_pass, unique_id, is_threaded, meta_ctx, IFN(args)(args))                                  \
   if (unique_id_##func##_CALLCTX->actual.is_failure->actual) {                                                         \
     (meta_ctx)->actual.is_failure = PblGetBoolT(true);                                                                 \
@@ -171,22 +171,19 @@ typedef struct PblException PblException_T;
                                               : unique_id_##func##_CALLCTX;                                            \
   }
 
-/// @brief This is a "one-liner" constructor for Para-C functions, which will call the passed function with the args
-/// (__VA_ARGS__) and return to the caller of the stack, if the called function returns with a raised exception.
+
+/// @brief This will call the passed function with the args (__VA_ARGS__) and return to the caller of the stack, if the
+/// called function returns with a raised exception.
 /// @param func The function that should be called with the passed variadic arguments.
 /// @param var_to_pass The variable the return of the function should be passed to.
 /// @param ctx_rtype The return type of the context (function) where this macro is used. If an exception occurs the
 /// default value (_DeclDefault) will be returned.
 /// @param unique_id The unique id the call ctx should be declared as. It follows the following scheme: unique##_##func.
 /// @note This requires the existence of 'this_call_meta' of type 'PblMetaFunctionCallCtx_T'
-#define PBL_EXCEPTION_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, args...)                         \
-  PBL_CALL_FUNC(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta, IFN(args)(args))                                                                         \
-  if (unique_id_##func##_CALLCTX->actual.is_failure->actual) {                                                         \
-    this_call_meta->actual.is_failure = PblGetBoolT(true);                                                             \
-    this_call_meta->actual.exception = unique_id_##func##_CALLCTX->actual.exception;                                   \
-    this_call_meta->actual.failure_origin_ctx = unique_id_##func##_CALLCTX;                                            \
-    return NULL;                                                                                                       \
-  }
+#define PBL_CALL_FUNC_AND_CATCH(func, var_to_pass, unique_id, args...)                                                 \
+  PBL_BASE_CALL_AND_CATCH_EXCEPTION(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta,  \
+                                    IFN(args)(args));                                                                  \
+  if (unique_id_##func##_CALLCTX->actual.is_failure->actual) { return NULL; }
 
 // ---- Exception Catching (try-except) -------------------------------------------------------------------------------
 
@@ -198,7 +195,7 @@ typedef struct PblException PblException_T;
 /// correctly update the information.
 /// @param meta_ctx The meta_ctx that should be used as a parent ctx (invocation context) of the child function
 /// @param call_return_type The return type of the function where this macro is invoked.
-#define PBL_EXCEPTION_TRY_EXCEPT_BLOCK(block, except_block, block_identifier, meta_ctx, call_return_type)              \
+#define PBL_TRY_EXCEPT_BLOCK(block, except_block, block_identifier, meta_ctx, call_return_type)              \
   PblException_T block_identifier##_local_catched_exc;                                                                 \
   PblBool_T *block_identifier##_invoke_except = PblGetBoolT(false);                                                    \
   PblBool_T *block_identifier##_except_handled = PblGetBoolT(false);                                                   \
@@ -208,15 +205,14 @@ typedef struct PblException PblException_T;
     if (block_identifier##_invoke_except->actual && !block_identifier##_except_handled->actual) { return NULL; }       \
   }
 
-/// @brief This is a "one-liner" constructor for functions that accept arguments and have a return, which will call the
-/// passed function with the args (__VA_ARGS__) and if an exception is raised jump to the except blocks.
+/// @brief This macro calls a function and if an exception was raised, goes directly to the parent except_block
 /// @param func The function that should be called with the passed variadic arguments.
 /// @param var_to_pass The variable the return of the function should be passed to.
 /// @param ctx_rtype The return type of the context (function) where this macro is used. If an exception occurs the
 /// default value (_DeclDefault) will be returned.
 /// @param unique_id The unique id the call ctx should be declared as. It follows the following scheme: unique##_##func.
 /// @note This requires the existence of 'this_call_meta' of type 'PblMetaFunctionCallCtx_T'
-#define PBL_EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(func, var_to_pass, ctx_rtype, unique_id, block_identifier,      \
+#define PBL_CALL_FUNC_IN_TRY_EXCEPT_BLOCK(func, var_to_pass, ctx_rtype, unique_id, block_identifier,      \
                                                        args...)                                                        \
   PBL_CALL_FUNC(func, var_to_pass, unique_id, this_call_meta->actual.is_threaded, this_call_meta, IFN(args)(args))     \
   if (unique_id_##func##_CALLCTX->actual.is_failure->actual) {                                                         \
@@ -227,7 +223,7 @@ typedef struct PblException PblException_T;
 
 /// @brief Adds an exception clause to the current block - this should be used to create a block statement which then is
 /// passed as an argument to EXCEPTION_TRY_EXCEPT_BLOCK()
-#define PBL_EXCEPTION_CREATE_EXCEPT_BLOCK(exception_name, block_to_execute, block_identifier)                          \
+#define PBL_EXCEPT_BLOCK(exception_name, block_to_execute, block_identifier)                          \
   if (block_identifier##_invoke_except->actual) {                                                                      \
     block_to_execute;                                                                                                  \
     block_identifier##_except_handled = PblGetBoolT(true);                                                             \
@@ -238,19 +234,20 @@ typedef struct PblException PblException_T;
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
 /// @returns The size in bytes of the PBL MetaFunctionCallCtx type
-#define PblMetaFunctionCallCtx_T_Size                                                                                  \
-  (sizeof(PblBool*) + sizeof(PblUInt_T*) + sizeof(PblBool_T*) + 2 * sizeof(PblMetaFunctionCallCtx_T *) + sizeof(NULL))
+#define PblFunctionCallMetaData_T_Size                                                                                  \
+  (sizeof(PblBool*) + sizeof(PblUInt_T*) + sizeof(PblBool_T*) + 2 * sizeof(PblFunctionCallMetaData_T *) + sizeof(NULL))
 /// @brief Returns the declaration default for the type 'PblMetaFunctionCallCtx_T'
-#define PblMetaFunctionCallCtx_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblMetaFunctionCallCtx_T)
+#define PblFunctionCallMetaData_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblFunctionCallMetaData_T)
 /// @brief Returns the definition default for the type 'PblMetaFunctionCallCtx_T', where the children have not been set yet and only the
 /// value itself 'exists' already.
-#define PblMetaFunctionCallCtx_T_DefDefault                                                                            \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblMetaFunctionCallCtx_T, .function_identifier = NULL, .is_failure = NULL,         \
+#define PblFunctionCallMetaData_T_DefDefault                                                                            \
+  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(                                                                      \
+    PblFunctionCallMetaData_T, .function_identifier = NULL, .is_failure = NULL,         \
                                     .arg_amount = NULL, .is_threaded = NULL, .failure_origin_ctx = NULL,               \
                                     .call_origin_ctx = NULL, .exception = NULL)
 
 /// @brief Base Meta Type passed to all functions
-struct PblMetaFunctionCallCtx_Base {
+struct PblFunctionCallMetaData_Base {
   /// @brief The function name - identifier
   PblString_T *function_identifier;
   /// Returns whether the function failed due to an exception occurring
@@ -272,24 +269,10 @@ struct PblMetaFunctionCallCtx_Base {
   PblException_T *exception;
 };
 
-struct PblMetaFunctionCallCtx PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblMetaFunctionCallCtx_Base)
+struct PblFunctionCallMetaData PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblFunctionCallMetaData_Base)
 
 /// @brief Base Meta Type passed to all functions
-typedef struct PblMetaFunctionCallCtx PblMetaFunctionCallCtx_T;
-
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-/**
- * @brief Cleanups a local function 'PblMetaFunctionCallCtx_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblMetaFunctionCallCtx_T_Cleanup(PblMetaFunctionCallCtx_T **value);
-
-/**
- * @brief Cleanups a local function 'PblException_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblException_T_Cleanup(PblException_T **value);
+typedef struct PblFunctionCallMetaData PblFunctionCallMetaData_T;
 
 // ---- Helper Functions ----------------------------------------------------------------------------------------------
 
@@ -297,17 +280,17 @@ __attribute__((unused)) void __PblException_T_Cleanup(PblException_T **value);
  * @brief Gets a new function call ctx, which will be located in the heap
  * @return The newly created function call ctx (pointer)
  */
-PblMetaFunctionCallCtx_T *PblGetMetaFunctionCallCtxT(PblString_T *function_identifier, PblBool_T *is_failure,
+PblFunctionCallMetaData_T *PblGetMetaFunctionCallCtxT(PblString_T *function_identifier, PblBool_T *is_failure,
                                                      PblUInt_T *arg_amount, PblBool_T *is_threaded,
-                                                     PblMetaFunctionCallCtx_T *failure_origin_ctx,
-                                                     PblMetaFunctionCallCtx_T *call_origin_ctx,
+                                                      PblFunctionCallMetaData_T *failure_origin_ctx,
+                                                      PblFunctionCallMetaData_T *call_origin_ctx,
                                                      PblException_T *exception);
 
 /**
  * @brief Deallocates the passed function call ctx and safely resets all values
  * @param ctx The function call ctx to deallocate
  */
-PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblMetaFunctionCallCtx_T *ctx);
+PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblFunctionCallMetaData_T *ctx);
 
 /**
  * @brief Gets a new Exception Type, which is located in the heap
@@ -321,7 +304,7 @@ PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_
  * @param this_call_meta The current context info that should be updated
  * @param exception The exception that was initialised
  */
-PblVoid_T PblRaiseNewException(PblMetaFunctionCallCtx_T *this_call_meta, PblException_T *exception);
+PblVoid_T PblRaiseNewException(PblFunctionCallMetaData_T *this_call_meta, PblException_T *exception);
 
 /**
  * @brief Deallocates the passed exception type and safely resets all values

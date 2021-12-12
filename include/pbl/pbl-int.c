@@ -6,56 +6,6 @@
 
 #include "./pbl-int.h"
 
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-__attribute__((unused)) void __PblInt8_T_Cleanup(PblInt8_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUInt8_T_Cleanup(PblUInt8_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblInt16_T_Cleanup(PblInt16_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUInt16_T_Cleanup(PblUInt16_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblInt32_T_Cleanup(PblInt32_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUInt32_T_Cleanup(PblUInt32_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblInt64_T_Cleanup(PblInt64_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUInt64_T_Cleanup(PblUInt64_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblLeastInt8_T_Cleanup(PblLeastInt8_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblULeastInt8_T_Cleanup(PblULeastInt8_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblLeastInt16_T_Cleanup(PblLeastInt16_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblULeastInt16_T_Cleanup(PblULeastInt16_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblLeastInt32_T_Cleanup(PblLeastInt32_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblULeastInt32_T_Cleanup(PblULeastInt32_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblLeastInt64_T_Cleanup(PblLeastInt64_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblULeastInt64_T_Cleanup(PblULeastInt64_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblFastInt8_T_Cleanup(PblFastInt8_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUFastInt8_T_Cleanup(PblUFastInt8_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblFastInt16_T_Cleanup(PblFastInt16_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUFastInt16_T_Cleanup(PblUFastInt16_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblFastInt32_T_Cleanup(PblFastInt32_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUFastInt32_T_Cleanup(PblUFastInt32_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblFastInt64_T_Cleanup(PblFastInt64_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUFastInt64_T_Cleanup(PblUFastInt64_T **value)  PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
 // ---- Helper Functions ----------------------------------------------------------------------------------------------
 
 PblInt8_T* PblGetInt8T(int8_t val) {

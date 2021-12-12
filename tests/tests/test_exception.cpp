@@ -7,15 +7,15 @@
 #include "gtest/gtest.h"
 
 TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
-  PBL_ALLOC_DECLARATION(v_1, PblMetaFunctionCallCtx_T);
+  PBL_DECLARE_VAR(v_1, PblFunctionCallMetaData_T);
 
   EXPECT_EQ(
-    PblMetaFunctionCallCtx_T_Size,
-    sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblMetaFunctionCallCtx_T* ) + sizeof(NULL)
+    PblFunctionCallMetaData_T_Size,
+    sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblFunctionCallMetaData_T * ) + sizeof(NULL)
     );
   EXPECT_EQ(v_1->meta.defined, false);
 
-  PBL_ALLOC_DEFINITION(v_2, PblMetaFunctionCallCtx_T);
+  PBL_DEFINE_VAR(v_2, PblFunctionCallMetaData_T);
 
   EXPECT_TRUE(v_2->actual.call_origin_ctx == NULL);
   EXPECT_TRUE(v_2->actual.exception == NULL);
@@ -24,19 +24,19 @@ TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
   EXPECT_TRUE(v_2->actual.arg_amount == NULL);
   EXPECT_TRUE(v_2->actual.function_identifier == NULL);
   EXPECT_EQ(
-    PblMetaFunctionCallCtx_T_Size,
-    sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblMetaFunctionCallCtx_T* ) + sizeof(NULL)
+    PblFunctionCallMetaData_T_Size,
+    sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblFunctionCallMetaData_T * ) + sizeof(NULL)
     );
   EXPECT_TRUE(v_2->meta.defined);
 }
 
 TEST(ExceptionTest, PblExceptionDefaults) {
-  PBL_ALLOC_DECLARATION(v_1, PblException_T);
+  PBL_DECLARE_VAR(v_1, PblException_T);
 
   EXPECT_EQ(PblException_T_Size, 4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void*));
   EXPECT_EQ(v_1->meta.defined, false);
 
-  PBL_ALLOC_DEFINITION(v_2, PblException_T);
+  PBL_DEFINE_VAR(v_2, PblException_T);
 
   EXPECT_TRUE(v_2->actual.child_exc == NULL);
   EXPECT_TRUE(v_2->actual.parent_exc == NULL);
@@ -49,7 +49,7 @@ TEST(ExceptionTest, PblExceptionDefaults) {
   EXPECT_EQ(v_2->meta.defined, true);
 }
 
-PblInt_T* NestedTestFunction(PblMetaFunctionCallCtx_T* this_call_meta, PblUInt_T* i)
+PblInt_T* NestedTestFunction(PblFunctionCallMetaData_T * this_call_meta, PblUInt_T* i)
 {
   PblUInt_T* line = PblGetUIntT(__LINE__);
   PblException_T* exception = PblGetExceptionT(
@@ -64,41 +64,41 @@ PblInt_T* NestedTestFunction(PblMetaFunctionCallCtx_T* this_call_meta, PblUInt_T
   PBL_RAISE_EXCEPTION(exception, PblInt_T);
 }
 
-PblInt_T* TestFunction(PblMetaFunctionCallCtx_T* this_call_meta)
+PblInt_T* TestFunction(PblFunctionCallMetaData_T * this_call_meta)
 {
-  PBL_ALLOC_DECLARATION(r_1, PblInt_T);
+  PBL_DECLARE_VAR(r_1, PblInt_T);
 
   /// creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
   /// the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T*, H3);
-  PBL_EXCEPTION_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T*, X1, PblGetUIntT(1));
+  PBL_CALL_FUNC_AND_CATCH(NestedTestFunction, r_1, X1, PblGetUIntT(1));
 
   // if the function failed, treat the return as invalid -> restore previous value
   // in this case the function raises an exception and as such it will never reach this code
   if (this_call_meta->actual.is_failure->actual)
   {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_PASTE_ADDRESS_COPY(r_1, PblInt_T *, H3);
+    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
   }
   return r_1;
 }
 
 TEST(ExceptionTest, OneNestCall) {
-  PBL_ALLOC_DECLARATION(r_1, PblInt_T);
-  PBL_ALLOC_DEFINITION(this_call_meta, PblMetaFunctionCallCtx_T);
+  PBL_DECLARE_VAR(r_1, PblInt_T);
+  PBL_DEFINE_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
   // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
   // the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T*, H3);
   /// Call the function and update the local ctx if an exception was raised
-  PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction, r_1, H3, PblGetBoolT(false),this_call_meta,);
+  PBL_BASE_CALL_AND_CATCH_EXCEPTION(TestFunction, r_1, H3, PblGetBoolT(false), this_call_meta,);
 
   // if the function failed, treat the return as invalid -> restore previous value
   if (this_call_meta->actual.is_failure->actual)
   {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_PASTE_ADDRESS_COPY(r_1, PblInt_T *, H3);
+    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
   }
 
   // the return should have failed aka. the value should have been set to NULL and then restored by
@@ -130,15 +130,15 @@ TEST(ExceptionTest, OneNestCall) {
     );
 }
 
-PblInt_T* TestFunction2(PblMetaFunctionCallCtx_T*  this_call_meta) {
+PblInt_T* TestFunction2(PblFunctionCallMetaData_T *  this_call_meta) {
   /// Call the block and execute the except block if the exc names match
-  PBL_EXCEPTION_TRY_EXCEPT_BLOCK(
+  PBL_TRY_EXCEPT_BLOCK(
     {
-      PBL_ALLOC_DECLARATION(r_1, PblInt_T);
-      PBL_EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T*, X1, Y2, PblGetUIntT(1))
+      PBL_DECLARE_VAR(r_1, PblInt_T);
+      PBL_CALL_FUNC_IN_TRY_EXCEPT_BLOCK(NestedTestFunction, r_1, PblInt_T*, X1, Y2, PblGetUIntT(1))
       return r_1;
     },
-    {PBL_EXCEPTION_CREATE_EXCEPT_BLOCK(
+    {PBL_EXCEPT_BLOCK(
         "test",
         {
           return PblGetIntT(1);
@@ -155,21 +155,21 @@ PblInt_T* TestFunction2(PblMetaFunctionCallCtx_T*  this_call_meta) {
 }
 
 TEST(ExceptionTest, TryExceptCall) {
-  PBL_ALLOC_DECLARATION(r_1, PblInt_T);
-  PBL_ALLOC_DEFINITION(this_call_meta, PblMetaFunctionCallCtx_T);
+  PBL_DECLARE_VAR(r_1, PblInt_T);
+  PBL_DEFINE_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
   // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
   // the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T*, H3);
   /// Call the function and update the local ctx if an exception was raised
-  PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction2, r_1, H3, PblGetBoolT(false), this_call_meta,);
+  PBL_BASE_CALL_AND_CATCH_EXCEPTION(TestFunction2, r_1, H3, PblGetBoolT(false), this_call_meta,);
 
   // if the function failed, treat the return as invalid -> restore previous value
   if (this_call_meta->actual.is_failure->actual)
   {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_PASTE_ADDRESS_COPY(r_1, PblInt_T *, H3);
+    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
   }
 
   // Try-except should never if there is a except statement that was executed, log it's exception and throw the results
@@ -182,15 +182,15 @@ TEST(ExceptionTest, TryExceptCall) {
   EXPECT_EQ(r_1->actual, 1);
 }
 
-PblInt_T* TestFunction3(PblMetaFunctionCallCtx_T*  this_call_meta) {
+PblInt_T* TestFunction3(PblFunctionCallMetaData_T *  this_call_meta) {
   /// Call the block and execute the except block if the exc names match
-  PBL_EXCEPTION_TRY_EXCEPT_BLOCK(
+  PBL_TRY_EXCEPT_BLOCK(
     {
-      PBL_ALLOC_DECLARATION(r_1, PblInt_T);
-      PBL_EXCEPTION_TRY_BLOCK_CATCH_FUNC_CONSTRUCTOR(NestedTestFunction, r_1, PblInt_T*, X1, Y2, PblGetUIntT(1))
+      PBL_DECLARE_VAR(r_1, PblInt_T);
+      PBL_CALL_FUNC_IN_TRY_EXCEPT_BLOCK(NestedTestFunction, r_1, PblInt_T*, X1, Y2, PblGetUIntT(1))
       return r_1;
     },
-    {PBL_EXCEPTION_CREATE_EXCEPT_BLOCK(
+    {PBL_EXCEPT_BLOCK(
         "test",
         {
           return PblGetIntT(1);
@@ -207,21 +207,21 @@ PblInt_T* TestFunction3(PblMetaFunctionCallCtx_T*  this_call_meta) {
 }
 
 TEST(ExceptionTest, TryExceptCallWithContinuation) {
-  PBL_ALLOC_DECLARATION(r_1, PblInt_T);
-  PBL_ALLOC_DEFINITION(this_call_meta, PblMetaFunctionCallCtx_T);
+  PBL_DECLARE_VAR(r_1, PblInt_T);
+  PBL_DEFINE_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
   // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
   // the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T*, H3);
   /// Call the function and update the local ctx if an exception was raised
-  PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR(TestFunction3, r_1, H3, PblGetBoolT(false), this_call_meta,);
+  PBL_BASE_CALL_AND_CATCH_EXCEPTION(TestFunction3, r_1, H3, PblGetBoolT(false), this_call_meta,);
 
   // if the function failed, treat the return as invalid -> restore previous value
   if (this_call_meta->actual.is_failure->actual)
   {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_PASTE_ADDRESS_COPY(r_1, PblInt_T *, H3);
+    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
   }
 
   EXPECT_FALSE(this_call_meta->actual.is_failure->actual);

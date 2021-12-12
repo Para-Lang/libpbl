@@ -20,11 +20,11 @@ extern "C" {
 /// @brief Size of the type 'PblString_T' in bytes
 #define PblString_T_Size (sizeof(PblSize_T*) + sizeof(PblUInt_T*) + sizeof(PblUInt_T*) + sizeof(char *))
 /// @brief Returns the declaration default for the type 'PblString_T'
-#define PblString_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblString_T)
+#define PblString_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblString_T)
 /// @brief Returns the definition default, for the type 'PblString_T', where the children have not been set yet and
 /// only the value itself 'exists' already.
 #define PblString_T_DefDefault                                                                                         \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblString_T, .allocated_len = NULL, .len = NULL, .str = NULL)
+  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblString_T, .allocated_len = NULL, .len = NULL, .str = NULL)
 
 /// @brief Base Struct of PblString - avoid using this type
 struct PblString_Base {
@@ -41,14 +41,6 @@ struct PblString_Base {
 /// @brief PBL String implementation - uses dynamic memory allocation -> located in heap
 struct PblString PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblString_Base)
 typedef struct PblString PblString_T;
-
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-/**
- * @brief Cleanups a local function 'PblString_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblString_T_Cleanup(PblString_T **value);
 
 // ---- Handler Functions ---------------------------------------------------------------------------------------------
 

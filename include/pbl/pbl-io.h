@@ -25,9 +25,9 @@ extern "C" {
 /// @returns The size of the type 'PblFile_T' in bytes
 #define PblFile_T_Size sizeof(FILE *)
 /// @brief Returns the declaration default for the type 'PblFile_T'
-#define PblFile_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblFile_T)
+#define PblFile_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblFile_T)
 /// @brief Returns the definition default for the type 'PblFile_T', where only value itself has been created
-#define PblFile_T_DefDefault PBL_DEFINITION_SINGLE_CONSTRUCTOR(PblFile_T, NULL)
+#define PblFile_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblFile_T, NULL)
 
 /// @brief File Descriptor used to perform I/O actions on a file
 struct PblFile PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(FILE*)
@@ -40,11 +40,11 @@ typedef struct PblFile PblFile_T;
 /// @returns The size of the type 'PblStream_T' in bytes
 #define PblStream_T_Size (sizeof(PblUInt_T*) + sizeof(PblFile_T*) + sizeof(PblBool_T*) + sizeof(PblString_T*))
 /// @brief Returns the declaration default for the type 'PblStream_T'
-#define PblStream_T_DeclDefault PBL_DECLARATION_CONSTRUCTOR(PblStream_T)
+#define PblStream_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblStream_T)
 /// @brief Returns the definition default for the type 'PblStream_T', where the children have not been set yet and only the
 /// value itself 'exists' already.
 #define PblStream_T_DefDefault                                                                                         \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = NULL, .file = NULL, .open = NULL, .mode = NULL)
+  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblStream_T, .fd = NULL, .file = NULL, .open = NULL, .mode = NULL)
 
 /// @brief Base Struct of PblString - avoid using this type
 struct PblStream_Base {
@@ -67,32 +67,18 @@ typedef struct PblStream PblStream_T;
 
 /// @brief Standard stream for getting input on the default program console
 #define PBL_STREAM_STDIN                                                                                               \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(0), .file = PblGetFileT(stdin),                     \
+  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(0), .file = PblGetFileT(stdin),                     \
                                     .open = PblGetBoolT(true), .mode = PblGetStringT("a"))
 
 /// @brief Standard stream for outputting to the default program console
 #define PBL_STREAM_STDOUT                                                                                              \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(1), .file = PblGetFileT(stdout),                    \
+  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(1), .file = PblGetFileT(stdout),                    \
                                     .open = PblGetBoolT(true), .mode = PblGetStringT("a"))
 
 /// @brief Standard stream for outputting error messages to the default program console
 #define PBL_STREAM_STDERR                                                                                              \
-  PBL_DEFINITION_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(2), .file = PblGetFileT(stderr),                    \
+  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblStream_T, .fd = PblGetUIntT(2), .file = PblGetFileT(stderr),                    \
                                     .open = PblGetBoolT(true), .mode = PblGetStringT("a"))
-
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-/**
- * @brief Cleanups a local function 'PblFile_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblFile_T_Cleanup(PblFile_T **value);
-
-/**
- * @brief Cleanups a local function 'PblStream_T' variable
- * @param value The pointer to the variable wrapper / pointer
- */
-__attribute__((unused)) void __PblStream_T_Cleanup(PblStream_T **value);
 
 // ---- Handler Functions ---------------------------------------------------------------------------------------------
 

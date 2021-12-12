@@ -8,41 +8,11 @@
 
 #include "./pbl-types.h"
 
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-__attribute__((unused)) void __PblBool_T_Cleanup(PblBool_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblSize_T_Cleanup(PblSize_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblChar_T_Cleanup(PblChar_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUChar_T_Cleanup(PblUChar_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblShort_T_Cleanup(PblShort_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUShort_T_Cleanup(PblUShort_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblInt_T_Cleanup(PblInt_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblUInt_T_Cleanup(PblUInt_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblLong_T_Cleanup(PblLong_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblULong_T_Cleanup(PblULong_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblLongLong_T_Cleanup(PblLongLong_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblULongLong_T_Cleanup(PblULongLong_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblFloat_T_Cleanup(PblFloat_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblDouble_T_Cleanup(PblDouble_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
-__attribute__((unused)) void __PblLongDouble_T_Cleanup(PblLongDouble_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
 // ---- Handler Functions ---------------------------------------------------------------------------------------------
 
 PblBool_T* PblGetBoolT(bool val) {
+  PBL_DECLARE_VAR(x, PblVoid_T);
+  PBL_SIZEOF_ON_RUNTIME(x);
   PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(PblBool_T, bool)
 }
 

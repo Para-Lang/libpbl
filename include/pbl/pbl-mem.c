@@ -24,11 +24,6 @@ void *PblValPtr(void *ptr) {
   return ptr;
 }
 
-void PblCleanupLocal(void **ptr)
-{
-  // TODO! Implement Cleanup
-}
-
 void PblFree(void *ptr) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
   if (ptr == NULL) { PBL_LOG_FREE_ERR_NULL_PTR }

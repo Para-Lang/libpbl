@@ -7,17 +7,13 @@
 
 #include "pbl-any.h"
 
-// ---- Cleanup Functions ---------------------------------------------------------------------------------------------
-
-__attribute__((unused)) void __PblAny_T_Cleanup(PblAny_T **value) PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value);
-
 // ---- Helper Functions ----------------------------------------------------------------------------------------------
 
-PblAny_T* PblGetAnyT(void* val, PblTypeMeta_T* type) {
+PblAny_T* PblGetAnyT(void* val, PblType_T * type) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);
 
-  PBL_ALLOC_DEFINITION(ptr, PblAny_T);
+  PBL_DEFINE_VAR(ptr, PblAny_T);
 
   // copying the memory to the destination address (the new type)
   ptr->actual.val = PblMalloc(type->size);
