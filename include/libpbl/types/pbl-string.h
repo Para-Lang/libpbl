@@ -79,7 +79,7 @@ PblString_T *PblGetStringT(const char *content);
  * @brief Compares the two passed strings and returns whether they are equal
  * @param str_1 The first string
  * @param str_2 The second string
- * @return True whether it's the same else false
+ * @return True if both strings are equal and the content does not differ, else false
  */
 PblBool_T *PblCompareStringT(PblString_T *str_1, PblString_T *str_2);
 
