@@ -34,7 +34,7 @@ jobs:
           cmake --build . --target runPblTests -- -j 9
       - name: Run Tests
         run: |
-          ./tests/tests/runPblTests
+          ./tests/runPblTests
       - name: Run DrMemory for Tests
         run: |
-          ./DrMemory-Linux-2.4.0-2/bin/drmemory -- ./tests/tests/runPblTests
+          ./DrMemory-Linux-2.4.0-2/bin/drmemory -- ./tests/runPblTests
