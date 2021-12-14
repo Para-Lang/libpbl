@@ -69,6 +69,31 @@ typedef struct PblVarMetaData PblVarMetaData_T;
   (to_write) = type##_DefDefault;                                                                                      \
   (to_write).actual = write_val;
 
+// Use auto with C++
+#ifdef __cplusplus
+
+/// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
+/// @note This should only be used when creating a declaration of a Para-C type
+#define PBL_DECLARE_VAR(var_identifier, type, cleanup...)                                                              \
+  auto *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
+  *(var_identifier) = type##_DeclDefault;
+
+/// @brief This macro allocates an instance of type, which has the default initialisation value set
+/// @note This should only be used when creating a definition that shall be empty - if it's though a conversion from C
+/// to Para-C the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable
+#define PBL_DEFINE_VAR(var_identifier, type, cleanup...)                                                               \
+  auto *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
+  *(var_identifier) = type##_DefDefault;
+
+/// @brief This macro should serve as a helper for writing static arrays that shall be used to store types
+/// @note This should not be used as a replacement to PblIterable_T, but only as a memory-efficient helper for copying
+/// or setting memory values
+#define PBL_CREATE_NEW_ARRAY(to_write, type, length, cleanup...)                                                       \
+  auto *to_write IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type) * (length));                     \
+  for (int i = 0; i < (length); i++) { (to_write)[i] = type##_DefDefault; }
+
+#else
+
 /// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
 /// @note This should only be used when creating a declaration of a Para-C type
 #define PBL_DECLARE_VAR(var_identifier, type, cleanup...)                                                              \
@@ -89,22 +114,20 @@ typedef struct PblVarMetaData PblVarMetaData_T;
   type *to_write IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type) * (length));                     \
   for (int i = 0; i < (length); i++) { (to_write)[i] = type##_DefDefault; }
 
+#endif
+
 // ---- End of General Type Handling Macros ---------------------------------------------------------------------------
 
 // ---- Constructor Macros --------------------------------------------------------------------------------------------
 
 /// @brief Declaration constructor which initialised the meta data for the passed type
 #define PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(type)                                                                 \
-  (type) {                                                                                                             \
-    .meta = {.defined = false }                                                                                        \
-  }
+  (type) { .meta = {.defined = false } }
 
 /// @brief Definition constructor, which initialises the meta data for the passed type and passes to '.actual' the args
 /// as struct
 #define PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(type, ...)                                                      \
-  (type) {                                                                                                             \
-    .meta = {.defined = true}, .actual = { __VA_ARGS__ }                                                               \
-  }
+  (type) { .meta = {.defined = true}, .actual = { __VA_ARGS__ } }
 
 /// @brief Definition constructor, which initialised the meta data for the passed type and passes to '.actual' the
 /// single arg
