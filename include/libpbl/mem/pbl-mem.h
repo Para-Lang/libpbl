@@ -54,18 +54,12 @@ static void PblMemInit(void);
 /// @brief Logs an error for attempting to free an invalid pointer address (NULL) and aborts with exit status '1'
 #define PBL_LOG_FREE_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to free invalid memory address (NULL)");
 
-/// @brief Logs an error for attempting to allocate 0 bytes and aborts with exit status '1'
-#define PBL_LOG_ALLOC_ERR_NULL_SZ PBL_LOG_MEM_ERR("PARA-C: Attempted to allocate invalid amounts of memory (0)");
-
 /// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_MALLOC' or 'GC_MALLOC_ATOMIC' and
 /// aborts with exit status '1'
 #define PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("PARA-C: Failed to allocate memory (Received NULL)");
 
 /// @brief Logs an error for attempting to realloc an invalid pointer address (NULL) and aborts with exit status '1'
 #define PBL_LOG_REALLOC_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to re-allocate invalid memory address (NULL)");
-
-/// @brief Logs an error for attempting to realloc 0 bytes and aborts with exit status '1'
-#define PBL_LOG_REALLOC_ERR_NULL_SZ PBL_LOG_MEM_ERR("PARA-C: Attempted to re-allocate invalid amounts of memory (0)");
 
 /// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_REALLOC' and aborts with exit status
 /// '1'
