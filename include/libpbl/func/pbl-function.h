@@ -62,31 +62,43 @@ extern "C" {
 /// in Para-C all values are pointers inherently and only declarations are not valid.
 #define PBL_FUNC_ARG(arg, val) IFNE(val)(arg = val, .arg = NULL)
 
+/// @brief Validates a required argument for a Para-C function
+#define PBL_VAL_REQ_ARG(var) PblValPtr((void*) (var));
+
 /// @brief Creates based on the passed declaration signature a viable struct child aka. add ';'
 #define PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD(arg) arg;
 
 /// @brief Macro Function to get the standardised identifier for the 'Args' struct of a PBL function
 /// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
+/// @return The identifier in the '<func_identifier>_Args' format
 #define PBL_GET_FUNC_ARGS_IDENTIFIER(func_identifier) func_identifier##_Args
 
 /// @brief Macro Function to get the standardised identifier for the 'Base' of a PBL function
 /// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
+/// @return The identifier in the '<func_identifier>_Base' format
 #define PBL_GET_FUNC_BASE_IDENTIFIER(func_identifier) func_identifier##_Base
 
 /// @brief Macro Function to get the standardised identifier for the 'Overhead' of a PBL function
 /// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
+/// @return The identifier in the '<func_identifier>_Overhead' format
 #define PBL_GET_FUNC_OVERHEAD_IDENTIFIER(func_identifier) func_identifier##_Overhead
 
 /// @brief This creates the overhead function for the passed new function, by declaring it and generating a struct type,
 /// which defines the arguments that may be passed
+/// @param ret_signature The return signature the function should have (left side of the identifier)
+/// @param identifier The identifier for the function
+/// @param _attribute_ The attribute for the function (right side)
+/// @param args The arguments for the function, which should also be contained in the type struct itself
 /// @note At max. 127 args are allowed
 /// @note Both the macro for accessing the base and overhead have to be defined yourself!
-#define PBL_CREATE_FUNC_OVERHEAD(signature, identifier, _attribute_, args...)                                          \
+/// (This macro is only for headers)
+/// @return The struct definition, and the base and overhead declaration
+#define PBL_CREATE_FUNC_OVERHEAD(ret_signature, identifier, _attribute_, args...)                                     \
   struct PBL_GET_FUNC_ARGS_IDENTIFIER(identifier) {                                                                    \
     PBL_APPLY_MACRO(PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD, args)                                                \
   };                                                                                                                   \
-  signature PBL_GET_FUNC_BASE_IDENTIFIER(identifier)(args) _attribute_;                                                \
-  signature PBL_GET_FUNC_OVERHEAD_IDENTIFIER(identifier)(struct identifier##_Args in) _attribute_;
+  ret_signature PBL_GET_FUNC_BASE_IDENTIFIER(identifier)(args) _attribute_;                                            \
+  ret_signature PBL_GET_FUNC_OVERHEAD_IDENTIFIER(identifier)(struct identifier##_Args in) _attribute_;
 
 /// @brief Calls a function, passes the args and creates the appropriate unique identifier for the function call.
 /// @param func The function that should be called with the passed variadic arguments.
@@ -138,7 +150,7 @@ struct PblException_Base {
 };
 
 /// Exception implementation
-struct PblException PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_Base);
+struct PblException PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_Base)
 /// Exception implementation
 typedef struct PblException PblException_T;
 
@@ -208,7 +220,7 @@ typedef struct PblException PblException_T;
   PblBool_T *block_identifier##_invoke_except = PblGetBoolT(false);                                                    \
   PblBool_T *block_identifier##_except_handled = PblGetBoolT(false);                                                   \
   block;                                                                                                               \
-  block_identifier##_except_block : except_block;                                                                      \
+  block_identifier##_except_block : { except_block };                                                                 \
   block_identifier##_finish_up : {                                                                                     \
     if (block_identifier##_invoke_except->actual && !block_identifier##_except_handled->actual) { return NULL; }       \
   }
@@ -244,7 +256,7 @@ typedef struct PblException PblException_T;
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
 /// @returns The size in bytes of the PBL MetaFunctionCallCtx type
 #define PblFunctionCallMetaData_T_Size                                                                                 \
-  (sizeof(PblBool *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblFunctionCallMetaData_T *) +           \
+  (sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblFunctionCallMetaData_T *) +         \
    sizeof(NULL))
 /// @brief Returns the declaration default for the type 'PblMetaFunctionCallCtx_T'
 #define PblFunctionCallMetaData_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblFunctionCallMetaData_T)
