@@ -11,6 +11,18 @@
 // General Required Header Inclusion
 #include <libpbl/types/pbl-types.h>
 
+// ---- Memory Setup --------------------------------------------------------------------------------------------------
+
+__attribute__((unused))
+__attribute__((constructor))
+__attribute__((deprecated("Compiler-Only Function - User Call Invalid!")))
+static void PblMemInit(void)
+{
+  GC_INIT();
+}
+
+// ---- End of Memory Setup -------------------------------------------------------------------------------------------
+
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
 void *PblMemCpy(void *dest, const void *src, size_t bytes) {

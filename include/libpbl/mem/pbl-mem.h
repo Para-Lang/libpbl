@@ -20,6 +20,20 @@
 extern "C" {
 #endif
 
+// ---- Memory Setup --------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Initialises the Garbage Collector and performs a general setup for the memory functions
+ * @warning May not be used by users, as it is only intended to be called by the compiler (in the background) before
+ * main was even run
+ */
+__attribute__((unused))
+__attribute__((constructor))
+__attribute__((deprecated("Compiler-Only Function - User Call Invalid!")))
+static void PblMemInit(void);
+
+// ---- End of Memory Setup -------------------------------------------------------------------------------------------
+
 // ---- Helper Macros -------------------------------------------------------------------------------------------------
 
 /// @brief Logs the entered error / string and aborts the program with the exit status '1'
