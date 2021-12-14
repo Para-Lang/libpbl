@@ -13,19 +13,19 @@ TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
   PBL_DECLARE_VAR(v_1, PblFunctionCallMetaData_T);
 
   EXPECT_EQ(PblFunctionCallMetaData_T_Size, sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) +
-                                              2 * sizeof(PblFunctionCallMetaData_T *) + sizeof(NULL));
+                                              2 * sizeof(PblFunctionCallMetaData_T *) + sizeof(nullptr));
   EXPECT_EQ(v_1->meta.defined, false);
 
   PBL_DEFINE_VAR(v_2, PblFunctionCallMetaData_T);
 
-  EXPECT_TRUE(v_2->actual.call_origin_ctx == NULL);
-  EXPECT_TRUE(v_2->actual.exception == NULL);
-  EXPECT_TRUE(v_2->actual.failure_origin_ctx == NULL);
-  EXPECT_TRUE(v_2->actual.is_failure == NULL);
-  EXPECT_TRUE(v_2->actual.arg_amount == NULL);
-  EXPECT_TRUE(v_2->actual.function_identifier == NULL);
+  EXPECT_TRUE(v_2->actual.call_origin_ctx == nullptr);
+  EXPECT_TRUE(v_2->actual.exception == nullptr);
+  EXPECT_TRUE(v_2->actual.failure_origin_ctx == nullptr);
+  EXPECT_TRUE(v_2->actual.is_failure == nullptr);
+  EXPECT_TRUE(v_2->actual.arg_amount == nullptr);
+  EXPECT_TRUE(v_2->actual.function_identifier == nullptr);
   EXPECT_EQ(PblFunctionCallMetaData_T_Size, sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) +
-                                              2 * sizeof(PblFunctionCallMetaData_T *) + sizeof(NULL));
+                                              2 * sizeof(PblFunctionCallMetaData_T *) + sizeof(nullptr));
   EXPECT_TRUE(v_2->meta.defined);
 }
 
@@ -37,13 +37,13 @@ TEST(ExceptionTest, PblExceptionDefaults) {
 
   PBL_DEFINE_VAR(v_2, PblException_T);
 
-  EXPECT_TRUE(v_2->actual.child_exc == NULL);
-  EXPECT_TRUE(v_2->actual.parent_exc == NULL);
-  EXPECT_TRUE(v_2->actual.name == NULL);
-  EXPECT_TRUE(v_2->actual.msg == NULL);
-  EXPECT_TRUE(v_2->actual.filename == NULL);
-  EXPECT_TRUE(v_2->actual.line_content == NULL);
-  EXPECT_TRUE(v_2->actual.line == NULL);
+  EXPECT_TRUE(v_2->actual.child_exc == nullptr);
+  EXPECT_TRUE(v_2->actual.parent_exc == nullptr);
+  EXPECT_TRUE(v_2->actual.name == nullptr);
+  EXPECT_TRUE(v_2->actual.msg == nullptr);
+  EXPECT_TRUE(v_2->actual.filename == nullptr);
+  EXPECT_TRUE(v_2->actual.line_content == nullptr);
+  EXPECT_TRUE(v_2->actual.line == nullptr);
   EXPECT_EQ(PblException_T_Size, 4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *));
   EXPECT_EQ(v_2->meta.defined, true);
 }
@@ -52,7 +52,7 @@ PblInt_T *NestedTestFunction(PblFunctionCallMetaData_T *this_call_meta, PblUInt_
   PblUInt_T *line = PblGetUIntT(__LINE__);
   PblException_T *exception =
     PblGetExceptionT(PblGetStringT("test"), PblGetStringT("TestException"), PblGetStringT(__FILE__), line,
-                     PblGetStringT("raise exception"), NULL, NULL);
+                     PblGetStringT("raise exception"), nullptr, nullptr);
   PBL_RAISE_EXCEPTION(exception, PblInt_T);
 }
 
@@ -94,9 +94,9 @@ TEST(ExceptionTest, OneNestCall) {
   // 'PBL_PASTE_ADDRESS_COPY'
   EXPECT_EQ(r_1->meta.defined, false);
   EXPECT_TRUE(this_call_meta->actual.is_failure->actual);
-  EXPECT_TRUE(this_call_meta->actual.failure_origin_ctx != NULL);
-  EXPECT_TRUE(this_call_meta->actual.exception != NULL);
-  EXPECT_TRUE(this_call_meta->actual.call_origin_ctx == NULL);
+  EXPECT_TRUE(this_call_meta->actual.failure_origin_ctx != nullptr);
+  EXPECT_TRUE(this_call_meta->actual.exception != nullptr);
+  EXPECT_TRUE(this_call_meta->actual.call_origin_ctx == nullptr);
   PblString_T *default_name = PblGetStringT("test");
   EXPECT_TRUE(
     PblCompareStringT(((PblException_T *) this_call_meta->actual.exception)->actual.msg, default_name)->actual);
@@ -148,9 +148,9 @@ TEST(ExceptionTest, TryExceptCall) {
   // Try-except should never if there is a except statement that was executed, log it's exception and throw the results
   // away right after finishing up
   EXPECT_FALSE(this_call_meta->actual.is_failure->actual);
-  EXPECT_TRUE(this_call_meta->actual.failure_origin_ctx == NULL);
-  EXPECT_TRUE(this_call_meta->actual.exception == NULL);
-  EXPECT_TRUE(this_call_meta->actual.call_origin_ctx == NULL);
+  EXPECT_TRUE(this_call_meta->actual.failure_origin_ctx == nullptr);
+  EXPECT_TRUE(this_call_meta->actual.exception == nullptr);
+  EXPECT_TRUE(this_call_meta->actual.call_origin_ctx == nullptr);
   EXPECT_EQ(r_1->meta.defined, true);
   EXPECT_EQ(r_1->actual, 1);
 }
@@ -188,9 +188,9 @@ TEST(ExceptionTest, TryExceptCallWithContinuation) {
   }
 
   EXPECT_FALSE(this_call_meta->actual.is_failure->actual);
-  EXPECT_TRUE(this_call_meta->actual.failure_origin_ctx == NULL);
-  EXPECT_TRUE(this_call_meta->actual.exception == NULL);
-  EXPECT_TRUE(this_call_meta->actual.call_origin_ctx == NULL);
+  EXPECT_TRUE(this_call_meta->actual.failure_origin_ctx == nullptr);
+  EXPECT_TRUE(this_call_meta->actual.exception == nullptr);
+  EXPECT_TRUE(this_call_meta->actual.call_origin_ctx == nullptr);
   EXPECT_EQ(r_1->meta.defined, true);
   EXPECT_EQ(r_1->actual, 1);
 }
