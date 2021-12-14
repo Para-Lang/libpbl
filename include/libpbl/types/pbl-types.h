@@ -452,27 +452,41 @@ struct PblDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(double);
 
 /// @brief PBL Long Double implementation
 struct PblLongDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(long double);
-  /// @brief PBL Long Double implementation
-  typedef struct PblLongDouble PblLongDouble_T;
+/// @brief PBL Long Double implementation
+typedef struct PblLongDouble PblLongDouble_T;
 
 // ---- End of Numeric Types ------------------------------------------------------------------------------------------
 
 // ---- Helper Function Constructor Macros ----------------------------------------------------------------------------
 
-/// @brief Constructs the default cleanup constructor
-#define PBL_DEFAULT_CLEANUP_CONSTRUCTOR(value)                                                                         \
-  { PblCleanupLocal((void **) value); }
+// Use auto with C++
+#ifdef __cplusplus
 
 /// @brief This a macro function definition body constructor, which should be used to directly convert C types into
 /// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
 /// does not support complex initialisation.
 #define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type)                                                    \
   {                                                                                                                    \
-    parac_type *conv = PblMalloc(sizeof(parac_type));                                                                  \
+    auto *conv = (parac_type*) PblMalloc(sizeof(parac_type));                                                          \
     *conv = parac_type##_DefDefault;                                                                                   \
     conv->actual = (c_type) val;                                                                                       \
     return conv;                                                                                                       \
   }
+
+#else
+
+/// @brief This a macro function definition body constructor, which should be used to directly convert C types into
+/// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
+/// does not support complex initialisation.
+#define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type)                                                    \
+  {                                                                                                                    \
+    parac_type *conv = (parac_type*) PblMalloc(sizeof(parac_type));                                                    \
+    *conv = parac_type##_DefDefault;                                                                                   \
+    conv->actual = (c_type) val;                                                                                       \
+    return conv;                                                                                                       \
+  }
+
+#endif
 
 // ---- End of Helper Function Constructor Macros ---------------------------------------------------------------------
 

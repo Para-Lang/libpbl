@@ -12,29 +12,23 @@ project(
 # Adding FetchContent for simplified content installation
 include(FetchContent)
 
+# Enabling the usage of folders and make predefined projects go into their own solution folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 # If this is the main project, define additional terms required for testing and such
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # PBL only supports C11 and upwards
   set(CMAKE_C_STANDARD 11)
 
-  # set test flags
+  # Setting test flags
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage -O0")
 
-  # adding coverage definitions
+  # Adding coverage definitions
   add_definitions(-fprofile-arcs -ftest-coverage)
 
-  # Hinting the usage of built-in atomic types (since we use C11 as an enforced base standard)
-  add_compile_definitions(GC_BUILTIN_ATOMIC)
+  # Adding the examples runtime
+  add_subdirectory(examples)
 endif()
-
-# Enabling windows threads if on windows
-if (WIN32)
-  option(CMAKE_USE_WIN32_THREADS_INIT "Using WIN32 threads" ON)
-  option(gtest_disable_pthreads "Disable uses of pthreads in gtest" ON)
-endif (WIN32)
-
-# Hinting the usage of built-in atomic types (since we use C11 as an enforced base standard)
-add_compile_definitions(GC_BUILTIN_ATOMIC)
 
 # Adding the src and linking the library
 add_subdirectory(src)
@@ -46,6 +40,13 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 # If Debug-Mode is enabled add debug definitions
-if (CMAKE_BUILD_TYPE MATCHES Debug)
+if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
+  # Add default definition for debugging
   add_definitions(-DDEBUG)
+
+  # Sets the PBL_DEBUG to true per default
+  set(PBL_DEBUG true)
+
+  # Add macro for the Garbage Collector to allow debugging
+  add_compile_definitions(GC_DEBUG)
 endif()

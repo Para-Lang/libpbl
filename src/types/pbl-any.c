@@ -16,11 +16,11 @@ PblAny_T *PblGetAnyT(void *val, PblType_T *type) {
 
   PBL_DEFINE_VAR(ptr, PblAny_T);
 
-  // copying the memory to the destination address (the new type)
+  // Copying the memory to the destination address (the new type)
   ptr->actual.val = PblMalloc(type->size);
   PblMemCpy(ptr->actual.val, val, type->size);
 
-  // initialising the remaining properties
+  // Initialising the remaining properties
   ptr->actual.byte_size = PblGetSizeT(type->size);
   ptr->actual.type = type;
 

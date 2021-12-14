@@ -13,15 +13,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - `pbl-apply-macro.h` for defining a macro function, which allows for iterating through macro args and apply another
-  macro to them
+  macro to them.
 - Macros `PBL_GET_FUNC_ARGS_IDENTIFIER`, `PBL_GET_FUNC_BASE_IDENTIFIER` and `PBL_GET_FUNC_OVERHEAD_IDENTIFIER` for
-  getting standardised macros
-- `PBL_COUNT_VA_ARGS` for counting the amount of arguments passed to this specific macro
-- `PBL_FUNC_ARG` for creating the effect of arguments being `NULL` per default
+  getting standardised macros.
+- `PBL_COUNT_VA_ARGS` for counting the amount of arguments passed to this specific macro.
+- `PBL_FUNC_ARG` for creating the effect of arguments being `NULL` per default.
 - `PBL_CREATE_FUNC_OVERHEAD` for creating overhead of a Para-C function, which can support default arguments and
-  struct-like initialisation
-- `PBL_CALL_FUNC` for calling a Para-C function and properly handling it
-- Header `pbl-advanced-mem.h` for exception-supported and advanced memory handling with Para-C types
+  struct-like initialisation.
+- `PBL_CALL_FUNC` for calling a Para-C function and properly handling it.
+- Header `pbl-advanced-mem.h` for exception-supported and advanced memory handling with Para-C types.
 - Function `PblMallocUncollectable()` in `pbl-mem.h` for allocating a variable that will not be automatically collected
   aka. will exist until the user deallocates it or the program ends. This will be used for global variables that are
   used throughout the entire program, and are essential to running properly, which means they should not be checked for
@@ -30,14 +30,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Better Docstrings to:
     - `PBL_CREATE_ADDRESS_COPY`
     - `PBL_WRITE_BACK_ADDRESS_COPY`
-- Added new macro for dynamically fetching the size using `PblType_T` using `PBL_SIZEOF_ON_RUNTIME(var)`
+- New macro `PBL_SIZEOF_ON_RUNTIME(var)` for dynamically fetching the size using `PblType_T.size`.
+- New macro `PBL_VAL_REQ_ARG` for validating a required argument aka. it may not be null. This is to make the code more
+  verbose when handling Para-C functions.
+- New IO functions `PblInput()`and `PblInputChar()`
 
 ### Changed
 
 - Entirely restructured the buildup, and now created separate folders for headers (`include`) and
   source code (`src`), where also CMake has been restructured and simplified.
-- Disabled `pthreads.h` usage on Windows for gtest and enabled usage of WIN32 threads
-- Updated macro `PBL_CALL_FUNC`, which handles now also the amount of args properly
+- Updated macro `PBL_CALL_FUNC`, which handles now also the amount of args properly.
 - Renamed the following types:
     - `PblTypeMeta_T` to `PblType_T`
     - `PblMetaVarCtx_T` to `PblVarMetaData_T`
@@ -80,7 +82,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Proper meta-tracking for all Para-C types using `PblVarMeta_T`
 - Default declaration and definition macros for all types in `libpbl`. These are defined using `_DeclDefault` and
   `_DefDefault` for all types
-- `PblStream_T` and `PblFile_T` implementation for stream handling
+- `PblIOStream_T` and `PblIOFile_T` implementation for stream handling
 - Specified Int Types in `pbl-int.h` that wrap the int types in `stdint.h`
 - Meta handling for managing a function call context and Exception handling in `pbl-function.h`
 - Fallback implementation for `__VA_EXT__`, which has been implemented since C++20 or C23,

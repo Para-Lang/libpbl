@@ -13,30 +13,82 @@
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
-PblFile_T *PblGetFileT(FILE *val) {
+PblIOFile_T *PblGetIOFileT(FILE *val) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);
 
-  PblFile_T *conv = PblMalloc(sizeof(PblFile_T));
+  PblIOFile_T *conv = PblMalloc(sizeof(PblIOFile_T));
   *conv = PblFile_T_DefDefault;
   conv->actual = val;
   return conv;
 }
 
-PblStream_T *PblGetStreamT(int fd, const char *mode) {
+PblIOStream_T *PblGetIOStreamT(int fd, const char *mode) {
   // Validate the pointer for safety measures
   mode = PblValPtr((void *) mode);
 
-  PblStream_T *conv = PblMalloc(sizeof(PblStream_T));
+  PblIOStream_T *conv = PblMalloc(sizeof(PblIOStream_T));
   *conv = PblStream_T_DefDefault;
   conv->actual.fd = PblGetUIntT((signed int) fd);
-  conv->actual.file = PblGetFileT(fdopen(fd, mode));
+  conv->actual.file = PblGetIOFileT(fdopen(fd, mode));
   conv->actual.mode = PblGetStringT(mode);
   conv->actual.open = PblGetBoolT(true);
   return conv;
 }
 
-PblVoid_T PblPrint_Base(PblString_T *out, const PblStream_T *stream, const PblChar_T *end) {
+PblChar_T *PblInputChar_Base(PblString_T *display_msg, PblChar_T* end) {
+  PblPrint(display_msg, .end=end);
+
+  char in_char = (char) getchar();
+  // Avoid returning \n or EOF by replacing it with \0
+  return in_char == '\n' || (int) in_char == EOF ? '\0' : PblGetCharT(in_char);
+}
+
+__attribute__((unused)) PblChar_T * PblInputChar_Overhead(struct PblInputChar_Args in) {
+  // Validate the pointer for safety measures
+  PblString_T *display_msg = PBL_VAL_REQ_ARG(in.display_msg);
+  PblChar_T *end = in.end != NULL ? in.end : PblGetCharT('\0');
+  return PblInputChar_Base(display_msg, end);
+}
+
+PblString_T *PblInput_Base(PblString_T *display_msg, PblChar_T *end) {
+  // Printing the initial display message
+  PblPrint(display_msg, .end=end);
+
+  // Initial size
+  unsigned int length = 100;
+  // Allocate mem for 100 chars
+  char *in_str = PblMalloc(length * sizeof(char));
+  // Keep Track of how many chars where inputted now
+  int count = 0;
+
+  char c;
+  // Run as long as it's not a newline
+  while((c = (char) getchar()) != '\n') {
+    // If the character is EOF, abort immediately
+    // (This should not happen though on a console stream, but covering for possible edge cases )
+    if (c == EOF)
+      break;
+
+    if(count >= length) {
+      // Resize the buffer. We increase each time with 50
+      length += 50;
+      in_str = PblRealloc(in_str, length * sizeof(char));
+    }
+    // Writing the char into the name
+    in_str[count++] = c;
+  }
+  return PblGetStringT(in_str);
+}
+
+__attribute__((unused)) PblString_T * PblInput_Overhead(struct PblInput_Args in) {
+  // Validate the pointer for safety measures
+  PblString_T *display_msg = PBL_VAL_REQ_ARG(in.display_msg);
+  PblChar_T *end = in.end != NULL ? in.end : PblGetCharT('\0');
+  return PblInput_Base(display_msg, end);
+}
+
+PblVoid_T PblPrint_Base(PblString_T *out, PblIOStream_T *stream, PblChar_T *end) {
   // Validate the pointer for safety measures
   out = PblValPtr((void *) out);
 
@@ -46,15 +98,15 @@ PblVoid_T PblPrint_Base(PblString_T *out, const PblStream_T *stream, const PblCh
   return PblVoid_T_DeclDefault;
 }
 
-PblVoid_T PblPrint_Overhead(struct PblPrint_Args in) {
+__attribute__((unused)) PblVoid_T PblPrint_Overhead(struct PblPrint_Args in) {
   // Validate the pointer for safety measures
-  PblString_T *out = PblValPtr((void *) in.out);
+  PblString_T *out = PBL_VAL_REQ_ARG(in.out);
 
-  PblStream_T *stream;
+  PblIOStream_T *stream;
   if (in.stream != NULL) {
     stream = in.stream;
   } else {
-    stream = PblMalloc(sizeof(PblStream_T));
+    stream = PblMalloc(sizeof(PblIOStream_T));
     *stream = PBL_STREAM_STDOUT;
   }
   PblChar_T *end = in.end != NULL ? in.end : PblGetCharT('\n');
