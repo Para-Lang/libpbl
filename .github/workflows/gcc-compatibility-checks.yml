@@ -1,0 +1,34 @@
+name: GCC Compatibility Checks
+on:
+  push:
+    branches-ignore:
+      - '**-coverage-report'
+  pull_request:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gcc-version: [ 4.8, 5, 6, 7, 8, 9, 10, 11 ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: ${{ matrix.gcc-version }}
+          platform: x64
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.9
+        with:
+          cmake-version: '3.17.x'
+      - name: Build Tests
+        run: |
+          cmake .
+          cmake --build . --target runPblTests -- -j 9
+      - name: Run Tests
+        run: |
+          ./tests/runPblTests

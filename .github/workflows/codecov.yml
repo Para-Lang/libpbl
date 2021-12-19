@@ -1,5 +1,6 @@
 name: Codecov
 on: [ push ]
+
 jobs:
   run:
     runs-on: ${{ matrix.os }}
