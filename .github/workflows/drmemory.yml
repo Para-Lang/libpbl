@@ -31,7 +31,7 @@ jobs:
       - name: Build Tests
         run: |
           cmake .
-          cmake --build . --target runPblTests -- -j 9
+          cmake --build . --target runPblTests
       - name: Run Tests
         run: |
           ./tests/runPblTests

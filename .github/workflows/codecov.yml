@@ -14,11 +14,11 @@ jobs:
       - name: Build GTest Tests
         run: |
           cmake .
-          cmake --build . --target runPblTests -- -j 9
+          cmake --build . --target runPblTests
       - name: Run C-Coverage
         run: |
-          ./tests/tests/runPblTests
-          gcov -abcfu ./include/CMakeFiles/parac-modules.dir/*.gc*
+          ./tests/runPblTests
+          gcov -abcfu ./src/CMakeFiles/libpbl.dir/*.gc*
           tree .
       - name: Upload C coverage to Codecov
         uses: codecov/codecov-action@v2
