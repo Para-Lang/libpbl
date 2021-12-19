@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Set up GCC
+      - name: Set up MinGW-w64
         uses: egor-tensin/setup-mingw@v1
         with:
           platform: x64
@@ -27,8 +27,8 @@ jobs:
           cmake-version: '3.17.x'
       - name: Build Tests
         run: |
-          cmake .
-          cmake --build . --target runPblTests -- -j 9
+          cmake . -DCMAKE_C_COMPILER=mingw
+          cmake --build . --target runPblTests
       - name: Run Tests
         run: |
           ./tests/runPblTests
