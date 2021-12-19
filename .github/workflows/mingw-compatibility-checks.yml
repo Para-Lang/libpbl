@@ -1,4 +1,4 @@
-name: GCC Compatibility Checks
+name: MinGW Compatibility Checks
 on:
   push:
     branches-ignore:
@@ -7,20 +7,19 @@ on:
 
 jobs:
   run:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         # At the moment only >=7.0 are supported by setup-gcc
-        gcc-version: [ 7, 8, 9, 10, 11, latest ]
+        mingw-version: [ latest ]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Set up GCC
-        uses: egor-tensin/setup-gcc@v1
+        uses: egor-tensin/setup-mingw@v1
         with:
-          version: ${{ matrix.gcc-version }}
           platform: x64
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.9
