@@ -1,0 +1,33 @@
+name: Codecov
+on: [ push ]
+
+jobs:
+  run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+    env:
+      OS: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@master
+      - name: Build GTest Tests
+        run: |
+          cmake .
+          cmake --build . --target runPblTests
+      - name: Run C-Coverage
+        run: |
+          ./tests/runPblTests
+      - name: Generate coverage files
+        run: |
+          gcov -abcfu ./src/**/*.c
+      - name: Run Tree to show directory structure
+        run: |
+          tree .
+      - name: Download Codecov Uploader
+        run: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+      - name: Upload C coverage to Codecov
+        run: |
+          ./codecov -v -F unittests -t ${{ secrets.CODECOV_TOKEN }} -s ./src/ -f ./src/**/*.gcov -n Github-Actions-Upload
