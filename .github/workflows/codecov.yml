@@ -21,6 +21,7 @@ jobs:
       - name: Generate coverage files
         run: |
           gcov -abcfu ./src/**/*.c
+          cp -r ./src/CMakeFiles/pbl.dir/ .
       - name: Run Tree to show directory structure
         run: |
           tree .
