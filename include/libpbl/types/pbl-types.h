@@ -467,7 +467,6 @@ typedef struct PblLongDouble PblLongDouble_T;
 
 // Use auto with C++
 #ifdef __cplusplus
-
 /// @brief This a macro function definition body constructor, which should be used to directly convert C types into
 /// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
 /// does not support complex initialisation.
@@ -478,9 +477,7 @@ typedef struct PblLongDouble PblLongDouble_T;
     conv->actual = (c_type) val;                                                                                       \
     return conv;                                                                                                       \
   }
-
 #else
-
 /// @brief This a macro function definition body constructor, which should be used to directly convert C types into
 /// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
 /// does not support complex initialisation.
@@ -491,7 +488,6 @@ typedef struct PblLongDouble PblLongDouble_T;
     conv->actual = (c_type) val;                                                                                       \
     return conv;                                                                                                       \
   }
-
 #endif
 
 // ---- End of Helper Function Constructor Macros ---------------------------------------------------------------------
