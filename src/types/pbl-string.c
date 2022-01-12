@@ -36,9 +36,10 @@ char *PblGetCCharArrayFromCharT(PblChar_T *char_arr, PblUInt_T *len) {
 
   char *ret_arr = (char *) PblMalloc(sizeof(char) * len->actual);
 
-  int i = 0;
-  for (; i < len->actual; i++) { PblMemCpy(&(ret_arr[i]), &(char_arr[i].actual), sizeof(char)); }
-  ret_arr[i] = '\0';
+  for (int i = 0; i < len->actual; i++) {
+    PblMemCpy(&(ret_arr[i]), &(char_arr[i].actual), sizeof(char));
+  }
+  ret_arr[len->actual] = '\0';
 
   return ret_arr;
 }
@@ -62,7 +63,10 @@ PblChar_T *PblGetCharTArray(const char *content) {
   PblUInt_T *len = PblGetLengthOfCString(content);
   PblChar_T *pbl_chars = PblMalloc(sizeof(PblChar_T) * (len->actual + 1)// Min. size is 1 -> plus end-char: \0
   );
-  for (int i = 0; i < len->actual; i++) { PBL_ASSIGN_TO_VAR(pbl_chars[i], PblChar_T, content[i]); }
+  for (int i = 0; i < len->actual; i++) {
+    PBL_ASSIGN_TO_VAR(pbl_chars[i], PblChar_T, content[i]);
+  }
+
   // Adding null character
   PBL_ASSIGN_TO_VAR(pbl_chars[len->actual], PblChar_T, '\0');
   return pbl_chars;
@@ -84,9 +88,11 @@ PblBool_T *PblCompareStringT(PblString_T *str_1, PblString_T *str_2) {
   str_2 = PblValPtr((void *) str_2);
 
   // Don't bother with comparison if the lengths are the same
-  if (str_1->actual.len->actual != str_2->actual.len->actual) return PblGetBoolT(false);
+  if (str_1->actual.len->actual != str_2->actual.len->actual)
+    return PblGetBoolT(false);
   for (int i = 0; i < str_1->actual.len->actual; i++) {
-    if (str_1->actual.str[i].actual != str_2->actual.str[i].actual) return PblGetBoolT(false);
+    if (str_1->actual.str[i].actual != str_2->actual.str[i].actual)
+      return PblGetBoolT(false);
   }
   return PblGetBoolT(true);
 }
@@ -139,9 +145,10 @@ PblVoid_T PblWriteStringToStringT(PblString_T *str, PblString_T *content, PblUIn
   len_to_write = PblValPtr((void *) len_to_write);
 
   PBL_CREATE_NEW_ARRAY(char_arr, PblChar_T, len_to_write->actual);
-  for (int i = 0; i < len_to_write->actual; i++)
+  for (int i = 0; i < len_to_write->actual; i++) {
     // Using MemCpy to properly copy the value, aka. to be certain it is copied properly
     PblMemCpy(&char_arr[i], &content->actual.str[i], sizeof(PblChar_T));
+  }
 
   PblWriteCharArrayToStringT(str, char_arr, len_to_write);
   return PblVoid_T_DeclDefault;
@@ -215,7 +222,8 @@ PblVoid_T PblDeallocateStringT(PblString_T *lvalue) {
   if (lvalue->meta.defined) {
     // Writing \0 onto the entire space of memory
     PBL_CREATE_NEW_ARRAY(nullify, PblChar_T, lvalue->actual.len->actual);
-    for (int i = 0; i < lvalue->actual.len->actual; i++) nullify[i].actual = '\0';
+    for (int i = 0; i < lvalue->actual.len->actual; i++)
+      nullify[i].actual = '\0';
     PblWriteCharArrayToStringT(lvalue, nullify, lvalue->actual.len);
 
     if (lvalue->actual.allocated_len != NULL) {

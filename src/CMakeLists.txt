@@ -32,7 +32,7 @@ set(HEADER_FILES
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/io/pbl-io.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/func/pbl-function.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/additional/pbl-apply-macro.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/additional/va-opt.h")
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/additional/va-opt.h" types/pbl-meta-type.c)
 
 # Setting the output for the static library (.a)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${libpbl_SOURCE_DIR}/lib")

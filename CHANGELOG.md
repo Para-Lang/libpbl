@@ -56,6 +56,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Renamed `PBL_SIZEOF` to `PBL_SIZEOF_ON_COMPILETIME`
 - Renamed `PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR` to `PBL_BASE_CALL_AND_CATCH_EXCEPTION` (for native C functions) and
   avoided code repetition by utilising the function in `PBL_CALL_FUNC_AND_CATCH` (for Para-C functions) as well.
+- Added inclusion check for C++ to use the `c` prefix in inclusion for C++ to avoid warnings (e.g `#include <cstring>`
+  in C++ and `#include <string.h>` in C)
 
 ### Removed
 

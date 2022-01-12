@@ -7,7 +7,12 @@
 #pragma once
 
 // Including the Base <stdio.h> which this header intends to implement
-#include <stdio.h>
+#ifdef __cplusplus
+  #include <cstdio>
+#else
+  #include <stdio.h>
+#endif
+
 
 // General Required Header Inclusion
 #include "../types/pbl-string.h"

@@ -10,9 +10,15 @@
 
 // Including the base <stdbool.h>, <string.h> and <stddef.h> which this header intends to utilise and paritally
 // implement
-#include <stdbool.h>
-#include <string.h>
-#include <stddef.h>
+#ifdef __cplusplus
+  #include <cstring>
+  #include <cstddef>
+#else
+  #include <stdbool.h>
+  #include <string.h>
+  #include <stddef.h>
+#endif
+
 
 // General Required Header Inclusion
 #include "../additional/va-opt.h"

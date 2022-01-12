@@ -8,9 +8,15 @@
 #pragma once
 
 // Including Headers that are required throughout the entire PBL Library
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#ifdef __cplusplus
+  #include <cstdarg>
+  #include <cstdio>
+  #include <cstdlib>
+#else
+  #include <stdarg.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+#endif
 
 #ifndef PBL_MODULES_MAIN_H
 #define PBL_MODULES_MAIN_H

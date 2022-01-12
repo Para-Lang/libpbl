@@ -9,7 +9,11 @@
 #pragma once
 
 // Including the base <string.h> which this header intends to implement
-#include <string.h>
+#ifdef __cplusplus
+  #include <cstring>
+#else
+  #include <string.h>
+#endif
 
 // General Required Header Inclusion
 #include "./pbl-types.h"

@@ -7,7 +7,12 @@
 #pragma once
 
 // Including the base <stdint.h> which this header intends to implement
-#include <stdint.h>
+#ifdef __cplusplus
+  #include <cstdint>
+#else
+  #include <stdint.h>
+#endif
+
 
 // General Required Header Inclusion
 #include "./pbl-types.h"
