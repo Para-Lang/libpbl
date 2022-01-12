@@ -79,7 +79,6 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 
 // Use auto with C++
 #ifdef __cplusplus
-
 /// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
 /// @note This should only be used when creating a declaration of a Para-C type
 #define PBL_DECLARE_VAR(var_identifier, type, cleanup...)                                                              \
@@ -99,9 +98,7 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 #define PBL_CREATE_NEW_ARRAY(to_write, type, length, cleanup...)                                                       \
   auto *to_write IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type) * (length));                     \
   for (int i = 0; i < (length); i++) { (to_write)[i] = type##_DefDefault; }
-
 #else
-
 /// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
 /// @note This should only be used when creating a declaration of a Para-C type
 #define PBL_DECLARE_VAR(var_identifier, type, cleanup...)                                                              \
@@ -121,7 +118,6 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 #define PBL_CREATE_NEW_ARRAY(to_write, type, length, cleanup...)                                                       \
   type *to_write IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type) * (length));                     \
   for (int i = 0; i < (length); i++) { (to_write)[i] = type##_DefDefault; }
-
 #endif
 
 // ---- End of General Type Handling Macros ---------------------------------------------------------------------------
@@ -139,8 +135,8 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 
 /// @brief Definition constructor, which initialised the meta data for the passed type and passes to '.actual' the
 /// single arg
-#define PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(type, var_actual)                                               \
-  (type) { .meta = {.defined = true}, .actual = (var_actual) }
+#define PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(type, var_actual...)                                            \
+  (type) { .meta = {.defined = true}, .actual = var_actual }
 
 /// @brief Creates the body for a Para-C type definition wrapper - the base_type is the actual value/struct
 #define PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(base_type)                                                             \
@@ -195,17 +191,19 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 /// @returns The declaration default for the type 'PblPointer_T'
 #define PblPointer_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblPointer_T)
 /// @returns The definition default, for the type 'PblPointer_T', where only value itself has been created
-#define PblPointer_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblPointer_T, NULL)
+#define PblPointer_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblPointer_T, {.p_type=NULL,.p_void=NULL})
 
 /// @brief The base pointer type, implemented with 'PblPointer_T'
-struct PblPointer {
-  /// @brief Meta-data tracking, as this value will never have anything accessible
-  PblVarMetaData_T meta;
+/// @note If the p_void is NULL, then the type is also NULL
+struct PblPointer_Base {
   /// @brief The type of the pointer
-  PblType_T* type;
+  PblType_T* p_type;
   /// @brief The actual pointer to the type
-  void* val;
+  void* p_void;
 };
+
+/// @brief This the general purpose pointer struct, which utilises 'PblType_T' to be differentiated
+struct PblPointer { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblPointer_Base); };
 
 /// @brief This the general purpose pointer type, which utilises 'PblType_T' to be differentiated
 typedef struct PblPointer PblPointer_T;
@@ -496,22 +494,22 @@ typedef struct PblLongDouble PblLongDouble_T;
 /// @brief This a macro function definition body constructor, which should be used to directly convert C types into
 /// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
 /// does not support complex initialisation.
-#define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type)                                                    \
+#define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, val, c_type)                                               \
   {                                                                                                                    \
     auto *conv = (parac_type*) PblMalloc(sizeof(parac_type));                                                          \
     *conv = parac_type##_DefDefault;                                                                                   \
-    conv->actual = (c_type) val;                                                                                       \
+    conv->actual = (c_type) (val);                                                                                     \
     return conv;                                                                                                       \
   }
 #else
 /// @brief This a macro function definition body constructor, which should be used to directly convert C types into
 /// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
 /// does not support complex initialisation.
-#define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, c_type)                                                    \
+#define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, val, c_type)                                               \
   {                                                                                                                    \
     parac_type *conv = (parac_type*) PblMalloc(sizeof(parac_type));                                                    \
     *conv = parac_type##_DefDefault;                                                                                   \
-    conv->actual = (c_type) val;                                                                                       \
+    conv->actual = (c_type) (val);                                                                                     \
     return conv;                                                                                                       \
   }
 #endif
@@ -521,11 +519,18 @@ typedef struct PblLongDouble PblLongDouble_T;
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
 /**
+ * @brief Converts a void* pointer and type to a Pbl Pointer type
+ * @param val The actual pointer value
+ * @param type The type of the pointer
+ * @return The created pointer
+ */
+__attribute__((unused)) PblPointer_T *PblGetPointerT(void* val, PblType_T* type);
+
+/**
  * @brief Converts the low level C-Type to a PBL Bool type
  * @param val The C-type to be converted
  * @return The newly created PBL Bool type
  * @note This is a C to Para-C type conversion function - args are in C therefore
- * @
  */
 __attribute__((unused)) PblBool_T *PblGetBoolT(bool val);
 

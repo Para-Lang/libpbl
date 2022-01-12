@@ -34,6 +34,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - New macro `PBL_VAL_REQ_ARG` for validating a required argument aka. it may not be null. This is to make the code more
   verbose when handling Para-C functions.
 - New IO functions `PblInput()`and `PblInputChar()`
+- New type `PblPointer_T` with conversion function `PblGetPointerT(void* val, PblType_T* type)`
 
 ### Changed
 
