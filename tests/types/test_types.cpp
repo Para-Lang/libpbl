@@ -10,9 +10,9 @@
 
 // TODO! Add tests for the type defaults and size
 
-TEST(MacroTypesTest, PblSizeof) { EXPECT_EQ(PblBool_T_Size, PBL_SIZEOF_ON_COMPILETIME(PblBool_T)); }
+TEST(MacroTypesTest, PblSizeof) { EXPECT_EQ(PblBool_T_Size, PBL_SIZEOF_USABLE(PblBool_T)); }
 
-TEST(MacroTypesTest, CSizeof) { EXPECT_EQ(sizeof(char), PBL_C_SIZEOF(char)); }
+TEST(MacroTypesTest, CSizeof) { EXPECT_EQ(sizeof(char), PBL_SIZEOF_FULL(char)); }
 
 TEST(BaseTypesTest, PblBool) {
   PblBool_T *v = PblGetBoolT(true);

@@ -53,7 +53,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     - `PBL_DEFINITION_SINGLE_CONSTRUCTOR` to `PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR`
     - `PBL_PASTE_ADDRESS_COPY` to `PBL_WRITE_BACK_ADDRESS_COPY`
 - Replaced `size_t *size` property in `PblVarMetaData_T` and replaced it with `PblType_T *type`
-- Renamed `PBL_SIZEOF` to `PBL_SIZEOF_ON_COMPILETIME`
+- Renamed `PBL_SIZEOF` to `PBL_SIZEOF_USABLE`
 - Renamed `PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR` to `PBL_BASE_CALL_AND_CATCH_EXCEPTION` (for native C functions) and
   avoided code repetition by utilising the function in `PBL_CALL_FUNC_AND_CATCH` (for Para-C functions) as well.
 - Added inclusion check for C++ to use the `c` prefix in inclusion for C++ to avoid warnings (e.g `#include <cstring>`

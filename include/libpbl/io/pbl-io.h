@@ -37,7 +37,7 @@ extern "C" {
 #define PblFile_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblIOFile_T, NULL)
 
 /// @brief File Descriptor used to perform I/O actions on a file
-struct PblIOFile PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(FILE *);
+struct PblIOFile { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(FILE *); };
 /// @brief File Descriptor used to perform I/O actions on a file
 typedef struct PblIOFile PblIOFile_T;
 
@@ -68,7 +68,7 @@ struct PblStream_Base {
 };
 
 /// @brief File Stream used to perform I/O actions on a file
-struct PblIOStream PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblStream_Base);
+struct PblIOStream { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblStream_Base); };
 /// @brief File Stream used to perform I/O actions on a file
 typedef struct PblIOStream PblIOStream_T;
 

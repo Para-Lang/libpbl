@@ -49,7 +49,8 @@ struct PblString_Base {
 };
 
 /// @brief PBL String implementation - uses dynamic memory allocation -> located in heap
-struct PblString PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblString_Base) typedef struct PblString PblString_T;
+struct PblString { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblString_Base)  };
+typedef struct PblString PblString_T;
 
 // ---- End of Declaration --------------------------------------------------------------------------------------------
 

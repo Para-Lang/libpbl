@@ -119,7 +119,7 @@ extern "C" {
 // ---- Exception Implementation --------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Long Double type
+/// @returns The usable size in bytes of the PBL Long Double type
 #define PblException_T_Size (4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *))
 /// @brief Returns the declaration default for the type 'PblException_T'
 #define PblException_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblException_T)
@@ -150,7 +150,7 @@ struct PblException_Base {
 };
 
 /// Exception implementation
-struct PblException PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_Base)
+struct PblException { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblException_Base) };
 /// Exception implementation
 typedef struct PblException PblException_T;
 
@@ -254,7 +254,7 @@ typedef struct PblException PblException_T;
 // ---- Function Meta Type --------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL MetaFunctionCallCtx type
+/// @returns The usable size in bytes of the PBL MetaFunctionCallCtx type
 #define PblFunctionCallMetaData_T_Size                                                                                 \
   (sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) + 2 * sizeof(PblFunctionCallMetaData_T *) +         \
    sizeof(NULL))
@@ -290,10 +290,10 @@ struct PblFunctionCallMetaData_Base {
   PblException_T *exception;
 };
 
-struct PblFunctionCallMetaData PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblFunctionCallMetaData_Base);
-
-  /// @brief Base Meta Type passed to all functions
-  typedef struct PblFunctionCallMetaData PblFunctionCallMetaData_T;
+/// @brief Base Meta Type passed to all functions
+struct PblFunctionCallMetaData { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblFunctionCallMetaData_Base);  };
+/// @brief Base Meta Type passed to all functions
+typedef struct PblFunctionCallMetaData PblFunctionCallMetaData_T;
 
 // ---- End of Function Meta Type -------------------------------------------------------------------------------------
 

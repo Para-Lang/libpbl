@@ -44,6 +44,8 @@ struct PblType {
   /// @brief The unique identifier for the type, that will be used to compare against. This is null char (\0)
   /// terminated.
   char *name;
+  /// @brief If the type is user defined and not a built-in
+  bool user_defined;
 };
 
 /// @brief The Type type, which is used as a meta-type for tracking of types in types like 'PblAny_T' and to allow for
@@ -142,10 +144,9 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 
 /// @brief Creates the body for a Para-C type definition wrapper - the base_type is the actual value/struct
 #define PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(base_type)                                                             \
-  {                                                                                                                    \
-    PblVarMetaData_T meta;                                                                                             \
-    base_type actual;                                                                                                  \
-  };
+  PblVarMetaData_T meta;                                                                                               \
+  base_type actual;                                                                                                    \
+
 
 // ---- End of Constructor Macros -------------------------------------------------------------------------------------
 
@@ -163,8 +164,8 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 /// @param var The pointer to the variable that should be written to
 /// @param type
 #define PBL_WRITE_BACK_ADDRESS_COPY(var_pointer, unique_id)                                                            \
-  if (var_pointer == NULL) {                                                                                           \
-    var_pointer = unique_id##_localcpy;                                                                                \
+  if ((var_pointer) == NULL) {                                                                                           \
+    (var_pointer) = unique_id##_localcpy;                                                                                \
     unique_id##_localcpy = NULL;                                                                                       \
   }
 
@@ -174,7 +175,7 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 
 /// @brief Returns the effective size of a Para-C type that can be actually used. Must be a Para-C type
 /// @param var The variable to get the size from
-#define PBL_SIZEOF_ON_COMPILETIME(type) (type##_Size)
+#define PBL_SIZEOF_USABLE(type) (type##_Size)
 
 /// @brief Returns the effective size of a Para-C type, which has been defined dynamically
 /// @param var The variable to get the size from
@@ -182,14 +183,39 @@ typedef struct PblVarMetaData PblVarMetaData_T;
 
 /// @brief Returns the effective C size of a type. This also includes meta data
 /// @param var The variable to get the size from
-#define PBL_C_SIZEOF(type) (sizeof(type))
+#define PBL_SIZEOF_FULL(type) (sizeof(type))
 
 // ---- End of Sizeof -------------------------------------------------------------------------------------------------
+
+// ---- Pointer Type --------------------------------------------------------------------------------------------------
+
+/// @brief (Never use this for malloc - this only indicates the usable memory space)
+/// @returns The usable size in bytes of the PBL Bool type
+#define PblPointer_T_Size sizeof(void*)
+/// @returns The declaration default for the type 'PblPointer_T'
+#define PblPointer_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblPointer_T)
+/// @returns The definition default, for the type 'PblPointer_T', where only value itself has been created
+#define PblPointer_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblPointer_T, NULL)
+
+/// @brief The base pointer type, implemented with 'PblPointer_T'
+struct PblPointer {
+  /// @brief Meta-data tracking, as this value will never have anything accessible
+  PblVarMetaData_T meta;
+  /// @brief The type of the pointer
+  PblType_T* type;
+  /// @brief The actual pointer to the type
+  void* val;
+};
+
+/// @brief This the general purpose pointer type, which utilises 'PblType_T' to be differentiated
+typedef struct PblPointer PblPointer_T;
+
+// ---- End of Pointer Type -------------------------------------------------------------------------------------------
 
 // ---- Void Type -----------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL PblVoid_T type
+/// @returns The usable size in bytes of the PBL PblVoid_T type
 #define PblVoid_T_Size 0
 /// @brief Returns the declaration default for the type 'PblVoid_T'
 #define PblVoid_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblVoid_T)
@@ -211,7 +237,7 @@ typedef struct PblVoid PblVoid_T;
 // ---- Bool ----------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @@returns The size in bytes of the PBL Bool type
+/// @returns The usable size in bytes of the PBL Bool type
 #define PblBool_T_Size sizeof(bool)
 /// @returns The declaration default for the type 'PblBool_T'
 #define PblBool_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblBool_T)
@@ -219,16 +245,16 @@ typedef struct PblVoid PblVoid_T;
 #define PblBool_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblBool_T, false)
 
 /// @brief PBL Bool implementation
-struct PblBool PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(bool);
-  /// @brief PBL Bool implementation
-  typedef struct PblBool PblBool_T;
+struct PblBool { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(bool); };
+/// @brief PBL Bool implementation
+typedef struct PblBool PblBool_T;
 
 // ---- End of Bool ---------------------------------------------------------------------------------------------------
 
 // ---- Size ----------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Size type
+/// @returns The usable size in bytes of the PBL Size type
 #define PblSize_T_Size sizeof(size_t)
 /// @returns The declaration default for the type 'PblSize_T'
 #define PblSize_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblSize_T)
@@ -236,16 +262,16 @@ struct PblBool PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(bool);
 #define PblSize_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblSize_T, 0)
 
 /// @brief PBL Byte Size implementation
-struct PblSize PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(size_t);
-  /// @brief PBL Byte Size implementation
-  typedef struct PblSize PblSize_T;
+struct PblSize { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(size_t); };
+/// @brief PBL Byte Size implementation
+typedef struct PblSize PblSize_T;
 
 // ---- End of Size ---------------------------------------------------------------------------------------------------
 
 // ---- Char ----------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Signed Char type
+/// @returns The usable size in bytes of the PBL Signed Char type
 #define PblChar_T_Size sizeof(signed char)
 /// @returns The declaration default for the type 'PblChar_T'
 #define PblChar_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblChar_T)
@@ -253,16 +279,16 @@ struct PblSize PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(size_t);
 #define PblChar_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblChar_T, 0)
 
 /// @brief PBL Signed Char implementation
-struct PblChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed char);
-  /// @brief PBL Signed Char implementation
-  typedef struct PblChar PblChar_T;
+struct PblChar { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed char); };
+/// @brief PBL Signed Char implementation
+typedef struct PblChar PblChar_T;
 
 // ---- End of Char ---------------------------------------------------------------------------------------------------
 
 // ---- UChar ---------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Unsigned Char type
+/// @returns The usable size in bytes of the PBL Unsigned Char type
 #define PblUChar_T_Size sizeof(unsigned char)
 /// @returns The declaration default for the type 'PblUChar_T_Size'
 #define PblUChar_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblUChar_T)
@@ -270,16 +296,16 @@ struct PblChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed char);
 #define PblUChar_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblUChar_T, 0)
 
 /// @brief PBL Unsigned Char implementation
-struct PblUChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned char);
-  /// @brief PBL Unsigned Char implementation
-  typedef struct PblUChar PblUChar_T;
+struct PblUChar { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned char); };
+/// @brief PBL Unsigned Char implementation
+typedef struct PblUChar PblUChar_T;
 
 // ---- End of UChar --------------------------------------------------------------------------------------------------
 
 // ---- Short ---------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Signed Short type
+/// @returns The usable size in bytes of the PBL Signed Short type
 #define PblShort_T_Size sizeof(signed short)
 /// @returns The declaration default for the type 'PblShort_T'
 #define PblShort_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblShort_T)
@@ -287,16 +313,16 @@ struct PblUChar PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned char);
 #define PblShort_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblShort_T, 0)
 
 /// @brief PBL Signed Short implementation
-struct PblShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed short);
-  /// @brief PBL Signed Short implementation
-  typedef struct PblShort PblShort_T;
+struct PblShort { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed short); };
+/// @brief PBL Signed Short implementation
+typedef struct PblShort PblShort_T;
 
 // ---- End of Short --------------------------------------------------------------------------------------------------
 
 // ---- UShort --------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Unsigned Short type
+/// @returns The usable size in bytes of the PBL Unsigned Short type
 #define PblUShort_T_Size sizeof(unsigned short)
 /// @returns The declaration default for the type 'PblUShort_T_Size'
 #define PblUShort_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblUShort_T)
@@ -304,16 +330,16 @@ struct PblShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed short);
 #define PblUShort_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblUShort_T, 0)
 
 /// @brief PBL Unsigned Short implementation
-struct PblUShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned short);
-  /// @brief PBL Unsigned Short implementation
-  typedef struct PblUShort PblUShort_T;
+struct PblUShort { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned short); };
+/// @brief PBL Unsigned Short implementation
+typedef struct PblUShort PblUShort_T;
 
 // ---- End of UShort -------------------------------------------------------------------------------------------------
 
 // ---- Int -----------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Signed Int type
+/// @returns The usable size in bytes of the PBL Signed Int type
 #define PblInt_T_Size sizeof(signed int)
 /// @returns The declaration default for the type 'PblInt_T'
 #define PblInt_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblInt_T)
@@ -321,16 +347,16 @@ struct PblUShort PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned short);
 #define PblInt_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblInt_T, 0)
 
 /// @brief PBL Signed Int implementation
-struct PblInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed int);
-  /// @brief PBL Signed Int implementation
-  typedef struct PblInt PblInt_T;
+struct PblInt { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed int); };
+/// @brief PBL Signed Int implementation
+typedef struct PblInt PblInt_T;
 
 // ---- End of Int ----------------------------------------------------------------------------------------------------
 
 // ---- UInt ----------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Unsigned Int type
+/// @returns The usable size in bytes of the PBL Unsigned Int type
 #define PblUInt_T_Size sizeof(unsigned int)
 /// @returns The declaration default for the type 'PblUInt_T'
 #define PblUInt_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblUInt_T)
@@ -338,16 +364,16 @@ struct PblInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed int);
 #define PblUInt_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblUInt_T, 0)
 
 /// @brief PBL Unsigned Int implementation
-struct PblUInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned int);
-  /// @brief PBL Unsigned Int implementation
-  typedef struct PblUInt PblUInt_T;
+struct PblUInt { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned int); };
+/// @brief PBL Unsigned Int implementation
+typedef struct PblUInt PblUInt_T;
 
 // ---- End of UInt ---------------------------------------------------------------------------------------------------
 
 // ---- Long ----------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Signed Long type
+/// @returns The usable size in bytes of the PBL Signed Long type
 #define PblLong_T_Size sizeof(signed long)
 /// @returns The declaration default for the type 'PblLong_T'
 #define PblLong_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblLong_T)
@@ -355,16 +381,16 @@ struct PblUInt PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned int);
 #define PblLong_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblLong_T, 0)
 
 /// @brief PBL Signed Long implementation
-struct PblLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long);
-  /// @brief PBL Signed Long implementation
-  typedef struct PblLong PblLong_T;
+struct PblLong { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long); };
+/// @brief PBL Signed Long implementation
+typedef struct PblLong PblLong_T;
 
 // ---- End of Long --------------------------------------------------------------------------------------------------
 
 // ---- ULong ---------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Unsigned Long type
+/// @returns The usable size in bytes of the PBL Unsigned Long type
 #define PblULong_T_Size sizeof(unsigned long)
 /// @returns The declaration default for the type 'PblULong_T'
 #define PblULong_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblULong_T)
@@ -372,16 +398,16 @@ struct PblLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long);
 #define PblULong_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblULong_T, 0)
 
 /// @brief PBL Unsigned Long implementation
-struct PblULong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long);
-  /// @brief PBL Unsigned Long implementation
-  typedef struct PblULong PblULong_T;
+struct PblULong { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long); };
+/// @brief PBL Unsigned Long implementation
+typedef struct PblULong PblULong_T;
 
 // ---- End of ULong --------------------------------------------------------------------------------------------------
 
 // ---- Long Long -----------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Signed Long Long type
+/// @returns The usable size in bytes of the PBL Signed Long Long type
 #define PblLongLong_T_Size sizeof(signed long long)
 /// @returns The declaration default for the type 'PblLongLong_T'
 #define PblLongLong_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblLongLong_T)
@@ -389,16 +415,16 @@ struct PblULong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long);
 #define PblLongLong_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblLongLong_T, 0)
 
 /// @brief PBL Signed Long Long implementation
-struct PblLongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long long);
-  /// @brief PBL Signed Long Long implementation
-  typedef struct PblLongLong PblLongLong_T;
+struct PblLongLong { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long long); };
+/// @brief PBL Signed Long Long implementation
+typedef struct PblLongLong PblLongLong_T;
 
 // ---- End of Long Long ----------------------------------------------------------------------------------------------
 
 // ---- ULong Long ----------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Unsigned Long Long type
+/// @returns The usable size in bytes of the PBL Unsigned Long Long type
 #define PblULongLong_T_Size sizeof(unsigned long long)
 /// @returns The declaration default for the type 'PblULongLong_T'
 #define PblULongLong_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblULongLong_T)
@@ -406,16 +432,16 @@ struct PblLongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(signed long long);
 #define PblULongLong_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblULongLong_T, 0)
 
 /// @brief PBL Unsigned Long Long implementation
-struct PblULongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long long);
-  /// @brief PBL Unsigned Long Long implementation
-  typedef struct PblULongLong PblULongLong_T;
+struct PblULongLong { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long long); };
+/// @brief PBL Unsigned Long Long implementation
+typedef struct PblULongLong PblULongLong_T;
 
 // ---- End of ULong Long ---------------------------------------------------------------------------------------------
 
 // ---- Float ---------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Float type
+/// @returns The usable size in bytes of the PBL Float type
 #define PblFloat_T_Size sizeof(float)
 /// @returns The declaration default for the type 'PblFloat_T'
 #define PblFloat_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblFloat_T)
@@ -423,16 +449,16 @@ struct PblULongLong PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(unsigned long long);
 #define PblFloat_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblFloat_T, 0)
 
 /// @brief PBL Float implementation
-struct PblFloat PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(float);
-  /// @brief PBL Float implementation
-  typedef struct PblFloat PblFloat_T;
+struct PblFloat { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(float); };
+/// @brief PBL Float implementation
+typedef struct PblFloat PblFloat_T;
 
 // ---- End of Float --------------------------------------------------------------------------------------------------
 
 // ---- Double --------------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Double type
+/// @returns The usable size in bytes of the PBL Double type
 #define PblDouble_T_Size sizeof(double)
 /// @returns The declaration default for the type 'PblDouble_T'
 #define PblDouble_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblDouble_T)
@@ -440,16 +466,16 @@ struct PblFloat PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(float);
 #define PblDouble_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblDouble_T, 0)
 
 /// @brief PBL Double implementation
-struct PblDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(double);
-  /// @brief PBL Double implementation
-  typedef struct PblDouble PblDouble_T;
+struct PblDouble { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(double); };
+/// @brief PBL Double implementation
+typedef struct PblDouble PblDouble_T;
 
 // ---- End of Double -------------------------------------------------------------------------------------------------
 
 // ---- Long Double ---------------------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// @returns The size in bytes of the PBL Long Double type
+/// @returns The usable size in bytes of the PBL Long Double type
 #define PblLongDouble_T_Size sizeof(long double)
 /// @returns The declaration default for the type 'PblLongDouble_T'
 #define PblLongDouble_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblLongDouble_T)
@@ -457,7 +483,7 @@ struct PblDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(double);
 #define PblLongDouble_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblLongDouble_T, 0)
 
 /// @brief PBL Long Double implementation
-struct PblLongDouble PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(long double);
+struct PblLongDouble { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(long double); };
 /// @brief PBL Long Double implementation
 typedef struct PblLongDouble PblLongDouble_T;
 

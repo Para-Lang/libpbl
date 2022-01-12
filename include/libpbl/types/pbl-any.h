@@ -21,7 +21,7 @@ extern "C" {
 // ---- Exception Implementation --------------------------------------------------------------------------------------
 
 /// @brief (Never use this for malloc - this only indicates the usable memory space)
-/// Returns the size in bytes of the PBL Long Double type
+/// Returns The usable size in bytes of the PBL Long Double type
 #define PblAny_T_Size (sizeof(void *) + sizeof(PblString_T *) + sizeof(PblSize_T *))
 /// @brief Returns the declaration default for the type 'PblAny_T'
 #define PblAny_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblAny_T)
@@ -37,7 +37,7 @@ struct PblAny_Base {
 };
 
 /// @brief Any implementation
-struct PblAny PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblAny_Base);
+struct PblAny { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblAny_Base); };
 /// @brief Any implementation - This type allows for a dynamic allocation and every type to be passed onto the allocated
 /// memory
 typedef struct PblAny PblAny_T;
