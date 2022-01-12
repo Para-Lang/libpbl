@@ -10,9 +10,9 @@
 
 // Including the base <string.h> which this header intends to implement
 #ifdef __cplusplus
-  #include <cstring>
+# include <cstring>
 #else
-  #include <string.h>
+# include <string.h>
 #endif
 
 // General Required Header Inclusion

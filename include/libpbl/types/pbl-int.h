@@ -8,9 +8,9 @@
 
 // Including the base <stdint.h> which this header intends to implement
 #ifdef __cplusplus
-  #include <cstdint>
+# include <cstdint>
 #else
-  #include <stdint.h>
+# include <stdint.h>
 #endif
 
 

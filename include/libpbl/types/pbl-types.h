@@ -11,12 +11,12 @@
 // Including the base <stdbool.h>, <string.h> and <stddef.h> which this header intends to utilise and paritally
 // implement
 #ifdef __cplusplus
-  #include <cstring>
-  #include <cstddef>
+# include <cstring>
+# include <cstddef>
 #else
-  #include <stdbool.h>
-  #include <string.h>
-  #include <stddef.h>
+# include <stdbool.h>
+# include <string.h>
+# include <stddef.h>
 #endif
 
 
