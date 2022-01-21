@@ -20,18 +20,6 @@
 extern "C" {
 #endif
 
-// ---- Memory Setup --------------------------------------------------------------------------------------------------
-
-/**
- * @brief Initialises the Garbage Collector and performs a general setup for the memory functions
- * @warning May not be used by users, as it is only intended to be called by the compiler (in the background) before
- * main was even run
- */
-__attribute__((unused))
-__attribute__((constructor))
-__attribute__((deprecated("Compiler-Only Function - User Call Invalid!")))
-static void PblMemInit(void);
-
 // ---- End of Memory Setup -------------------------------------------------------------------------------------------
 
 // ---- Helper Macros -------------------------------------------------------------------------------------------------
@@ -123,7 +111,7 @@ __attribute__((unused)) void *PblMallocUncollectable(size_t size);
  * @return The pointer returned by the 'GC_MALLOC()' call
  * @note This will crash the program if the size of the value is invalid!
  * @warning It is discouraged to directly use this function to allocate memory, unless for explicit cases. For general
- * usage of allocating a type please use 'PBL_ALLOC_DEFINITION(to_write, type)', which will safely allocate and
+ * usage of allocating a type please use 'PBL_DEFINE_VAR(to_write, type, cleanup...)', which will safely allocate and
  * initialise the value!
  */
 void *PblMalloc(size_t size);
@@ -135,7 +123,7 @@ void *PblMalloc(size_t size);
  * @return The pointer returned by the GC atomic malloc call
  * @note This will crash the program if the size of the value is invalid!
  * @warning It is discouraged to directly use this function to allocate memory, unless for explicit cases. For general
- * usage of allocating a type please use 'PBL_ALLOC_DEFINITION(to_write, type)', which will safely allocate and
+ * usage of allocating a type please use 'PBL_DEFINE_VAR(to_write, type)', which will safely allocate and
  * initialise the value!
  */
 __attribute__((unused)) void *PblMallocAtomic(size_t size);

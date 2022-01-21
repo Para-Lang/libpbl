@@ -24,20 +24,17 @@ In actual code usage, the Para-C Compiler will use the code as regular C, and on
 
 The styling guide for the PBL is as following:
 
-- Structs/Enums: PascalCase with leading 'Pbl'
+- Structs/Enums: PascalCase with leading `Pbl`
 - Struct Properties: snake_case
-- Constants and Enum Properties: PascalCase with leading 'k' (copied from the Google C++ Styling Guide)
-- Typedef: PascalCase with leading 'Pbl' and trailing '_T'
+- Constants and Enum Properties: SCREAMING_SNAKE_CASE
+- Typedef: PascalCase with leading `Pbl` and trailing `_T`
 - Local Variables: snake_case
 - Parameters: snake_case
 - Macros: SCREAMING_SNAKE_CASE (exceptions are function definition macros, where PascalCase is applied)
-- Functions: PascalCase
-- Indention is set to 2 spaces
-
-## `_DefDefault` and `_DeclDefault` for PBL-Types
-
-When declaring a built-in type that should be used inside Para-C, the style of the general types should be replicated,
-to allow for the proper usage of defaults aka. `_DefDefault` and `_DeclDefault`
+- Functions: PascalCase with leading `Pbl`
+- Indention: 2 spaces
+- Startup Constructors: Name with leading `PBL_CONSTRUCTOR`
+- Cleanup De-Constructors: Name with leading `PBL_DECONSTRUCTOR`
 
 ## Meta-Data Tracking - `pbl-types.h`
 
@@ -47,11 +44,40 @@ Para-C implements meta-data tracking using `PblVarMetaData_T` and pre-defined ma
 - Effective space the user has to utilise. Note that effective space does not include actual space that is allocated!
   This is due to meta-data also taking up a bit of memory space.
 
-## Declared and Defined handling - `pbl-types.h`
+### `_DefDefault` and `_DeclDefault` for PBL-Types
+
+When declaring a built-in type that should be used inside Para-C, the style of the general types should be replicated,
+to allow for the proper usage of defaults aka. `_DefDefault` and `_DeclDefault`
+
+## Variables - `pbl-types.h`
+
+Variables in Para-C are specifically handled using a garbage collector, meaning that initialised variables are
+going to be represented and accessed using pointers. 
+
+States of a Variable: 
+- Only Declared (True C Declaration)
+- Technically "Declared" (Technically defined in C, but handled as declared in Para-C). Two possible 
+  scenarios:
+  - Allocated, but the meta-Property `.meta.defined` is set to false, since no value was assigned yet
+  - The value is NULL, as it's a pointer and there has not been any clear definition.
+- Defined Variable that has been written to
+- Freed Variable by the Garbage Collector
+
+### Type List
+
+Para-C keeps a type list of all registered types that were created or imported inside a source file. This list is 
+created at startup of the program, meaning all types may be dynamically accessed and used to create new types. 
+
+This means that each file has its own scope with meta-data tracking, which can be also imported into other files. 
+
+Constructor Priority:
+- `PBL_CONSTRUCTOR_TYPES_LIST_INIT` - Initialises the local `LOCAL_TYPE_LIST` and `LOCAL_TYPE_TRACKING_INITIALISED` 
+
+### Declared and Defined handling
 
 In Para-C, there are two different states a variable can exist in; It is either declared or defined.
 
-### Declared Variable
+#### Declared Variable
 
 A declared variable is, unlike in C, can be appearing in two forms:
 
@@ -69,7 +95,7 @@ user-created variable is declared. This means user-pointers are by default defin
 (This will be changed later, by implementing `PblPointer_T` as a new type and as such pointers will be like variables,
 meaning a `PblPointer_T` can be undefined with NULL and declared, but with `.meta.defined == false`)
 
-### Defined Variable
+#### Defined Variable
 
 The defined variables on the other hand will always be initialised with a default value, usually `0`, except for struct
 types, which will have all their property-pointers set to NULL, aka. they are also only 'declared' but not initialised.
@@ -84,13 +110,13 @@ This means that returning NULL will always be valid in Para-C aka. it's the `Non
 ### Global Variable handling
 
 Global Variables are in Para-C handled a bit differentially, due to the general allocations using `pbl-mem.h`. This
-means that any Para-C file will contain a `static void __InitialiseLocalGlobals()` function, where all the local globals
+means that any Para-C file will contain a `static void PBL_INIT_GLOBALS()` function, where all the local globals
 are defined and the code is executed that was written before.
 
-This means that in the compiled code the globals will simply be pointer declarations with no interference. To that, all
-declarations will be on runtime set to NULL, unless they have been defined.
+This means that in the compiled code the globals will simply be declarations, until they were defined
+on runtime (before the execution of main).
 
-## Automatic Cleanup for local variables
+### Automatic Cleanup for local variables
 
 When allocating a local variable, the PBL will automatically define the `__cleanup__` attribute of the variable, meaning
 when it goes out of scope the generated cleanup function for the type is called (`__<PBL_TYPE>_Cleanup`) and the type is

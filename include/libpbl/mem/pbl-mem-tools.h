@@ -17,7 +17,7 @@
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
-// TODO! Implement global PblTypeDict_T for proper dynamic type checking and fetching
+// TODO! Implement global PblTypeList_T for proper dynamic type checking and fetching
 
 /**
  * @brief Uses 'PblMemCpy()' from 'pbl-mem.h' to copy memory from a type to a destination. This is intended to be used

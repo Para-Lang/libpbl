@@ -9,6 +9,64 @@
 // Parent Header for this file
 #include <libpbl/types/pbl-types.h>
 
+// ---- Initialisation of the global type list ------------------------------------------------------------------------
+
+const PblType_T *PblCreateNewType(const size_t size, const void *type_template, const char *name,
+                                  const bool user_defined, const bool definable) {
+  PblType_T *type = PblMalloc(sizeof(PblType_T));
+  *type = (PblType_T) {
+    .actual_size =size,
+    .type_template=type_template,
+    .name=name,
+    .user_defined=user_defined,
+    .definable=definable
+  };
+  return type;
+}
+
+void PblInitTypeList(PblTypeList_T* list) {
+  // Default size on init is 50
+  list->t_items = PblMalloc(sizeof(PblType_T) * 50);
+  list->alloc_len = 50;
+}
+
+void PblAddTypeToTypeList(PblTypeList_T* list, const PblType_T* type) {
+  // If there is not enough space to add a new item, extend the list
+  if (list->alloc_len == list->t_amount) {
+    list->t_items = PblRealloc(
+      list->t_items,
+      sizeof(PblType_T *) * (list->alloc_len * 50)
+      );
+    list->alloc_len += 50;
+  }
+  list->t_items[list->t_amount] = type;
+  list->t_amount++;
+}
+
+// ---- End of Initialisation of the global type list -----------------------------------------------------------------
+
+// ---- Initialisation of the Local types -----------------------------------------------------------------------------
+
+PBL_INIT_LOCAL_TYPE_LIST;
+LOCAL_TYPE_LIST_CONSTRUCTOR {
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblVoid_T, "void", false, false);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblPointer_T, "ptr", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblSize_T, "size", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblBool_T, "bool", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblChar_T, "char", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblUChar_T, "uchar", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblShort_T, "int", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblUShort_T, "ushort", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblInt_T, "int", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblUInt_T, "uint", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblLong_T, "long", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblULong_T, "ulong", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblLongLong_T, "longlong", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblULongLong_T, "ulonglong", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblFloat_T, "float", false, true);
+  PBL_REGISTER_LOCAL_TYPE(&LOCAL_TYPE_LIST, PblDouble_T, "double", false, true);
+};
+
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
 __attribute__((unused)) PblPointer_T *PblGetPointerT(void* val, PblType_T* type) {

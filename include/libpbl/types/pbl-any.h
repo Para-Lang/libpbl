@@ -25,7 +25,7 @@ extern "C" {
 #define PblAny_T_Size (sizeof(void *) + sizeof(PblString_T *) + sizeof(PblSize_T *))
 /// @brief Returns the declaration default for the type 'PblAny_T'
 #define PblAny_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblAny_T)
-/// @brief Returns the definition default, for the type 'PblAny_T', where the children have not been set yet and only
+/// @brief Returns the definition default for the type 'PblAny_T', where the children have not been set yet and only
 /// the value itself 'exists' already.
 #define PblAny_T_DefDefault                                                                                            \
   PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblAny_T, .val = NULL, .type = NULL, .byte_size = NULL)
@@ -44,18 +44,14 @@ typedef struct PblAny PblAny_T;
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
-/**
- * @brief Allocates and fetches a new PblAny_T and passes the value onto it
- * @param val The void* value that shall be assigned to the PblAny_T type
- * @param size The size of the value to properly determine the size and the owned memory
- * @return The new PblAny_T
- * @note This is a C to Para-C type conversion function - args are in C therefore
- */
+/// @brief Allocates and fetches a new PblAny_T and passes the value onto it
+/// @param val The void* value that shall be assigned to the PblAny_T type
+/// @param size The size of the value to properly determine the size and the owned memory
+/// @return The new PblAny_T
+/// @note This is a C to Para-C type conversion function - args are in C therefore
 PblAny_T *PblGetAnyT(void *val, PblType_T *type);
 
-/**
- * @brief Force-deallocates the entire any-type
- */
+/// @brief Force-deallocates the entire any-type
 PblVoid_T PblDeallocateAnyType(PblAny_T *val);
 
 // ---- End of Functions Definitions ----------------------------------------------------------------------------------

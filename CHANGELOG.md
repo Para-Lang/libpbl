@@ -35,6 +35,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   verbose when handling Para-C functions.
 - New IO functions `PblInput()`and `PblInputChar()`
 - New type `PblPointer_T` with conversion function `PblGetPointerT(void* val, PblType_T* type)`
+- Inclusion check for C++ to use the `c` prefix in inclusion for C++ to avoid warnings (e.g `#include <cstring>`
+  in C++ and `#include <string.h>` in C)
+- New type `PblTypeList_T` for local file type and meta-data tracking, with the additional handling functions and
+  macros:
+  - `PblAddTypeToTypeList()` - Adds a new type to the local type list 
+  - `PblCreateNewType()` - Allocates a new type in memory that may be used for type lists
+  - `PblInitTypeList()` - Initialises a local type list and creates the on-runtime constructor for allocating its
+    content
+  - `LOCAL_TYPE_LIST_CONSTRUCTOR` - Is replaced with a default constructor function signature for registering new types
+    at runtime
+  - `PBL_REGISTER_LOCAL_TYPE` - Registers a local type and adds it to the local type list. Has to be used inside of
+    `LOCAL_TYPE_LIST_CONSTRUCTOR` constructor function definitions
+  - `PBL_INIT_LOCAL_TYPE_LIST` - Creates and initialises the variables `LOCAL_TYPE_LIST` and 
+    `LOCAL_TYPE_TRACKING_INITIALISED`, which are required for utilising type tracking inside a file
 
 ### Changed
 
@@ -47,7 +61,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Renamed the following macros:
     - `PBL_GET_ACTUAL_TYPE_INSTANCE` to `PBL_ASSIGN_TO_VAR`
     - `PBL_ALLOC_DECLARATION` to `PBL_DECLARE_VAR`
-    - `PBL_ALLOC_DEFINITION` to `PBL_DEFINE_VAR`
+    - `PBL_DEFINE_VAR` to `PBL_DEFINE_VAR`
     - `PBL_ALLOC_ARRAY_DEFINITION` to `PBL_CREATE_NEW_ARRAY`
     - `PBL_DECLARATION_CONSTRUCTOR` to `PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR`
     - `PBL_DEFINITION_STRUCT_CONSTRUCTOR` to `PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR`
@@ -57,8 +71,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Renamed `PBL_SIZEOF` to `PBL_SIZEOF_USABLE`
 - Renamed `PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR` to `PBL_BASE_CALL_AND_CATCH_EXCEPTION` (for native C functions) and
   avoided code repetition by utilising the function in `PBL_CALL_FUNC_AND_CATCH` (for Para-C functions) as well.
-- Added inclusion check for C++ to use the `c` prefix in inclusion for C++ to avoid warnings (e.g `#include <cstring>`
-  in C++ and `#include <string.h>` in C)
+- Changed handling of `PBL_SIZEOF_ON_RUNTIME` to utilise usable memory and renamed the macro to
+  `PBL_SIZEOF_USABLE_ON_RUNTIME`
 
 ### Removed
 
@@ -93,7 +107,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Added `pbl-mem.h` for independent memory management and Garbage Collector implementation
   using [Boehm-Demers-Weiser Garbage Collector](https://github.com/ivmai/bdwgc)
 - Handler macros `PBL_GET_ACTUAL_TYPE_INSTANCE` (getting type instance), `PBL_ALLOC_DECLARATION` (Para-C Declarations)
-  and `PBL_ALLOC_DEFINITION` (Para-C Definitions) which standardise the initialisation of Para-C values
+  and `PBL_DEFINE_VAR` (Para-C Definitions) which standardise the initialisation of Para-C values
 
 [unreleased]: https://github.com/Para-C/Para-C-Base-Library/tree/dev
 

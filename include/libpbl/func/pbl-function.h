@@ -123,8 +123,9 @@ extern "C" {
 #define PblException_T_Size (4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *))
 /// @brief Returns the declaration default for the type 'PblException_T'
 #define PblException_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblException_T)
-/// @brief Returns the definition default for the type 'PblException_T', where the children have not been set yet and only the
-/// value itself 'exists' already.
+/// @brief Returns the definition default for the type 'PblException_T', where the value/the children have not been set yet
+/// and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
+/// initialised to 0 or another Definition Default of another type
 #define PblException_T_DefDefault                                                                                      \
   PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblException_T, .msg = NULL, .name = NULL, .filename = NULL,          \
                                                  .line = NULL, .line_content = NULL, .parent_exc = NULL,               \
@@ -260,8 +261,9 @@ typedef struct PblException PblException_T;
    sizeof(NULL))
 /// @brief Returns the declaration default for the type 'PblMetaFunctionCallCtx_T'
 #define PblFunctionCallMetaData_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblFunctionCallMetaData_T)
-/// @brief Returns the definition default for the type 'PblMetaFunctionCallCtx_T', where the children have not been set yet and only the
-/// value itself 'exists' already.
+/// @brief Returns the definition default for the type 'PblMetaFunctionCallCtx_T', where the value/the children have not been set yet
+/// and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
+/// initialised to 0 or another Definition Default of another type
 #define PblFunctionCallMetaData_T_DefDefault                                                                           \
   PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(                                                                      \
     PblFunctionCallMetaData_T, .function_identifier = NULL, .is_failure = NULL, .arg_amount = NULL,                    \

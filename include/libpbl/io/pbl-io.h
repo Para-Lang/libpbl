@@ -33,7 +33,9 @@ extern "C" {
 #define PblFile_T_Size sizeof(FILE *)
 /// @brief Returns the declaration default for the type 'PblIOFile_T'
 #define PblFile_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblIOFile_T)
-/// @brief Returns the definition default for the type 'PblIOFile_T', where only value itself has been created
+/// @brief Returns the definition default for the type 'PblIOFile_T', where the value/the children have not been set yet
+/// and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
+/// initialised to 0 or another Definition Default of another type
 #define PblFile_T_DefDefault PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(PblIOFile_T, NULL)
 
 /// @brief File Descriptor used to perform I/O actions on a file
@@ -50,8 +52,9 @@ typedef struct PblIOFile PblIOFile_T;
 #define PblStream_T_Size (sizeof(PblUInt_T *) + sizeof(PblIOFile_T *) + sizeof(PblBool_T *) + sizeof(PblString_T *))
 /// @brief Returns the declaration default for the type 'PblIOStream_T'
 #define PblStream_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblIOStream_T)
-/// @brief Returns the definition default for the type 'PblIOStream_T', where the children have not been set yet and only the
-/// value itself 'exists' already.
+/// @brief Returns the definition default for the type 'PblIOStream_T', where the value/the children have not been set yet
+/// and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
+/// initialised to 0 or another Definition Default of another type
 #define PblStream_T_DefDefault                                                                                         \
   PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblIOStream_T, .fd = NULL, .file = NULL, .open = NULL, .mode = NULL)
 
