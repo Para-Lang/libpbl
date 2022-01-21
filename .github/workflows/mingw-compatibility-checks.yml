@@ -27,7 +27,7 @@ jobs:
           cmake-version: '3.17.x'
       - name: Build Tests
         run: |
-          cmake . -G "MinGW Makefiles" -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=gcc
+          cmake . -G "MinGW Makefiles" -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++
           cmake --build . --target runPblTests
       - name: Run Tests
         run: |
