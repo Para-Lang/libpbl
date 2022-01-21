@@ -31,4 +31,4 @@ jobs:
           cmake --build . --target runPblTests
       - name: Run Tests
         run: |
-          ./tests/runPblTests
+          ./tests/CMakeFiles/runPblTests.exe

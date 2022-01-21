@@ -50,3 +50,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
   # Add macro for the Garbage Collector to allow debugging
   add_compile_definitions(GC_DEBUG)
 endif()
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
