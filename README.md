@@ -1,8 +1,11 @@
 # `libpbl` - Para-C Base Library
 
+[![Latest Release](https://img.shields.io/github/v/release/Para-C/Para-C-Base-Library?include_prereleases)](https://github.com/Para-C/Para-C-Base-Library/releases)
 [![Codecov](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/codecov.yml/badge.svg)](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/codecov.yml)
 [![Dr.Memory and GTest](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/drmemory.yml/badge.svg)](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/drmemory.yml)
 [![Open Para-C issues](https://img.shields.io/github/issues/Para-C/Para-C)](https://github.com/Para-C/Para-C/issues)
+[![Required GCC version](https://img.shields.io/badge/GCC-%3E%3D8.0-blue)](https://github.com/Para-C/Para-C/discussions/76)
+![Required CMake version](https://img.shields.io/badge/CMake-%3E%3D3.17-blue)
 
 This is the repository containing the c-implementation library (Para-C Core Library, and partly Para-C Built-In Library)
 , which is used for the built-in functions, keywords and items, which are required for the base language.
@@ -18,7 +21,7 @@ is used in an C++ environment, which will simply include the C-files and run the
 
 In actual code usage, the Para-C Compiler will use the code as regular C, and only for testing C++ will/must be used.
 
-# Basic Overview
+# Overview
 
 ## Styling and Formatting
 
