@@ -119,15 +119,13 @@ are defined and the code is executed that was written before.
 This means that in the compiled code the globals will simply be declarations, until they were defined
 on runtime (before the execution of main).
 
-### Automatic Cleanup for local variables
-
-When allocating a local variable, the PBL will automatically define the `__cleanup__` attribute of the variable, meaning
-when it goes out of scope the generated cleanup function for the type is called (`__<PBL_TYPE>_Cleanup`) and the type is
-automatically de-allocated. This is to automatically handle garbage collection / deallocation when possible!
-
 ## Memory accessing - `pbl-mem.h`
 
-(Currently in work - to be decided)
+As already stated previously in section [Variables](#variables---pbl-typesh), Para-C is using a garbage collector to
+handle its leftover variables that are not collected at the end of a stack's lifetime. This means that almost all 
+variables will be allocated and cleaned up using the [Boehm garbage collector](https://hboehm.info/gc/). The only 
+exceptions are for small variables that will likely be allocated in the stack using `alloca()` to preserve speed in
+crucial tasks and not add unnecessary memory to the garbage collector.
 
 ## Function Meta-Data Tracking - `pbl-function.h`
 
