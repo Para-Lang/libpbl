@@ -98,7 +98,7 @@ typedef struct PblIOStream PblIOStream_T;
  * @brief Converts the low level C-Type to a PBL File type
  * @param val The FILE pointer C-type
  * @return The newly created PBL File type
- * @note This is a C to Para-C type conversion function - args are in C therefore
+ * @note This is a C to Para type conversion function - args are in C therefore
  */
 PblIOFile_T *PblGetIOFileT(FILE *val);
 
@@ -107,7 +107,7 @@ PblIOFile_T *PblGetIOFileT(FILE *val);
  * @param fd The file descriptor that will be converted
  * @param mode The mode that should be used to open the FILE*
  * @return The newly created PBL Stream type
- * @note This is a C to Para-C type conversion function - args are therefore in C
+ * @note This is a C to Para type conversion function - args are therefore in C
  */
 PblIOStream_T *PblGetIOStreamT(int fd, const char *mode);
 

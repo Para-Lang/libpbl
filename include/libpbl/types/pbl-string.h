@@ -58,20 +58,20 @@ typedef struct PblString PblString_T;
 
 /// @brief Gets the Length of a C string (const char*)
 /// @param content The char array (pointer)
-/// @return The length as Para-C Int
+/// @return The length as Para Int
 PblUInt_T *PblGetLengthOfCString(const char *content);
 
 /// @brief Converts the passed char* array to a PblChar_T array
 /// @param content The C char array
 /// @param len The length that shall be used to initialise the array. This length must be exact!
 /// @return The newly allocated string
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 PblChar_T *PblGetCharTArray(const char *content);
 
-/// @brief This directly converts a char* to a Para-C string type
+/// @brief This directly converts a char* to a Para string type
 /// @param content The char array (pointer)
-/// @return The new Para-C string type, which was created using 'PblAllocateStringContentT'
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @return The new Para string type, which was created using 'PblAllocateStringContentT'
+/// @note This is a C to Para type conversion function - args are in C therefore
 PblString_T *PblGetStringT(const char *content);
 
 /// @brief Compares the two passed strings and returns whether they are equal

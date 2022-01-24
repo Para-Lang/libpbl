@@ -12,27 +12,32 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+### Changed
+
+### Removed
+
+## [v0.1.dev7] - 2022-01-24
+
+### Added
+
 - `pbl-apply-macro.h` for defining a macro function, which allows for iterating through macro args and apply another
   macro to them.
 - Macros `PBL_GET_FUNC_ARGS_IDENTIFIER`, `PBL_GET_FUNC_BASE_IDENTIFIER` and `PBL_GET_FUNC_OVERHEAD_IDENTIFIER` for
   getting standardised macros.
 - `PBL_COUNT_VA_ARGS` for counting the amount of arguments passed to this specific macro.
 - `PBL_FUNC_ARG` for creating the effect of arguments being `NULL` per default.
-- `PBL_CREATE_FUNC_OVERHEAD` for creating overhead of a Para-C function, which can support default arguments and
+- `PBL_CREATE_FUNC_OVERHEAD` for creating overhead of a Para function, which can support default arguments and
   struct-like initialisation.
-- `PBL_CALL_FUNC` for calling a Para-C function and properly handling it.
-- Header `pbl-advanced-mem.h` for exception-supported and advanced memory handling with Para-C types.
+- `PBL_CALL_FUNC` for calling a Para function and properly handling it.
+- Header `pbl-advanced-mem.h` for exception-supported and advanced memory handling with Para types.
 - Function `PblMallocUncollectable()` in `pbl-mem.h` for allocating a variable that will not be automatically collected
   aka. will exist until the user deallocates it or the program ends. This will be used for global variables that are
   used throughout the entire program, and are essential to running properly, which means they should not be checked for
   Garbage Collection.
 - New Macro for simplified cleanup attribute assignment: `PBL_CLEANUP(func)`
-- Better Docstrings to:
-    - `PBL_CREATE_ADDRESS_COPY`
-    - `PBL_WRITE_BACK_ADDRESS_COPY`
 - New macro `PBL_SIZEOF_ON_RUNTIME(var)` for dynamically fetching the size using `PblType_T.size`.
 - New macro `PBL_VAL_REQ_ARG` for validating a required argument aka. it may not be null. This is to make the code more
-  verbose when handling Para-C functions.
+  verbose when handling Para functions.
 - New IO functions `PblInput()`and `PblInputChar()`
 - New type `PblPointer_T` with conversion function `PblGetPointerT(void* val, PblType_T* type)`
 - Inclusion check for C++ to use the `c` prefix in inclusion for C++ to avoid warnings (e.g `#include <cstring>`
@@ -70,14 +75,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced `size_t *size` property in `PblVarMetaData_T` and replaced it with `PblType_T *type`
 - Renamed `PBL_SIZEOF` to `PBL_SIZEOF_USABLE`
 - Renamed `PBL_C_BASE_EXCEPTION_CATCH_CONSTRUCTOR` to `PBL_BASE_CALL_AND_CATCH_EXCEPTION` (for native C functions) and
-  avoided code repetition by utilising the function in `PBL_CALL_FUNC_AND_CATCH` (for Para-C functions) as well.
-- Changed handling of `PBL_SIZEOF_ON_RUNTIME` to utilise usable memory and renamed the macro to
+  avoided code repetition by utilising the function in `PBL_CALL_FUNC_AND_CATCH` (for Para functions) as well.
+- Changed handling of `PBL_SIZEOF_ON_RUNTIME` to return usable memory of a type and renamed the macro to
   `PBL_SIZEOF_USABLE_ON_RUNTIME`
 
 ### Removed
 
 - Outdated macro `PBL_CALL_FUNC_WITH_META_CTX`, which is now replaced by `PBL_CALL_FUNC` as the general method to call
-  Para-C functions
+  Para functions
 - Unneeded `PBL_DEFINITION_IF_VA_ARGS_CONSTRUCTOR` macro
 - Parameter `type` in `PBL_WRITE_BACK_ADDRESS_COPY`, which was unnecessary, due to both variables already having been
   defined.
@@ -88,7 +93,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Made the PBL properly fetch-able for the build script `build.py` in [Para-C](https://github.com/Para-C/Para-C)
+- Made the PBL properly fetch-able for the build script `build.py` in [Para](https://github.com/Para-Lang/Para)
 
 ## [v0.1.dev5] - 2021-11-09
 
@@ -96,7 +101,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Base types in `pbl-types.h` that wrap the low-level C types, including conversion functions which allow simply
   one-line conversion
-- Proper meta-tracking for all Para-C types using `PblVarMeta_T`
+- Proper meta-tracking for all Para types using `PblVarMeta_T`
 - Default declaration and definition macros for all types in `libpbl`. These are defined using `_DeclDefault` and
   `_DefDefault` for all types
 - `PblIOStream_T` and `PblIOFile_T` implementation for stream handling
@@ -106,11 +111,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   using `./modules/parac-modules/included/va-opt.h`
 - Added `pbl-mem.h` for independent memory management and Garbage Collector implementation
   using [Boehm-Demers-Weiser Garbage Collector](https://github.com/ivmai/bdwgc)
-- Handler macros `PBL_GET_ACTUAL_TYPE_INSTANCE` (getting type instance), `PBL_ALLOC_DECLARATION` (Para-C Declarations)
-  and `PBL_DEFINE_VAR` (Para-C Definitions) which standardise the initialisation of Para-C values
+- Handler macros `PBL_GET_ACTUAL_TYPE_INSTANCE` (getting type instance), `PBL_ALLOC_DECLARATION` (Para Declarations)
+  and `PBL_DEFINE_VAR` (Para Definitions) which standardise the initialisation of Para values
 
-[unreleased]: https://github.com/Para-C/Para-C-Base-Library/tree/dev
-
-[v0.1.dev6]: https://github.com/Para-C/Para-C-Base-Library/compare/v0.1.dev5...v0.1.dev6
-
-[v0.1.dev5]: https://github.com/Para-C/Para-C-Base-Library/tag/v0.1.dev5
+[unreleased]: https://github.com/Para-Lang/Para-Base-Library/tree/dev
+[v0.1.dev6]: https://github.com/Para-Lang/Para-Base-Library/compare/v0.1.dev6...v0.1.dev7
+[v0.1.dev6]: https://github.com/Para-Lang/Para-Base-Library/compare/v0.1.dev5...v0.1.dev6
+[v0.1.dev5]: https://github.com/Para-Lang/Para-Base-Library/tag/v0.1.dev5

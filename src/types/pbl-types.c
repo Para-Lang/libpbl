@@ -1,5 +1,5 @@
 /// @file pbl-types.c
-/// @brief Para-C Base Types Implementation, which contains handler macros, conversion functions, default declaration,
+/// @brief Para Base Types Implementation, which contains handler macros, conversion functions, default declaration,
 /// default definition types and default size macros. This also includes meta-data tracking based on the
 /// 'PblMetaVarCtx_T' type.
 /// @author Luna-Klatzer

@@ -48,7 +48,7 @@ typedef struct PblAny PblAny_T;
 /// @param val The void* value that shall be assigned to the PblAny_T type
 /// @param size The size of the value to properly determine the size and the owned memory
 /// @return The new PblAny_T
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 PblAny_T *PblGetAnyT(void *val, PblType_T *type);
 
 /// @brief Force-deallocates the entire any-type
