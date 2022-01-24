@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # At the moment only >=8.0 are supported -> https://github.com/Para-C/Para-C/discussions/76
+        # At the moment only >=8.0 are supported -> https://github.com/Para-Lang/Para/discussions/76
         gcc-version: [ 8, 9, 10, 11, latest ]
 
     steps:

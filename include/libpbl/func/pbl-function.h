@@ -58,11 +58,11 @@ extern "C" {
 
 // ---- Basic Function Macros -----------------------------------------------------------------------------------------
 
-/// @brief Specifier for a Para-C function, which is then formatted aka. to per default set the value passed to NULL, as
-/// in Para-C all values are pointers inherently and only declarations are not valid.
+/// @brief Specifier for a Para function, which is then formatted aka. to per default set the value passed to NULL, as
+/// in Para all values are pointers inherently and only declarations are not valid.
 #define PBL_FUNC_ARG(arg, val) IFNE(val)(arg = val, .arg = NULL)
 
-/// @brief Validates a required argument for a Para-C function
+/// @brief Validates a required argument for a Para function
 #define PBL_VAL_REQ_ARG(var) PblValPtr((void*) (var));
 
 /// @brief Creates based on the passed declaration signature a viable struct child aka. add ';'
@@ -173,7 +173,7 @@ typedef struct PblException PblException_T;
 
 // ---- Invoke and Catch Exception-Handling ---------------------------------------------------------------------------
 
-/// @brief This is a "one-liner" constructor for Para-C functions, which will call the passed function with the args
+/// @brief This is a "one-liner" constructor for Para functions, which will call the passed function with the args
 /// (__VA_ARGS__) and if an exception is raised update the local ctx appropriately
 /// @param func The function that should be called with the passed variadic arguments.
 /// @param var_to_pass The variable the return of the function should be passed to.

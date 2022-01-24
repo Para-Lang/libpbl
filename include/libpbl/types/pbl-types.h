@@ -1,5 +1,5 @@
 /// @file pbl-types.h
-/// @brief Para-C Base Types Implementation, which contains handler macros, conversion functions, default declaration,
+/// @brief Para Base Types Implementation, which contains handler macros, conversion functions, default declaration,
 /// default definition types and default size macros. This also includes meta-data tracking based on the
 /// 'PblMetaVarCtx_T' type.
 /// @author Luna-Klatzer
@@ -94,7 +94,7 @@ struct PblTypeList {
 };
 
 /// @brief A type list storing pointers to data-types
-/// @note This will be used in each Para-C file to keep track of all types, and allow for more advanced dynamic type
+/// @note This will be used in each Para file to keep track of all types, and allow for more advanced dynamic type
 /// fetching and handling without having to deal with name mangling
 typedef struct PblTypeList PblTypeList_T;
 
@@ -152,14 +152,14 @@ void PblInitTypeList(PblTypeList_T* list);
 // Use auto with C++
 #ifdef __cplusplus
 /// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
-/// @note This should only be used when creating a declaration of a Para-C type
+/// @note This should only be used when creating a declaration of a Para type
 #define PBL_DECLARE_VAR(var_identifier, type, cleanup...)                                                              \
   auto *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
   *(var_identifier) = type##_DeclDefault;
 
 /// @brief This macro allocates an instance of type, which has the default initialisation value set
 /// @note This should only be used when creating a definition that shall be empty - if it's though a conversion from C
-/// to Para-C the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable
+/// to Para the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable
 #define PBL_DEFINE_VAR(var_identifier, type, cleanup...)                                                               \
   auto *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
   *(var_identifier) = type##_DefDefault;
@@ -174,14 +174,14 @@ void PblInitTypeList(PblTypeList_T* list);
   }
 #else
 /// @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet
-/// @note This should only be used when creating a declaration of a Para-C type
+/// @note This should only be used when creating a declaration of a Para type
 #define PBL_DECLARE_VAR(var_identifier, type, cleanup...)                                                              \
   type *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
   *(var_identifier) = type##_DeclDefault;
 
 /// @brief This macro allocates an instance of type, which has the default initialisation value set
 /// @note This should only be used when creating a definition that shall be empty - if it's though a conversion from C
-/// to Para-C the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable
+/// to Para the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable
 #define PBL_DEFINE_VAR(var_identifier, type, cleanup...)                                                               \
   type *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
   *(var_identifier) = type##_DefDefault;
@@ -214,11 +214,10 @@ void PblInitTypeList(PblTypeList_T* list);
 #define PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR(type, var_actual...)                                            \
   (type) { .meta = {.defined = true}, .actual = var_actual }
 
-/// @brief Creates the body for a Para-C type definition wrapper - the base_type is the actual value/struct
+/// @brief Creates the body for a Para type definition wrapper - the base_type is the actual value/struct
 #define PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(base_type)                                                             \
   PblVarMetaData_T meta;                                                                                               \
   base_type actual;                                                                                                    \
-
 
 // ---- End of Constructor Macros -------------------------------------------------------------------------------------
 
@@ -245,25 +244,25 @@ void PblInitTypeList(PblTypeList_T* list);
 
 // ---- Sizeof --------------------------------------------------------------------------------------------------------
 
-/// @brief Returns the usable size of a Para-C type that can be actually used
+/// @brief Returns the usable size of a Para type that can be actually used
 /// @param var The variable to get the size from
-/// @note This type must be a Para-C type
+/// @note This type must be a Para type
 #define PBL_SIZEOF_USABLE(type) (type##_Size)
 
-/// @brief Returns the full allocation size of a Para-C type. This also includes meta data
+/// @brief Returns the full allocation size of a Para type. This also includes meta data
 /// @param var The variable to get the size from
-/// @note This type must be a Para-C type
+/// @note This type must be a Para type
 #define PBL_SIZEOF_FULL(type) (sizeof(type))
 
-/// @brief Returns the full allocation size of a Para-C type, which has been defined dynamically.
+/// @brief Returns the full allocation size of a Para type, which has been defined dynamically.
 /// This also includes meta data
 /// @param var The variable to get the size from
-/// @note This type must be a Para-C type
+/// @note This type must be a Para type
 #define PBL_SIZEOF_FULL_ON_RUNTIME(var) var->meta.type->actual_size
 
-/// @brief Returns the usable size of a Para-C type, which has been defined dynamically
+/// @brief Returns the usable size of a Para type, which has been defined dynamically
 /// @param var The variable to get the size from
-/// @note This type must be a Para-C type
+/// @note This type must be a Para type
 #define PBL_SIZEOF_USABLE_ON_RUNTIME(var) var->meta.type->usable_size
 
 // ---- End of Sizeof -------------------------------------------------------------------------------------------------
@@ -612,7 +611,7 @@ typedef struct PblLongDouble PblLongDouble_T;
 // Use auto with C++
 #ifdef __cplusplus
 /// @brief This a macro function definition body constructor, which should be used to directly convert C types into
-/// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
+/// their Para counterparts. This should be only used for Para types that have as actual a single property, as this
 /// does not support complex initialisation.
 #define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, val, c_type)                                               \
   {                                                                                                                    \
@@ -623,7 +622,7 @@ typedef struct PblLongDouble PblLongDouble_T;
   }
 #else
 /// @brief This a macro function definition body constructor, which should be used to directly convert C types into
-/// their Para-C counterparts. This should be only used for Para-C types that have as actual a single property, as this
+/// their Para counterparts. This should be only used for Para types that have as actual a single property, as this
 /// does not support complex initialisation.
 #define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(parac_type, val, c_type)                                               \
   {                                                                                                                    \
@@ -647,91 +646,91 @@ __attribute__((unused)) PblPointer_T *PblGetPointerT(void* val, PblType_T* type)
 /// @brief Converts the low level C-Type to a PBL Bool type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Bool type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblBool_T *PblGetBoolT(bool val);
 
 /// @brief Converts the low level C-Type to a PBL Byte Size type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Byte Size type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblSize_T *PblGetSizeT(size_t val);
 
 /// @brief Converts the low level C-Type to a PBL Char type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblChar_T *PblGetCharT(signed char val);
 
 /// @brief Converts the low level C-Type to a PBL Unsigned Char type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblUChar_T *PblGetUCharT(unsigned char val);
 
 /// @brief Converts the low level C-Type to a PBL Short type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblShort_T *PblGetShortT(signed short val);
 
 /// @brief Converts the low level C-Type to a PBL Unsigned Short type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblUShort_T *PblGetUShortT(unsigned short val);
 
 /// @brief Converts the low level C-Type to a PBL Int type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblInt_T *PblGetIntT(signed int val);
 
 /// @brief Converts the low level C-Type to a PBL Unsigned Int type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblUInt_T *PblGetUIntT(unsigned int val);
 
 /// @brief Converts the low level C-Type to a PBL Long type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblLong_T *PblGetLongT(signed long val);
 
 /// @brief Converts the low level C-Type to a PBL Unsigned Long type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblULong_T *PblGetULongT(unsigned long val);
 
 /// @brief Converts the low level C-Type to a PBL Long Long type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblLongLong_T *PblGetLongLongT(signed long long val);
 
 /// @brief Converts the low level C-Type to a PBL Unsigned Long Long type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblULongLong_T *PblGetULongLongT(unsigned long long val);
 
 /// @brief Converts the low level C-Type to a PBL Float type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Char type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblFloat_T *PblGetFloatT(float val);
 
 /// @brief Converts the low level C-Type to a PBL Double type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Double type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblDouble_T *PblGetDoubleT(double val);
 
 /// @brief Converts the low level C-Type to a PBL Long Double type
 /// @param val The C-type to be converted
 /// @return The newly created PBL Long Double type
-/// @note This is a C to Para-C type conversion function - args are in C therefore
+/// @note This is a C to Para type conversion function - args are in C therefore
 __attribute__((unused)) PblLongDouble_T *PblGetLongDoubleT(long double val);
 
 // ---- End of Functions Definitions ----------------------------------------------------------------------------------

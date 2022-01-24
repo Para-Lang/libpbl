@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.17)
 project(
     libpbl
     VERSION 0.1
-    DESCRIPTION "The Para-C Base Library implementing macros, functions and types for the Para-C programming language"
+    DESCRIPTION "The Para Base Library implementing macros, functions and types for the Para programming language"
     LANGUAGES C CXX
 )
 

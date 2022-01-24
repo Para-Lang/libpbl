@@ -1,5 +1,5 @@
 /// @file pbl-mem.c
-/// @brief Para-C memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
+/// @brief Para memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
 /// collector)
 /// @author Luna-Klatzer
 /// @date 2021-11-23

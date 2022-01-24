@@ -1,5 +1,5 @@
 /// @file pbl-mem.h
-/// @brief Para-C memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
+/// @brief Para memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
 /// collector)
 /// @author Luna-Klatzer
 /// @date 2021-11-23
@@ -28,30 +28,30 @@ extern "C" {
 #define PBL_LOG_MEM_ERR(...) PblAbortWithCriticalError(1, __VA_ARGS__)
 
 /// @brief Logs an error for attempting to copy from an invalid memory address (NULL) and aborts with exit status '1'
-#define PBL_LOG_CPY_FROM_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to copy from an invalid memory address (NULL)");
+#define PBL_LOG_CPY_FROM_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to copy from an invalid memory address (NULL)");
 
 /// @brief Logs an error for attempting to copy to an invalid memory address (NULL) and aborts with exit status '1'
-#define PBL_LOG_CPY_TO_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to copy to an invalid memory address (NULL)");
+#define PBL_LOG_CPY_TO_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to copy to an invalid memory address (NULL)");
 
 /// @brief Logs an error for receiving 'NULL' from the call of the C function 'memcpy' and aborts with exit status '1'
-#define PBL_LOG_CPY_RECEIVE_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Failed to cpy memory (Received NULL)");
+#define PBL_LOG_CPY_RECEIVE_NULL_PTR PBL_LOG_MEM_ERR("Para: Failed to cpy memory (Received NULL)");
 
 /// @brief Logs an error for attempting to use an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_LOG_ACCESS_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to access invalid memory address (NULL)");
+#define PBL_LOG_ACCESS_ERR_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to access invalid memory address (NULL)");
 
 /// @brief Logs an error for attempting to free an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_LOG_FREE_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to free invalid memory address (NULL)");
+#define PBL_LOG_FREE_ERR_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to free invalid memory address (NULL)");
 
 /// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_MALLOC' or 'GC_MALLOC_ATOMIC' and
 /// aborts with exit status '1'
-#define PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("PARA-C: Failed to allocate memory (Received NULL)");
+#define PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("Para: Failed to allocate memory (Received NULL)");
 
 /// @brief Logs an error for attempting to realloc an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_LOG_REALLOC_ERR_NULL_PTR PBL_LOG_MEM_ERR("PARA-C: Attempted to re-allocate invalid memory address (NULL)");
+#define PBL_LOG_REALLOC_ERR_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to re-allocate invalid memory address (NULL)");
 
 /// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_REALLOC' and aborts with exit status
 /// '1'
-#define PBL_LOG_REALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("PARA-C: Failed to re-allocate memory (Received NULL)");
+#define PBL_LOG_REALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("Para: Failed to re-allocate memory (Received NULL)");
 
 // ---- End of Helper Macro -------------------------------------------------------------------------------------------
 

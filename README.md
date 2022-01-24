@@ -1,16 +1,16 @@
-# `libpbl` - Para-C Base Library
+# `libpbl` - Para Base Library
 
-[![Latest Release](https://img.shields.io/github/v/release/Para-C/Para-C-Base-Library?include_prereleases)](https://github.com/Para-C/Para-C-Base-Library/releases)
-[![Codecov](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/codecov.yml/badge.svg)](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/codecov.yml)
-[![Dr.Memory and GTest](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/drmemory.yml/badge.svg)](https://github.com/Para-C/Para-C-Base-Library/actions/workflows/drmemory.yml)
-[![Open Para-C issues](https://img.shields.io/github/issues/Para-C/Para-C)](https://github.com/Para-C/Para-C/issues)
-[![Required GCC version](https://img.shields.io/badge/GCC-%3E%3D8.0-blue)](https://github.com/Para-C/Para-C/discussions/76)
+[![Latest Release](https://img.shields.io/github/v/release/Para-Lang/Para-Base-Library?include_prereleases)](https://github.com/Para-Lang/Para-Base-Library/releases)
+[![Codecov](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/codecov.yml/badge.svg)](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/codecov.yml)
+[![Dr.Memory and GTest](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/drmemory.yml/badge.svg)](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/drmemory.yml)
+[![Open Para issues](https://img.shields.io/github/issues/Para-Lang/Para)](https://github.com/Para-Lang/Para/issues)
+[![Required GCC version](https://img.shields.io/badge/GCC-%3E%3D8.0-blue)](https://github.com/Para-Lang/Para/discussions/76)
 ![Required CMake version](https://img.shields.io/badge/CMake-%3E%3D3.17-blue)
 
-This is the repository containing the c-implementation library (Para-C Core Library, and partly Para-C Built-In Library)
+This is the repository containing the c-implementation library (Para Core Library, and partly Para Built-In Library)
 , which is used for the built-in functions, keywords and items, which are required for the base language.
 
-*For proper documentation and info on Para-C visit the main repo [here](https://github.com/Para-C/Para-C). This also
+*For proper documentation and info on Para visit the main repo [here](https://github.com/Para-Lang/Para). This also
 includes issues or requesting changes. These should be done on the main branch, while the issues here will be
 maintainers-only*
 
@@ -19,7 +19,7 @@ maintainers-only*
 For testing purposes, [GTest (Google Test)](https://github.com/google/googletest/releases/tag/release-1.11.0)
 is used in an C++ environment, which will simply include the C-files and run them.
 
-In actual code usage, the Para-C Compiler will use the code as regular C, and only for testing C++ will/must be used.
+In actual code usage, the Para Compiler will use the code as regular C, and only for testing C++ will/must be used.
 
 # Overview
 
@@ -41,7 +41,7 @@ The styling guide for the PBL is as following:
 
 ## Meta-Data Tracking - `pbl-types.h`
 
-Para-C implements meta-data tracking using `PblVarMetaData_T` and pre-defined macros, tracking things like:
+Para implements meta-data tracking using `PblVarMetaData_T` and pre-defined macros, tracking things like:
 
 - If the variable has been defined yet
 - Effective space the user has to utilise. Note that effective space does not include actual space that is allocated!
@@ -49,17 +49,17 @@ Para-C implements meta-data tracking using `PblVarMetaData_T` and pre-defined ma
 
 ### `_DefDefault` and `_DeclDefault` for PBL-Types
 
-When declaring a built-in type that should be used inside Para-C, the style of the general types should be replicated,
+When declaring a built-in type that should be used inside Para, the style of the general types should be replicated,
 to allow for the proper usage of defaults aka. `_DefDefault` and `_DeclDefault`
 
 ## Variables - `pbl-types.h`
 
-Variables in Para-C are specifically handled using a garbage collector, meaning that initialised variables are
+Variables in Para are specifically handled using a garbage collector, meaning that initialised variables are
 going to be represented and accessed using pointers. 
 
 States of a Variable: 
 - Only Declared (True C Declaration)
-- Technically "Declared" (Technically defined in C, but handled as declared in Para-C). Two possible 
+- Technically "Declared" (Technically defined in C, but handled as declared in Para). Two possible 
   scenarios:
   - Allocated, but the meta-Property `.meta.defined` is set to false, since no value was assigned yet
   - The value is NULL, as it's a pointer and there has not been any clear definition.
@@ -68,7 +68,7 @@ States of a Variable:
 
 ### Type List
 
-Para-C keeps a type list of all registered types that were created or imported inside a source file. This list is 
+Para keeps a type list of all registered types that were created or imported inside a source file. This list is 
 created at startup of the program, meaning all types may be dynamically accessed and used to create new types. 
 
 This means that each file has its own scope with meta-data tracking, which can be also imported into other files. 
@@ -78,7 +78,7 @@ Constructor Priority:
 
 ### Declared and Defined handling
 
-In Para-C, there are two different states a variable can exist in; It is either declared or defined.
+In Para, there are two different states a variable can exist in; It is either declared or defined.
 
 #### Declared Variable
 
@@ -108,12 +108,12 @@ types, which will have all their property-pointers set to NULL, aka. they are al
 For functions, returns will always be pointers no matter what, since all variables are dynamically allocated and the
 actual storage in the stack is the pointer itself.
 
-This means that returning NULL will always be valid in Para-C aka. it's the `None` (from Python) of Para-C,
+This means that returning NULL will always be valid in Para aka. it's the `None` (from Python) of Para,
 
 ### Global Variable handling
 
-Global Variables are in Para-C handled a bit differentially, due to the general allocations using `pbl-mem.h`. This
-means that any Para-C file will contain a `static void PBL_INIT_GLOBALS()` function, where all the local globals
+Global Variables are in Para handled a bit differentially, due to the general allocations using `pbl-mem.h`. This
+means that any Para file will contain a `static void PBL_INIT_GLOBALS()` function, where all the local globals
 are defined and the code is executed that was written before.
 
 This means that in the compiled code the globals will simply be declarations, until they were defined
@@ -121,7 +121,7 @@ on runtime (before the execution of main).
 
 ## Memory accessing - `pbl-mem.h`
 
-As already stated previously in section [Variables](#variables---pbl-typesh), Para-C is using a garbage collector to
+As already stated previously in section [Variables](#variables---pbl-typesh), Para is using a garbage collector to
 handle its leftover variables that are not collected at the end of a stack's lifetime. This means that almost all 
 variables will be allocated and cleaned up using the [Boehm garbage collector](https://hboehm.info/gc/). The only 
 exceptions are for small variables that will likely be allocated in the stack using `alloca()` to preserve speed in
@@ -129,7 +129,7 @@ crucial tasks and not add unnecessary memory to the garbage collector.
 
 ## Function Meta-Data Tracking - `pbl-function.h`
 
-Inside Para-C, when calling a Para-C function, so-called `PblFunctionCallMetaData_T` types are passed as the first
+Inside Para, when calling a Para function, so-called `PblFunctionCallMetaData_T` types are passed as the first
 argument to every function, which contain:
 
 - The meta-data of the invocation aka. call context,
@@ -141,11 +141,11 @@ failure of the program.
 
 ## Exceptions - `pbl-function.h`
 
-Exceptions in Para-C are very similarly implemented to the exceptions in C#.
+Exceptions in Para are very similarly implemented to the exceptions in C#.
 
 Exceptions can be raised, re-raised with a parent-exception and child-exception, caught using an `except` block and also
 used to pre-maturely abort the program.
 
-Inside Para-C these are though implemented using the `PblFunctionCallMetaData_T` types, which will store the traceback
+Inside Para these are though implemented using the `PblFunctionCallMetaData_T` types, which will store the traceback
 and exception information. All macros for exceptions have been implemented in this header and should be always used when
 implementing higher level functions.
