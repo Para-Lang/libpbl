@@ -1,0 +1,34 @@
+name: MinGW Compatibility Checks
+on:
+  push:
+    branches-ignore:
+      - '**-coverage-report'
+  pull_request:
+
+jobs:
+  run:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # At the moment only >=7.0 are supported by setup-gcc
+        mingw-version: [ latest ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up MinGW-w64
+        uses: egor-tensin/setup-mingw@v1
+        with:
+          platform: x64
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.9
+        with:
+          cmake-version: '3.17.x'
+      - name: Build Tests
+        run: |
+          cmake . -G "MinGW Makefiles" -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++
+          cmake --build . --target runPblTests
+      - name: Run Tests
+        run: |
+          .\tests\runPblTests.exe

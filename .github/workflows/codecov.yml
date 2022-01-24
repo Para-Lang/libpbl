@@ -1,29 +1,33 @@
 name: Codecov
-on: [push]
+on: [ push ]
+
 jobs:
   run:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
     env:
       OS: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@master
-    - name: Build GTest Tests
-      run: |
-        cmake .
-        cmake --build . --target runParacModulesTests -- -j 9
-    - name: Run C-Coverage
-      run: |
-        ./tests/tests/runParacModulesTests
-        gcov -abcfu ./include/CMakeFiles/parac-modules.dir/*.gc*
-        tree .
-    - name: Upload C coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        directory: .
-        env_vars: OS
-        files: pbl-int.c.gcov,pbl-string.c.gcov,pbl-types.c.gcov,pbl-io.c.gcov,pbl-mem.c.gcov,pbl-main.c.gcov,pbl-function.c.gcov,pbl.c.gcov
-        verbose: true
+      - uses: actions/checkout@master
+      - name: Build GTest Tests
+        run: |
+          cmake .
+          cmake --build . --target runPblTests
+      - name: Run C-Coverage
+        run: |
+          ./tests/runPblTests
+      - name: Generate coverage files
+        run: |
+          gcov -abcfu ./CMakeFiles/pbl.dir/**/*.gcda ./CMakeFiles/pbl.dir/**/*.gcno
+      - name: Run Tree to show directory structure
+        run: |
+          tree .
+      - name: Download Codecov Uploader
+        run: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+      - name: Upload C coverage to Codecov
+        run: |
+          ./codecov -v -F unittests -t ${{ secrets.CODECOV_TOKEN }} -s ./src/ -f ./src/**/*.gcov -n Github-Actions-Upload
