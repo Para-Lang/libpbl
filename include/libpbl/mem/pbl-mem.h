@@ -20,7 +20,22 @@
 extern "C" {
 #endif
 
-// ---- End of Memory Setup -------------------------------------------------------------------------------------------
+// If the overwrite macro is defined, overwrite the default function names
+#ifdef PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
+# define malloc(args...) PblMalloc(args)
+# define free(args...) PblFree(args)
+# define realloc(args...) PblRealloc(args)
+#endif
+
+// If debug is defined, print additional GC stats
+#ifdef PBL_DEBUG
+# define GC_PRINT_STATS
+#endif
+
+// If verbose debug is defined, print additional verbose GC stats
+#ifdef PBL_DEBUG_VERBOSE
+# define GC_PRINT_VERBOSE_STATS
+#endif
 
 // ---- Helper Macros -------------------------------------------------------------------------------------------------
 

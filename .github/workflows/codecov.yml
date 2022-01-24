@@ -14,7 +14,7 @@ jobs:
       - name: Build GTest Tests
         run: |
           cmake .
-          cmake --build . --target runPblTests
+          cmake --build . --target runPblTests -DPBL_COVERAGE=true
       - name: Run C-Coverage
         run: |
           ./tests/runPblTests

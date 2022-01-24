@@ -6,6 +6,8 @@
 #include "gtest/gtest.h"
 
 // Including the header to be tested
+#define PBL_DEBUG_VERBOSE
+#define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
 #include <libpbl/types/pbl-string.h>
 
 TEST(StringTypesTest, GetLenghtOfCString) {

@@ -23,9 +23,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # Setting test flags
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage -O0")
 
-  # Adding coverage definitions
-  add_definitions(-fprofile-arcs -ftest-coverage)
-
   # Adding the examples runtime
   add_subdirectory(examples)
 endif()
@@ -39,6 +36,16 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   add_subdirectory(tests)
 endif()
 
+if (DEFINED PBL_DEBUG_VERBOSE)
+  add_compile_definitions(PBL_DEBUG)
+  add_compile_definitions(PBL_DEBUG_VERBOSE)
+endif()
+
+if (DEFINED PBL_COVERAGE)
+  # Adding coverage definitions
+  add_definitions(-fprofile-arcs -ftest-coverage)
+endif()
+
 # If Debug-Mode is enabled add debug definitions
 if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
   # Add default definition for debugging
@@ -46,6 +53,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
 
   # Sets the PBL_DEBUG to true per default
   set(PBL_DEBUG true)
+  add_compile_definitions(PBL_DEBUG)
 
   # Add macro for the Garbage Collector to allow debugging
   add_compile_definitions(GC_DEBUG)
