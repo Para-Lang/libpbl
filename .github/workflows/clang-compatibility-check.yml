@@ -1,0 +1,35 @@
+name: Clang Compatibility Checks
+on:
+  push:
+    branches-ignore:
+      - '**-coverage-report'
+  pull_request:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # At the moment only >=7.0 are supported by setup-clang
+        clang-version: [ 7, 8, 9, 10, 11, 12, 13, latest ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Clang
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: ${{ matrix.clang-version }}
+          platform: x64
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.9
+        with:
+          cmake-version: '3.17.x'
+      - name: Build Tests
+        run: |
+          cmake . -G "Unix Makefiles" -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+          cmake --build . --target runPblTests
+      - name: Run Tests
+        run: |
+          ./tests/runPblTests

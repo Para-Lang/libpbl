@@ -1,5 +1,4 @@
 name: "CodeQL"
-
 on:
   push:
     branches: [ main ]
@@ -24,19 +23,18 @@ jobs:
         language: [ 'cpp' ]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: ${{ matrix.language }}
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
 
-    - name: Build
-      run: |
-        cmake .
-        cmake --build . --target runParacModulesTests -- -j 9
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      - name: Build
+        run: |
+          cmake .
+          cmake --build . --target runPblTests
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
