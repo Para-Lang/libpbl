@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/Para-Lang/Para/v0.1.dev7/img/para-banner.png)
+
 # `libpbl` - Para Base Library
 
 [![Latest Release](https://img.shields.io/github/v/release/Para-Lang/Para-Base-Library?include_prereleases)](https://github.com/Para-Lang/Para-Base-Library/releases)
