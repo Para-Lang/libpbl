@@ -2,7 +2,7 @@
 *.log
 **/.idea
 **/venv/
-**/cmake-build-debug
+**/cmake-build-debug*
 **/CMakeFiles
 *.java
 **/gen

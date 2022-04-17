@@ -20,11 +20,36 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # PBL only supports C11 and upwards
   set(CMAKE_C_STANDARD 11)
 
-  # Setting test flags
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage -O0")
-
   # Adding the examples runtime
   add_subdirectory(examples)
+
+  # Including the tests and the testing target
+  add_subdirectory(tests)
+
+  # Verbose cmd option
+  option(PBL_DEBUG_VERBOSE "Enable verbose debugging" OFF)
+  if (PBL_DEBUG_VERBOSE)
+    message("Enabled PBL_DEBUG_VERBOSE successfully.")
+    add_compile_definitions(PBL_DEBUG)
+    add_compile_definitions(PBL_DEBUG_VERBOSE)
+  endif()
+
+  # Coverage cmd option
+  option(PBL_COVERAGE "Enable default coverage reporting" OFF)
+  set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
+  if (PBL_COVERAGE)
+    if(CMAKE_COMPILER_IS_GNUCXX)
+      add_definitions(-fprofile-arcs -ftest-coverage)
+
+      # We need to turn off optimization for non-skewed coverage reports
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+
+      message("Enabled PBL_COVERAGE successfully.")
+    else()
+      message("Failed to enable PBL_COVERAGE. Only supported for the GNU Compiler Collection and MingW.")
+    endif()
+  endif()
 endif()
 
 # Adding the external libraries
@@ -32,22 +57,6 @@ add_subdirectory(lib)
 
 # Adding the src and linking the library
 add_subdirectory(src)
-
-# If this is the main project, enable testing
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-  # Including the tests and the testing target
-  add_subdirectory(tests)
-endif()
-
-if (DEFINED PBL_DEBUG_VERBOSE)
-  add_compile_definitions(PBL_DEBUG)
-  add_compile_definitions(PBL_DEBUG_VERBOSE)
-endif()
-
-if (DEFINED PBL_COVERAGE)
-  # Adding coverage definitions
-  add_definitions(-fprofile-arcs -ftest-coverage)
-endif()
 
 # If Debug-Mode is enabled add debug definitions
 if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
@@ -61,5 +70,3 @@ if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
   # Add macro for the Garbage Collector to allow debugging
   add_compile_definitions(GC_DEBUG)
 endif()
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

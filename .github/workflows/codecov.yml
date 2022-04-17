@@ -13,14 +13,14 @@ jobs:
       - uses: actions/checkout@master
       - name: Build GTest Tests
         run: |
-          cmake .
-          cmake --build . --target pbl-tests -DPBL_COVERAGE=true
+          cmake -DCMAKE_BUILD_TYPE=Debug -DPBL_COVERAGE=ON -DPBL_DEBUG_VERBOSE=ON -S . -B ./cmake-build-debug
+          cmake --build . --target pbl-tests
       - name: Run C-Coverage
         run: |
-          ./tests/pbl-tests
+          ./cmake-build-debug/tests/pbl-tests
       - name: Generate coverage files
         run: |
-          gcov -abcfu ./CMakeFiles/pbl.dir/**/*.gcda ./CMakeFiles/pbl.dir/**/*.gcno
+          find ./cmake-build-debug/src/CMakeFiles/pbl.dir/ -type f -name "**/*.c.gcda" -exec gcov -abcfum "{}" \;
       - name: Run Tree to show directory structure
         run: |
           tree .
@@ -30,4 +30,4 @@ jobs:
           chmod +x codecov
       - name: Upload C coverage to Codecov
         run: |
-          ./codecov -v -F unittests -t ${{ secrets.CODECOV_TOKEN }} -s ./src/ -f ./src/**/*.gcov -n Github-Actions-Upload
+          ./codecov -v -F unittests -t ${{ secrets.CODECOV_TOKEN }} -s . -f *.gcov -n Github-Actions-Upload

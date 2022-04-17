@@ -25,3 +25,4 @@ target_link_libraries(pbl-tests gtest gtest_main)
 
 # Linking the PBl itself
 target_link_libraries(pbl-tests pbl)
+target_link_libraries(pbl-tests gcov)
