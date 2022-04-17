@@ -3,6 +3,7 @@
 # `libpbl` - Para Base Library
 
 [![Latest Release](https://img.shields.io/github/v/release/Para-Lang/Para-Base-Library?include_prereleases)](https://github.com/Para-Lang/Para-Base-Library/releases)
+[![codecov](https://codecov.io/gh/Para-Lang/libpbl/branch/main/graph/badge.svg?token=DaivYBG7vW)](https://codecov.io/gh/Para-Lang/libpbl)
 [![Codecov](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/codecov.yml/badge.svg)](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/codecov.yml)
 [![Dr.Memory and GTest](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/drmemory.yml/badge.svg)](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/drmemory.yml)
 [![Open Para issues](https://img.shields.io/github/issues/Para-Lang/Para)](https://github.com/Para-Lang/Para/issues)
@@ -19,9 +20,16 @@ maintainers-only*
 # Testing
 
 For testing purposes, [GTest (Google Test)](https://github.com/google/googletest/releases/tag/release-1.11.0)
-is used in an C++ environment, which will simply include the C-files and run them.
+is used in an C++ environment, which will simply include the C-headers and Object-files.
 
-In actual code usage, the Para Compiler will use the code as regular C, and only for testing C++ will/must be used.
+To do a simple test, you can do the following using `cmake`:
+
+```bash
+cmake -S . -B ./cmake-build-debug
+cmake --build ./cmake-build-debug --target pbl-tests
+```
+
+This will simply setup the cmake environment, build the 
 
 # Overview
 
