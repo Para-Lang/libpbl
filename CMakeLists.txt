@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.17)
 project(
     libpbl
     VERSION 0.1
-    DESCRIPTION "The Para Base Library implementing macros, functions and types for the Para programming language"
+    DESCRIPTION "The Para Base Library implementing the functionality for the Para programming language"
     LANGUAGES C CXX
 )
 
@@ -26,6 +26,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # Adding the examples runtime
   add_subdirectory(examples)
 endif()
+
+# Adding the external libraries
+add_subdirectory(lib)
 
 # Adding the src and linking the library
 add_subdirectory(src)
@@ -59,6 +62,4 @@ if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
   add_compile_definitions(GC_DEBUG)
 endif()
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

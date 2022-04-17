@@ -27,7 +27,7 @@ jobs:
       - name: Build Tests
         run: |
           cmake . -G "MinGW Makefiles" -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++
-          cmake --build . --target runPblTests
+          cmake --build . --target pbl-tests
       - name: Run Tests
         run: |
-          .\tests\runPblTests.exe
+          .\tests\pbl-tests.exe

@@ -3,6 +3,7 @@
 **/.idea
 **/venv/
 **/cmake-build-debug
+**/CMakeFiles
 *.java
 **/gen
 **/build

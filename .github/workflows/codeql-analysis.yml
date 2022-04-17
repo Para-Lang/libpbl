@@ -35,6 +35,6 @@ jobs:
       - name: Build
         run: |
           cmake .
-          cmake --build . --target runPblTests
+          cmake --build . --target pbl-tests
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1

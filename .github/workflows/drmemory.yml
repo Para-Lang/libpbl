@@ -31,10 +31,10 @@ jobs:
       - name: Build Tests
         run: |
           cmake .
-          cmake --build . --target runPblTests
+          cmake --build . --target pbl-tests
       - name: Run Tests
         run: |
-          ./tests/runPblTests
+          ./tests/pbl-tests
       - name: Run DrMemory for Tests
         run: |
-          ./DrMemory-Linux-2.4.0-2/bin/drmemory -- ./tests/runPblTests
+          ./DrMemory-Linux-2.4.0-2/bin/drmemory -- ./tests/pbl-tests
