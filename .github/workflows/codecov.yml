@@ -20,7 +20,7 @@ jobs:
           ./cmake-build-debug/tests/pbl-tests
       - name: Generate coverage files
         run: |
-          find ./cmake-build-debug/src/CMakeFiles/pbl.dir/ -type f -name "**/*.c.gcda" -exec gcov -abcfum "{}" \;
+          find ./cmake-build-debug/src/CMakeFiles/pbl.dir/ -print -type f -name "**/*.c.gcda" -exec gcov -abcfum {} \;
       - name: Run Tree to show directory structure
         run: |
           tree .
