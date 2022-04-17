@@ -2,6 +2,10 @@
 set(HEADER_INCLUDE_DIRECTORY "${libpbl_SOURCE_DIR}/include")
 set(SOURCE_INCLUDE_DIRECTORY "${libpbl_SOURCE_DIR}/src")
 
+# Defining the directories for library source and header files
+set(HEADER_EXT_LIB_DIRECTORY "${libpbl_SOURCE_DIR}/lib")
+set(SOURCE_EXT_LIB_DIRECTORY "${libpbl_SOURCE_DIR}/lib")
+
 # Logging for debugging purposes the source and header directories
 message("SOURCE_INCLUDE_DIRECTORY = ${SOURCE_INCLUDE_DIRECTORY}")
 message("HEADER_INCLUDE_DIRECTORY = ${HEADER_INCLUDE_DIRECTORY}")
@@ -31,11 +35,7 @@ set(HEADER_FILES
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/mem/pbl-mem-tools.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/io/pbl-io.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/func/pbl-function.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/additional/pbl-apply-macro.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/additional/va-opt.h")
-
-# Setting the output for the static library (.a)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${libpbl_SOURCE_DIR}/lib")
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-apply-macro.h")
 
 # Adding the static Library
 add_library(pbl STATIC ${SOURCE_FILES} ${HEADER_FILES})
@@ -46,6 +46,14 @@ target_include_directories(pbl PUBLIC ${HEADER_INCLUDE_DIRECTORY} ${SOURCE_INCLU
 
 # Linking the garbage collector
 target_link_libraries(pbl PUBLIC gc-lib)
+
+# -- Linking external libraries --
+
+# Adding the headers from the '/lib/' folder
+target_include_directories(pbl PUBLIC ${HEADER_EXT_LIB_DIRECTORY})
+
+# Linking the va-opt library
+target_link_libraries(pbl PUBLIC va-opt)
 
 # Including the Hans Boehm garbage collector
 FetchContent_Declare(

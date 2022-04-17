@@ -18,10 +18,11 @@ set(TEST_SOURCE_INCLUDE_DIRECTORY "${libpbl_SOURCE_DIR}/tests")
 file(GLOB TEST_SOURCE_FILES CONFIGURE_DEPENDS "${TEST_SOURCE_INCLUDE_DIRECTORY}/**/*.cpp")
 
 # Adding the test executable
-add_executable(runPblTests ${TEST_SOURCE_FILES})
+add_executable(pbl-tests ${TEST_SOURCE_FILES})
 
 # Linking the required GTest library
-target_link_libraries(runPblTests gtest gtest_main)
+target_link_libraries(pbl-tests gtest gtest_main)
 
 # Linking the PBl itself
-target_link_libraries(runPblTests pbl)
+target_link_libraries(pbl-tests pbl)
+target_link_libraries(pbl-tests gcov)

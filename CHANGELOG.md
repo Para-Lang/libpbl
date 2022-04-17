@@ -120,6 +120,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   and `PBL_DEFINE_VAR` (Para Definitions) which standardise the initialisation of Para values
 
 [unreleased]: https://github.com/Para-Lang/Para-Base-Library/tree/dev
-[v0.1.dev6]: https://github.com/Para-Lang/Para-Base-Library/compare/v0.1.dev6...v0.1.dev7
+[v0.1.dev7]: https://github.com/Para-Lang/Para-Base-Library/compare/v0.1.dev6...v0.1.dev7
 [v0.1.dev6]: https://github.com/Para-Lang/Para-Base-Library/compare/v0.1.dev5...v0.1.dev6
 [v0.1.dev5]: https://github.com/Para-Lang/Para-Base-Library/tag/v0.1.dev5

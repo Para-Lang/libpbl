@@ -8,11 +8,11 @@
 #pragma once
 
 // General Required Header Inclusion
-#include "../additional/va-opt.h"
-#include "../additional/pbl-apply-macro.h"
+#include <va-opt/va-opt.h>
 #include "../mem/pbl-mem.h"
 #include "../types/pbl-string.h"
 #include "../types/pbl-types.h"
+#include "libpbl/pbl-apply-macro.h"
 
 #ifndef PBL_MODULES_FUNCTION_H
 #define PBL_MODULES_FUNCTION_H
