@@ -4,7 +4,6 @@
 
 [![Latest Release](https://img.shields.io/github/v/release/Para-Lang/Para-Base-Library?include_prereleases)](https://github.com/Para-Lang/Para-Base-Library/releases)
 [![codecov](https://codecov.io/gh/Para-Lang/libpbl/branch/main/graph/badge.svg?token=DaivYBG7vW)](https://codecov.io/gh/Para-Lang/libpbl)
-[![Codecov](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/codecov.yml/badge.svg)](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/codecov.yml)
 [![Dr.Memory and GTest](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/drmemory.yml/badge.svg)](https://github.com/Para-Lang/Para-Base-Library/actions/workflows/drmemory.yml)
 [![Open Para issues](https://img.shields.io/github/issues/Para-Lang/Para)](https://github.com/Para-Lang/Para/issues)
 [![Required GCC version](https://img.shields.io/badge/GCC-%3E%3D8.0-blue)](https://github.com/Para-Lang/Para/discussions/76)
@@ -17,21 +16,69 @@ This is the repository containing the c-implementation library (Para Core Librar
 includes issues or requesting changes. These should be done on the main branch, while the issues here will be
 maintainers-only*
 
-# Testing
+# Testing the library
 
 For testing purposes, [GTest (Google Test)](https://github.com/google/googletest/releases/tag/release-1.11.0)
 is used in an C++ environment, which will simply include the C-headers and Object-files.
 
-To do a simple test, you can do the following using `cmake`:
+## Running the default tests using CMake
+
+To build the tests on your system, you will have to use CMake to set up the project and its dependencies:
 
 ```bash
 cmake -S . -B ./cmake-build-debug
 cmake --build ./cmake-build-debug --target pbl-tests
 ```
 
-This will simply setup the cmake environment, build the 
+This will set up the cmake environment and build the test-executable. 
 
-# Overview
+The executable should be located here (With `.exe` extension on Windows): 
+
+```bash
+./cmake-build-debug/tests/pbl-tests
+```
+ 
+## Additional optional flags
+
+To pass a flag add it to the project setup command, like this:
+
+```bash
+cmake -{FLAG}={VALUE} -S . -B ./cmake-build-debug
+```
+
+Example using the verbose, coverage and debug flag:
+
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug -DPBL_COVERAGE=ON -DPBL_DEBUG_VERBOSE=ON -S . -B ./cmake-build-debug
+```
+
+### `DCMAKE_BUILD_TYPE=Debug`
+
+Enables debugging features for the test executable. This must be used when
+debugging using a graphical IDE, like CLion, Visual Studio Code or Atom. 
+
+### `DPBL_COVERAGE=ON`
+
+Enables gcov coverage reporting. This will automatically generate `.gcda` and `.gcno`
+cov-report files for each compiled source file.
+
+These can be converted into proper `.gcov` files using the following command:
+
+```bash
+gcov -abcfum PATH_TO_FILE
+```
+
+### `DPBL_DEBUG_VERBOSE=ON`
+
+Enables verbose runtime messages.
+
+This will also define the macro `GC_PRINT_VERBOSE_STATS`, allowing for additional GC info.
+
+# Implementation Overview
+
+This section is a work-in-progress and serves as a reference, while the library is being
+developed. Don't take functionality listed here as granted, as almost everything will be
+likely changed at some point!
 
 ## Styling and Formatting
 
@@ -46,9 +93,7 @@ The styling guide for the PBL is as following:
 - Macros: SCREAMING_SNAKE_CASE (exceptions are function definition macros, where PascalCase is applied)
 - Functions: PascalCase with leading `Pbl`
 - Indention: 2 spaces
-- Startup Constructors: Name with leading `PBL_CONSTRUCTOR`
-- Cleanup De-Constructors: Name with leading `PBL_DECONSTRUCTOR`
-
+- 
 ## Meta-Data Tracking - `pbl-types.h`
 
 Para implements meta-data tracking using `PblVarMetaData_T` and pre-defined macros, tracking things like:
@@ -124,7 +169,16 @@ This means that returning NULL will always be valid in Para aka. it's the `None`
 
 Global Variables are in Para handled a bit differentially, due to the general allocations using `pbl-mem.h`. This
 means that any Para file will contain a `static void PBL_INIT_GLOBALS()` function, where all the local globals
-are defined and the code is executed that was written before.
+are defined and the code is executed that was written before. 
+
+This function will also interpret any left-over other variables, like:
+
+```c
+int val = 4;
+
+// -> 
+PblInt_T val = 4;
+```
 
 This means that in the compiled code the globals will simply be declarations, until they were defined
 on runtime (before the execution of main).
@@ -151,7 +205,7 @@ failure of the program.
 
 ## Exceptions - `pbl-function.h`
 
-Exceptions in Para are very similarly implemented to the exceptions in C#.
+Exceptions in Para are very similarly implemented to the exceptions in Python.
 
 Exceptions can be raised, re-raised with a parent-exception and child-exception, caught using an `except` block and also
 used to pre-maturely abort the program.
