@@ -40,7 +40,7 @@ extern "C" {
 // ---- Helper Macros -------------------------------------------------------------------------------------------------
 
 /// @brief Logs the entered error / string and aborts the program with the exit status '1'
-#define PBL_LOG_MEM_ERR(str, line, file_name) PblAbortWithCriticalError(1, str, line, file_name)
+#define PBL_LOG_MEM_ERR(str, line, file_name) PblThrowCriticalError(1, str, line, file_name)
 
 /// @brief Logs an error for receiving 'NULL' as a return from memory functions.
 #define PBL_MEM_OPERATION_RET_NULL_ERR(line, file_name) PBL_LOG_MEM_ERR("Failed to cpy memory (Received NULL)", line, file_name);

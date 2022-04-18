@@ -20,6 +20,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Updated project structure and split `pbl-types.h` into three new files. (Breaking change!)
 - Renamed `PBL_STREAM_STDIN` to `PBL_STDIN`, `PBL_STREAM_STDOUT` to `PBL_STDOUT` and `PBL_STREAM_STDERR` to 
   `PBL_STDERR`, and made them global variables, which may be included using the `pbl-io.h` header.
+- Renamed `PblAbortWithCriticalError` to `PblThrowCriticalError`.
 
 ### Removed
 

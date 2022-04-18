@@ -29,7 +29,7 @@
  * @param line The line where the error happened
  * @param file_name The file where the error happened
  */
-void PblAbortWithCriticalError(int exit_code, const char *string, const int line, const char* file_name);
+void PblThrowCriticalError(int exit_code, const char *string, const int line, const char* file_name);
 
 // ---- End of Function Definitions -----------------------------------------------------------------------------------
 
