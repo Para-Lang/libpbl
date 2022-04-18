@@ -30,14 +30,14 @@ cmake -S . -B ./cmake-build-debug
 cmake --build ./cmake-build-debug --target pbl-tests
 ```
 
-This will set up the cmake environment and build the test-executable. 
+This will set up the cmake environment and build the test-executable.
 
-The executable should be located here (With `.exe` extension on Windows): 
+The executable should be located here (With `.exe` extension on Windows):
 
 ```bash
 ./cmake-build-debug/tests/pbl-tests
 ```
- 
+
 ## Additional optional flags
 
 To pass a flag add it to the project setup command, like this:
@@ -55,7 +55,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug -DPBL_COVERAGE=ON -DPBL_DEBUG_VERBOSE=ON -S . -B 
 ### `DCMAKE_BUILD_TYPE=Debug`
 
 Enables debugging features for the test executable. This must be used when
-debugging using a graphical IDE, like CLion, Visual Studio Code or Atom. 
+debugging using a graphical IDE, like CLion, Visual Studio Code or Atom.
 
 ### `DPBL_COVERAGE=ON`
 
@@ -84,6 +84,7 @@ likely changed at some point!
 
 The styling guide for the PBL is as following:
 
+- Indention: 2 spaces
 - Structs/Enums: PascalCase with leading `Pbl`
 - Struct Properties: snake_case
 - Constants and Enum Properties: SCREAMING_SNAKE_CASE
@@ -92,8 +93,35 @@ The styling guide for the PBL is as following:
 - Parameters: snake_case
 - Macros: SCREAMING_SNAKE_CASE (exceptions are function definition macros, where PascalCase is applied)
 - Functions: PascalCase with leading `Pbl`
-- Indention: 2 spaces
-- 
+- Constructor Functions: PascalCase with leading `pre__Pbl`
+
+## Constructors
+
+As Para requires some overhead to run properly, C constructors are used to set up certain features.
+The order of constructor evaluation is as following:
+
+- `pre__PblInitialiseGarbageCollection` (Priority `101`) - Calls `GC_INIT()` and sets up memory handling. This must
+  always be first, as otherwise memory functions from `mem/pbl-mem.h` can NOT be used.
+- `pre__PblInitTypeListTracking` (Priority `102`) - Creates and initialises local type tracking.
+- `pre__PblInitGlobals` (Priority `103`) - Initialises globals for a standard file. This constructor is
+  created with `PBL_INIT_GLOBALS`, which is a macro that may be used to define local globals before main
+  starts execution.
+
+## Variables - `pbl-types.h`
+
+Variables in Para are specifically handled using a garbage collector, meaning that initialised variables are
+going to be represented and accessed using pointers.
+
+States of a Variable:
+
+- Only Declared (True C Declaration)
+- Technically "Declared" (Technically defined in C, but handled as declared in Para). Two possible
+  scenarios:
+    - Allocated, but the meta-Property `.meta.defined` is set to false, since no value was assigned yet
+    - The value is NULL, as it's a pointer and there has not been any clear definition.
+- Defined Variable that has been written to
+- Freed Variable by the Garbage Collector
+
 ## Meta-Data Tracking - `pbl-types.h`
 
 Para implements meta-data tracking using `PblVarMetaData_T` and pre-defined macros, tracking things like:
@@ -107,29 +135,26 @@ Para implements meta-data tracking using `PblVarMetaData_T` and pre-defined macr
 When declaring a built-in type that should be used inside Para, the style of the general types should be replicated,
 to allow for the proper usage of defaults aka. `_DefDefault` and `_DeclDefault`
 
-## Variables - `pbl-types.h`
+### Type List - `pbl-type-list.h`
 
-Variables in Para are specifically handled using a garbage collector, meaning that initialised variables are
-going to be represented and accessed using pointers. 
+Para keeps a type list of all registered types that were created or imported inside a source file. This list is
+created at startup of the program, meaning all types may be dynamically accessed and used to create new types.
 
-States of a Variable: 
-- Only Declared (True C Declaration)
-- Technically "Declared" (Technically defined in C, but handled as declared in Para). Two possible 
-  scenarios:
-  - Allocated, but the meta-Property `.meta.defined` is set to false, since no value was assigned yet
-  - The value is NULL, as it's a pointer and there has not been any clear definition.
-- Defined Variable that has been written to
-- Freed Variable by the Garbage Collector
+This means that each file has its own scope with meta-data tracking, which can be also imported into other files.
 
-### Type List
+To manually init a para-file and register new types, you can call the following macros:
 
-Para keeps a type list of all registered types that were created or imported inside a source file. This list is 
-created at startup of the program, meaning all types may be dynamically accessed and used to create new types. 
+```c
+// Actual globals or inclusions of headers
+#include <libpbl/pbl.h>
 
-This means that each file has its own scope with meta-data tracking, which can be also imported into other files. 
-
-Constructor Priority:
-- `PBL_CONSTRUCTOR_TYPES_LIST_INIT` - Initialises the local `LOCAL_TYPE_LIST` and `LOCAL_TYPE_TRACKING_INITIALISED` 
+// Para initialisation
+P_INIT_FILE;
+P_INIT_GLOBALS {
+  // Example for a void type
+  P_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblVoid_T, "void", false, false);
+};
+```
 
 ### Declared and Defined handling
 
@@ -167,27 +192,40 @@ This means that returning NULL will always be valid in Para aka. it's the `None`
 
 ### Global Variable handling
 
-Global Variables are in Para handled a bit differentially, due to the general allocations using `pbl-mem.h`. This
+Global Variables are in Para handled a bit differentially, due to the variable allocations using `pbl-mem.h`. This
 means that any Para file will contain a `static void PBL_INIT_GLOBALS()` function, where all the local globals
-are defined and the code is executed that was written before. 
+are defined and the code is executed that was written before.
 
-This function will also interpret any left-over other variables, like:
+That means that code will be converted like this:
 
-```c
-int val = 4;
+- Before:
+  ```c
+  int num = 4;
+  string str = "4";
+  ```
 
-// -> 
-PblInt_T val = 4;
-```
+- After:
+  ```c
+  PblInt_T *num = NULL;
+  PblString_T *str = NULL;
+  
+  P_INIT_FILE;
+  P_INIT_GLOBALS {
+    // ... type initialisations
+    
+    num = PblGetIntT(4);
+    str = PblGetStringT("4");
+  };
+  ```
 
-This means that in the compiled code the globals will simply be declarations, until they were defined
-on runtime (before the execution of main).
+This means that in the compiled code the globals will simply stay declarations until they were defined
+using constructors on runtime (before the execution of main).
 
 ## Memory accessing - `pbl-mem.h`
 
 As already stated previously in section [Variables](#variables---pbl-typesh), Para is using a garbage collector to
-handle its leftover variables that are not collected at the end of a stack's lifetime. This means that almost all 
-variables will be allocated and cleaned up using the [Boehm garbage collector](https://hboehm.info/gc/). The only 
+handle its leftover variables that are not collected at the end of a stack's lifetime. This means that almost all
+variables will be allocated and cleaned up using the [Boehm garbage collector](https://hboehm.info/gc/). The only
 exceptions are for small variables that will likely be allocated in the stack using `alloca()` to preserve speed in
 crucial tasks and not add unnecessary memory to the garbage collector.
 

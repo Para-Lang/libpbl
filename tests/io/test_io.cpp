@@ -9,7 +9,7 @@
 // Including the header to be tested
 #define PBL_DEBUG_VERBOSE
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
-#include <libpbl/io/pbl-io.h>
+#include "libpbl/pbl-io.h"
 
 TEST(IOFileTest, ConversionCheck) {
   FILE *val = fdopen(1, "a");
@@ -17,7 +17,7 @@ TEST(IOFileTest, ConversionCheck) {
 
   EXPECT_EQ(stream->actual, val);
   EXPECT_EQ(stream->meta.defined, true);
-  EXPECT_EQ(PblFile_T_Size, sizeof(FILE *));
+  EXPECT_EQ(PblIOFile_T_Size, sizeof(FILE *));
 }
 
 TEST(IOStreamTest, ConversionCheck) {
@@ -28,11 +28,12 @@ TEST(IOStreamTest, ConversionCheck) {
   EXPECT_TRUE(PblCompareStringT(stream->actual.mode, mode)->actual);
   EXPECT_EQ(stream->actual.open->actual, true);
   EXPECT_EQ(stream->meta.defined, true);
-  EXPECT_EQ(PblStream_T_Size, sizeof(PblString_T *) + sizeof(PblUInt_T *) + sizeof(PblIOFile_T *) + sizeof(PblBool_T *));
+  EXPECT_EQ(PblIOStream_T_Size,
+            sizeof(PblString_T *) + sizeof(PblUInt_T *) + sizeof(PblIOFile_T *) + sizeof(PblBool_T *));
 }
 
 TEST(IOPrintTest, SimplePrint) {
-  PblString_T *str = PblCreateStringT(PblGetCharTArray("hello world"), PblGetUIntT(11));
+  PblString_T *str = PblGetStringT("hello world");
 
   // size is per default 50 + 1 (for null char)
   EXPECT_EQ(str->actual.allocated_len->actual, 51);
@@ -45,13 +46,13 @@ TEST(IOPrintTest, SimplePrint) {
 }
 
 TEST(IOPrintTest, SimplePrintWithSetStream) {
-  PblString_T *str = PblCreateStringT(PblGetCharTArray("hello world"), PblGetUIntT(11));
+  PblString_T *str = PblGetStringT("Hello world!");
 
   // size is per default 50 + 1 (for null char)
   EXPECT_EQ(str->actual.allocated_len->actual, 51);
 
   PblIOStream_T *stream = (PblIOStream_T *) PblMalloc(sizeof(PblIOStream_T));
-  *stream = PBL_STREAM_STDOUT;
+  *stream = *PBL_STDOUT;
   PblPrint(.out = str, .stream = stream);
 
   // deallocating the string

@@ -20,9 +20,9 @@ set(SOURCE_FILES
     "${SOURCE_INCLUDE_DIRECTORY}/types/pbl-types.c"
     "${SOURCE_INCLUDE_DIRECTORY}/mem/pbl-mem.c"
     "${SOURCE_INCLUDE_DIRECTORY}/mem/pbl-mem-tools.c"
-    "${SOURCE_INCLUDE_DIRECTORY}/io/pbl-io.c"
-    "${SOURCE_INCLUDE_DIRECTORY}/func/pbl-function.c"
-    )
+    "${SOURCE_INCLUDE_DIRECTORY}/pbl-io.c"
+    "${SOURCE_INCLUDE_DIRECTORY}/pbl-function.c"
+    types/pbl-type-list.c)
 
 set(HEADER_FILES
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl.h"
@@ -31,10 +31,12 @@ set(HEADER_FILES
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-int.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-string.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-types.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-meta-types.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-type-list.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/mem/pbl-mem.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/mem/pbl-mem-tools.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/io/pbl-io.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/func/pbl-function.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-io.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-function.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-apply-macro.h")
 
 # Adding the static Library

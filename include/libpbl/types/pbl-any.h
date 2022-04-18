@@ -3,16 +3,16 @@
 /// pre-defined conversion functions.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 #pragma once
 
 // General Required Header Inclusion
-#include "./pbl-string.h"
 #include "./pbl-types.h"
+#include "./pbl-string.h"
 
-#ifndef PBL_INCLUDE_ANY_H
-#define PBL_INCLUDE_ANY_H
+#ifndef PBL_LIB_ANY_H
+#define PBL_LIB_ANY_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,11 +24,10 @@ extern "C" {
 /// Returns The usable size in bytes of the PBL Long Double type
 #define PblAny_T_Size (sizeof(void *) + sizeof(PblString_T *) + sizeof(PblSize_T *))
 /// @brief Returns the declaration default for the type 'PblAny_T'
-#define PblAny_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblAny_T)
+#define PblAny_T_DeclDefault PBL_TYPE_DECL_VAL(PblAny_T)
 /// @brief Returns the definition default for the type 'PblAny_T', where the children have not been set yet and only
 /// the value itself 'exists' already.
-#define PblAny_T_DefDefault                                                                                            \
-  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblAny_T, .val = NULL, .type = NULL, .byte_size = NULL)
+#define PblAny_T_DefDefault PBL_TYPE_DEF_VAL(PblAny_T, {.val = NULL, .type = NULL, .byte_size = NULL})
 
 struct PblAny_Base {
   void *val;
@@ -37,7 +36,9 @@ struct PblAny_Base {
 };
 
 /// @brief Any implementation
-struct PblAny { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblAny_Base); };
+struct PblAny {
+  PBL_TYPE_DEF_HELPER(struct PblAny_Base);
+};
 /// @brief Any implementation - This type allows for a dynamic allocation and every type to be passed onto the allocated
 /// memory
 typedef struct PblAny PblAny_T;
@@ -49,10 +50,10 @@ typedef struct PblAny PblAny_T;
 /// @param size The size of the value to properly determine the size and the owned memory
 /// @return The new PblAny_T
 /// @note This is a C to Para type conversion function - args are in C therefore
-PblAny_T *PblGetAnyT(void *val, PblType_T *type);
+__attribute__((unused)) PblAny_T *PblGetAnyT(void *val, PblType_T *type);
 
 /// @brief Force-deallocates the entire any-type
-PblVoid_T PblDeallocateAnyType(PblAny_T *val);
+__attribute__((unused)) PblVoid_T PblDeallocateAnyType(PblAny_T *val);
 
 // ---- End of Functions Definitions ----------------------------------------------------------------------------------
 
@@ -60,4 +61,4 @@ PblVoid_T PblDeallocateAnyType(PblAny_T *val);
 }
 #endif
 
-#endif//PBL_INCLUDE_ANY_H
+#endif//PBL_LIB_ANY_H

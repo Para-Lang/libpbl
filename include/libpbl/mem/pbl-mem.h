@@ -3,7 +3,7 @@
 /// collector)
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 #pragma once
 
@@ -13,8 +13,8 @@
 // General Required Header Inclusion
 #include "../pbl-main.h"
 
-#ifndef PBL_MODULES_MEM_H
-#define PBL_MODULES_MEM_H
+#ifndef PBL_LIB_MEM_H
+#define PBL_LIB_MEM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,19 +22,19 @@ extern "C" {
 
 // If the overwrite macro is defined, overwrite the default function names
 #ifdef PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
-# define malloc(args...) PblMalloc(args)
-# define free(args...) PblFree(args)
-# define realloc(args...) PblRealloc(args)
+#define malloc(args...) PblMalloc(args)
+#define free(args...) PblFree(args)
+#define realloc(args...) PblRealloc(args)
 #endif
 
 // If debug is defined, print additional GC stats
 #ifdef PBL_DEBUG
-# define GC_PRINT_STATS
+#define GC_PRINT_STATS
 #endif
 
 // If verbose debug is defined, print additional verbose GC stats
 #ifdef PBL_DEBUG_VERBOSE
-# define GC_PRINT_VERBOSE_STATS
+#define GC_PRINT_VERBOSE_STATS
 #endif
 
 // ---- Helper Macros -------------------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ __attribute__((unused)) void *PblMallocUncollectable(size_t size);
  * @return The pointer returned by the 'GC_MALLOC()' call
  * @note This will crash the program if the size of the value is invalid!
  * @warning It is discouraged to directly use this function to allocate memory, unless for explicit cases. For general
- * usage of allocating a type please use 'PBL_DEFINE_VAR(to_write, type, cleanup...)', which will safely allocate and
+ * usage of allocating a type please use 'PBL_DEF_VAR(to_write, type, cleanup...)', which will safely allocate and
  * initialise the value!
  */
 void *PblMalloc(size_t size);
@@ -138,7 +138,7 @@ void *PblMalloc(size_t size);
  * @return The pointer returned by the GC atomic malloc call
  * @note This will crash the program if the size of the value is invalid!
  * @warning It is discouraged to directly use this function to allocate memory, unless for explicit cases. For general
- * usage of allocating a type please use 'PBL_DEFINE_VAR(to_write, type)', which will safely allocate and
+ * usage of allocating a type please use 'PBL_DEF_VAR(to_write, type)', which will safely allocate and
  * initialise the value!
  */
 __attribute__((unused)) void *PblMallocAtomic(size_t size);
@@ -160,4 +160,4 @@ void *PblRealloc(void *ptr, size_t size);
 }
 #endif
 
-#endif//PBL_MODULES_MEM_H
+#endif//PBL_LIB_MEM_H

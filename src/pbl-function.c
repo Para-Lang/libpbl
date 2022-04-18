@@ -3,9 +3,19 @@
 /// function states, exceptions and tracebacks.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
-#include <libpbl/func/pbl-function.h>
+#include <libpbl/pbl-function.h>
+#include <libpbl/pbl.h>
+
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS {
+  PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblException_T, "Exception", false, true);
+};
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
@@ -14,7 +24,7 @@ PblFunctionCallMetaData_T *PblGetMetaFunctionCallCtxT(PblString_T *function_iden
                                                       PblFunctionCallMetaData_T *failure_origin_ctx,
                                                       PblFunctionCallMetaData_T *call_origin_ctx,
                                                       PblException_T *exception) {
-  PBL_DEFINE_VAR(ptr, PblFunctionCallMetaData_T);
+  PBL_DEF_VAR(ptr, PblFunctionCallMetaData_T);
   *ptr = PblFunctionCallMetaData_T_DefDefault;
 
   ptr->actual = (struct PblFunctionCallMetaData_Base){.function_identifier = function_identifier,
@@ -27,7 +37,7 @@ PblFunctionCallMetaData_T *PblGetMetaFunctionCallCtxT(PblString_T *function_iden
   return ptr;
 }
 
-__attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblFunctionCallMetaData_T *ctx) {
+__attribute__((unused)) __attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblFunctionCallMetaData_T *ctx) {
   // Validate the pointer for safety measures
   ctx = PblValPtr((void *) ctx);
 
@@ -45,7 +55,7 @@ __attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblFunctionC
 
 PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_T *filename, PblUInt_T *line,
                                  PblString_T *line_content, PblVoid_T *parent_exc, PblVoid_T *child_exc) {
-  PBL_DEFINE_VAR(ptr, PblException_T);
+  PBL_DEF_VAR(ptr, PblException_T);
 
   // Using the Definition Default
   *ptr = PblException_T_DefDefault;

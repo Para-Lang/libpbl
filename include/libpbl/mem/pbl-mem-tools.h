@@ -3,17 +3,17 @@
 /// the most basic functions.
 /// @author Luna-Klatzer
 /// @date 2021-12-09
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 #pragma once
 
 // General Required Header Inclusion
-#include "./pbl-mem.h"
 #include "../types/pbl-any.h"
 #include "../types/pbl-types.h"
+#include "./pbl-mem.h"
 
-#ifndef PBL_INCLUDE_ADVANCED_MEM_H_
-#define PBL_INCLUDE_ADVANCED_MEM_H_
+#ifndef PBL_LIB_MEM_TOOLS_H
+#define PBL_LIB_MEM_TOOLS_H
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
@@ -54,4 +54,4 @@ __attribute__((unused)) void *PblTypedMemCpy(void *dest, const void *src, PblTyp
 
 // ---- End of Functions Definitions ----------------------------------------------------------------------------------
 
-#endif//PBL_INCLUDE_ADVANCED_MEM_H_
+#endif//PBL_LIB_MEM_TOOLS_H

@@ -3,18 +3,26 @@
 /// pre-defined conversion functions.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 // Parent Header for this file
+#include <libpbl/pbl.h>
 #include <libpbl/types/pbl-any.h>
+
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS { PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblAny_T, "any", false, true); };
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
-PblAny_T *PblGetAnyT(void *val, PblType_T *type) {
+__attribute__((unused)) PblAny_T *PblGetAnyT(void *val, PblType_T *type) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);
 
-  PBL_DEFINE_VAR(ptr, PblAny_T);
+  PBL_DEF_VAR(ptr, PblAny_T);
 
   // Copying the memory to the destination address (the new type)
   ptr->actual.val = PblMalloc(type->actual_size);
@@ -27,7 +35,7 @@ PblAny_T *PblGetAnyT(void *val, PblType_T *type) {
   return ptr;
 }
 
-PblVoid_T PblDeallocateAnyType(PblAny_T *val) {
+__attribute__((unused)) PblVoid_T PblDeallocateAnyType(PblAny_T *val) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);
 

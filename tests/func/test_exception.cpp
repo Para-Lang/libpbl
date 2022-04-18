@@ -9,16 +9,16 @@
 // Including the header to be tested
 #define PBL_DEBUG_VERBOSE
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
-#include <libpbl/func/pbl-function.h>
+#include "libpbl/pbl-function.h"
 
 TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
-  PBL_DECLARE_VAR(v_1, PblFunctionCallMetaData_T);
+  PBL_DECL_VAR(v_1, PblFunctionCallMetaData_T);
 
   EXPECT_EQ(PblFunctionCallMetaData_T_Size, sizeof(PblBool_T *) + sizeof(PblUInt_T *) + sizeof(PblBool_T *) +
                                               2 * sizeof(PblFunctionCallMetaData_T *) + sizeof(nullptr));
   EXPECT_EQ(v_1->meta.defined, false);
 
-  PBL_DEFINE_VAR(v_2, PblFunctionCallMetaData_T);
+  PBL_DEF_VAR(v_2, PblFunctionCallMetaData_T);
 
   EXPECT_TRUE(v_2->actual.call_origin_ctx == nullptr);
   EXPECT_TRUE(v_2->actual.exception == nullptr);
@@ -32,12 +32,12 @@ TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
 }
 
 TEST(ExceptionTest, PblExceptionDefaults) {
-  PBL_DECLARE_VAR(v_1, PblException_T);
+  PBL_DECL_VAR(v_1, PblException_T);
 
   EXPECT_EQ(PblException_T_Size, 4 * sizeof(PblString_T *) + sizeof(PblUInt_T *) + 2 * sizeof(void *));
   EXPECT_EQ(v_1->meta.defined, false);
 
-  PBL_DEFINE_VAR(v_2, PblException_T);
+  PBL_DEF_VAR(v_2, PblException_T);
 
   EXPECT_TRUE(v_2->actual.child_exc == nullptr);
   EXPECT_TRUE(v_2->actual.parent_exc == nullptr);
@@ -59,7 +59,7 @@ PblInt_T *NestedTestFunction(PblFunctionCallMetaData_T *this_call_meta, PblUInt_
 }
 
 PblInt_T *TestFunction(PblFunctionCallMetaData_T *this_call_meta) {
-  PBL_DECLARE_VAR(r_1, PblInt_T);
+  PBL_DECL_VAR(r_1, PblInt_T);
 
   /// creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
   /// the exception occurring)
@@ -76,8 +76,8 @@ PblInt_T *TestFunction(PblFunctionCallMetaData_T *this_call_meta) {
 }
 
 TEST(ExceptionTest, OneNestCall) {
-  PBL_DECLARE_VAR(r_1, PblInt_T);
-  PBL_DEFINE_VAR(this_call_meta, PblFunctionCallMetaData_T);
+  PBL_DECL_VAR(r_1, PblInt_T);
+  PBL_DEF_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
   // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
@@ -119,7 +119,7 @@ PblInt_T *TestFunction2(PblFunctionCallMetaData_T *this_call_meta) {
   /// Call the block and execute the except block if the exc names match
   PBL_TRY_EXCEPT_BLOCK(
     {
-      PBL_DECLARE_VAR(r_1, PblInt_T);
+      PBL_DECL_VAR(r_1, PblInt_T);
       PBL_CALL_FUNC_IN_TRY_EXCEPT_BLOCK(NestedTestFunction, r_1, PblInt_T *, X1, Y2, PblGetUIntT(1))
       return r_1;
     },
@@ -131,8 +131,8 @@ PblInt_T *TestFunction2(PblFunctionCallMetaData_T *this_call_meta) {
 }
 
 TEST(ExceptionTest, TryExceptCall) {
-  PBL_DECLARE_VAR(r_1, PblInt_T);
-  PBL_DEFINE_VAR(this_call_meta, PblFunctionCallMetaData_T);
+  PBL_DECL_VAR(r_1, PblInt_T);
+  PBL_DEF_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
   // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
@@ -161,7 +161,7 @@ PblInt_T *TestFunction3(PblFunctionCallMetaData_T *this_call_meta) {
   /// Call the block and execute the except block if the exc names match
   PBL_TRY_EXCEPT_BLOCK(
     {
-      PBL_DECLARE_VAR(r_1, PblInt_T);
+      PBL_DECL_VAR(r_1, PblInt_T);
       PBL_CALL_FUNC_IN_TRY_EXCEPT_BLOCK(NestedTestFunction, r_1, PblInt_T *, X1, Y2, PblGetUIntT(1))
       return r_1;
     },
@@ -173,8 +173,8 @@ PblInt_T *TestFunction3(PblFunctionCallMetaData_T *this_call_meta) {
 }
 
 TEST(ExceptionTest, TryExceptCallWithContinuation) {
-  PBL_DECLARE_VAR(r_1, PblInt_T);
-  PBL_DEFINE_VAR(this_call_meta, PblFunctionCallMetaData_T);
+  PBL_DECL_VAR(r_1, PblInt_T);
+  PBL_DEF_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
   // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to

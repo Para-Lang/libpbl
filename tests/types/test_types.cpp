@@ -10,51 +10,47 @@
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
 #include <libpbl/types/pbl-types.h>
 
-TEST(MacroTypesTest, PblSizeof) {
-  EXPECT_EQ(PblBool_T_Size, PBL_SIZEOF_USABLE(PblBool_T));
-}
+TEST(MacroTypesTest, PblSizeof) { EXPECT_EQ(PblBool_T_Size, PBL_SIZEOF_USABLE(PblBool_T)); }
 
-TEST(MacroTypesTest, CSizeof) {
-  EXPECT_EQ(sizeof(char), PBL_SIZEOF_FULL(char));
-}
+TEST(MacroTypesTest, CSizeof) { EXPECT_EQ(sizeof(char), PBL_SIZEOF_FULL(char)); }
 
 TEST(PointerTest, PblPointerWithNULL) {
-  PBL_DEFINE_VAR(pointer, PblPointer_T);
+  PBL_DEF_VAR(pointer, PblPointer_T);
   EXPECT_EQ(pointer->actual.p_void, nullptr);
   EXPECT_EQ(pointer->actual.p_type, nullptr);
 }
 
 TEST(PointerTest, PblPointerUsageWithoutType) {
-  PBL_DEFINE_VAR(pointer, PblPointer_T);
-  PBL_DEFINE_VAR(integer, PblInt_T);
+  PBL_DEF_VAR(pointer, PblPointer_T);
+  PBL_DEF_VAR(integer, PblInt_T);
 
   integer = PblGetIntT(4);
   pointer->actual.p_void = integer;
 
-  EXPECT_EQ(((PblInt_T*) pointer->actual.p_void)->actual, integer->actual);
+  EXPECT_EQ(((PblInt_T *) pointer->actual.p_void)->actual, integer->actual);
 }
 
 TEST(PointerTest, VoidPblPointerWithoutType) {
-  PBL_DEFINE_VAR(pointer, PblPointer_T);
-  PBL_DEFINE_VAR(integer, PblInt_T);
+  PBL_DEF_VAR(pointer, PblPointer_T);
+  PBL_DEF_VAR(integer, PblInt_T);
 
   integer = PblGetIntT(4);
   pointer->actual.p_void = integer;
 
-  EXPECT_EQ(((PblInt_T*) pointer->actual.p_void)->actual, integer->actual);
+  EXPECT_EQ(((PblInt_T *) pointer->actual.p_void)->actual, integer->actual);
 }
 
 TEST(BaseTypesTest, PblPointerDefaults) {
   PblPointer_T v_1 = PblPointer_T_DeclDefault;
 
-  EXPECT_EQ(PblPointer_T_Size, sizeof(void*));
+  EXPECT_EQ(PblPointer_T_Size, sizeof(void *));
   EXPECT_EQ(v_1.meta.defined, false);
 
   PblPointer_T v_2 = PblPointer_T_DefDefault;
 
   EXPECT_EQ(v_2.actual.p_void, nullptr);
   EXPECT_EQ(v_2.actual.p_type, nullptr);
-  EXPECT_EQ(PblPointer_T_Size, sizeof(void*));
+  EXPECT_EQ(PblPointer_T_Size, sizeof(void *));
   EXPECT_EQ(v_2.meta.defined, true);
 }
 

@@ -8,7 +8,7 @@ message("SOURCE_EXT_LIB_DIRECTORY = ${SOURCE_EXT_LIB_DIRECTORY}")
 
 # Setting the src files for va-opt
 set(
-  VA_OPT_HEADER_FILES
+    VA_OPT_HEADER_FILES
     "${HEADER_EXT_LIB_DIRECTORY}/va-opt/va-opt.h"
 )
 

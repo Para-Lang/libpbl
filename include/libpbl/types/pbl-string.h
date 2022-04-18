@@ -4,22 +4,22 @@
 /// entire type to save memory.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 #pragma once
 
 // Including the base <string.h> which this header intends to implement
 #ifdef __cplusplus
-# include <cstring>
+#include <cstring>
 #else
-# include <string.h>
+#include <string.h>
 #endif
 
 // General Required Header Inclusion
 #include "./pbl-types.h"
 
-#ifndef PBL_MODULES_STRING_H
-#define PBL_MODULES_STRING_H
+#ifndef PBL_LIB_STRING_H
+#define PBL_LIB_STRING_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,11 +30,10 @@ extern "C" {
 /// @brief Size of the type 'PblString_T' in bytes
 #define PblString_T_Size (sizeof(PblSize_T *) + sizeof(PblUInt_T *) + sizeof(PblUInt_T *) + sizeof(char *))
 /// @brief Returns the declaration default for the type 'PblString_T'
-#define PblString_T_DeclDefault PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR(PblString_T)
+#define PblString_T_DeclDefault PBL_TYPE_DECL_VAL(PblString_T)
 /// @brief Returns the definition default for the type 'PblString_T', where the children have not been set yet and
 /// only the value itself 'exists' already.
-#define PblString_T_DefDefault                                                                                         \
-  PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR(PblString_T, .allocated_len = NULL, .len = NULL, .str = NULL)
+#define PblString_T_DefDefault PBL_TYPE_DEF_VAL(PblString_T, {.allocated_len = NULL, .len = NULL, .str = NULL})
 
 /// @brief Base Struct of PblString - avoid using this type
 struct PblString_Base {
@@ -49,7 +48,9 @@ struct PblString_Base {
 };
 
 /// @brief PBL String implementation - uses dynamic memory allocation -> located in heap
-struct PblString { PBL_TYPE_DEFINITION_WRAPPER_CONSTRUCTOR(struct PblString_Base)  };
+struct PblString {
+  PBL_TYPE_DEF_HELPER(struct PblString_Base)
+};
 typedef struct PblString PblString_T;
 
 // ---- End of Declaration --------------------------------------------------------------------------------------------
@@ -145,4 +146,4 @@ PblVoid_T PblDeallocateStringT(PblString_T *lvalue);
 }
 #endif
 
-#endif//PBL_MODULES_STRING_H
+#endif//PBL_LIB_STRING_H

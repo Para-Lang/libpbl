@@ -4,7 +4,7 @@
 /// @see https://google.github.io/styleguide/cppguide.html
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 // Parent Header for this file
 #include <libpbl/pbl.h>

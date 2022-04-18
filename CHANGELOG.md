@@ -11,8 +11,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- New macros `PBL_INIT_FILE` and `PBL_INIT_GLOBALS`, which are used to initialise Para files and set up
+  local type tracking. Specifically `PBL_INIT_GLOBALS` allows for the pre-main definition of globals that
+  require function calls. This allows that even pointer-type globals based on memory allocations can be used globally, 
+  as before execution `pre__PblInitGlobals` is called which defines the values.
 
 ### Changed
+- Updated project structure and split `pbl-types.h` into three new files. (Breaking change!)
+- Renamed `PBL_STREAM_STDIN` to `PBL_STDIN`, `PBL_STREAM_STDOUT` to `PBL_STDOUT` and `PBL_STREAM_STDERR` to 
+  `PBL_STDERR`, and made them global variables, which may be included using the `pbl-io.h` header.
 
 ### Removed
 
@@ -44,19 +51,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   in C++ and `#include <string.h>` in C).
 - New type `PblTypeList_T` for local file type and meta-data tracking, with the additional handling functions and
   macros:
-  - `PblAddTypeToTypeList()` - Adds a new type to the local type list.
-  - `PblCreateNewType()` - Allocates a new type in memory that may be used for type lists.
-  - `PblInitTypeList()` - Initialises a local type list and creates the on-runtime constructor for allocating its
-    content.
-  - `LOCAL_TYPE_LIST_CONSTRUCTOR` - Is replaced with a default constructor function signature for registering new types
-    at runtime.
-  - `PBL_REGISTER_LOCAL_TYPE` - Registers a local type and adds it to the local type lis.t. Has to be used inside of
-    `LOCAL_TYPE_LIST_CONSTRUCTOR` constructor function definitions
-  - `PBL_INIT_LOCAL_TYPE_LIST` - Creates and initialises the variables `LOCAL_TYPE_LIST` and 
-    `LOCAL_TYPE_TRACKING_INITIALISED`, which are required for utilising type tracking inside a file.
-- New Debug Macros: 
-  - `PBL_DEBUG_VERBOSE` - Enables Verbose debugging for the library.
-  - `PBL_DEBUG` - Enables default debugging for the library.
+    - `PblAddTypeToTypeList()` - Adds a new type to the local type list.
+    - `PblCreateNewType()` - Allocates a new type in memory that may be used for type lists.
+    - `PblInitTypeList()` - Initialises a local type list and creates the on-runtime constructor for allocating its
+      content.
+    - `LOCAL_TYPE_LIST_CONSTRUCTOR` - Is replaced with a default constructor function signature for registering new
+      types
+      at runtime.
+    - `PBL_REGISTER_LOCAL_TYPE` - Registers a local type and adds it to the local type list. Has to be used inside of
+      `LOCAL_TYPE_LIST_CONSTRUCTOR` constructor function definitions
+    - `PBL_INIT_LOCAL_TYPE_LIST` - Creates and initialises the variables `LOCAL_TYPE_LIST` and
+      `LOCAL_TYPE_TRACKING_INITIALISED`, which are required for utilising type tracking inside a file.
+- New Debug Macros:
+    - `PBL_DEBUG_VERBOSE` - Enables Verbose debugging for the library.
+    - `PBL_DEBUG` - Enables default debugging for the library.
 - New Overwrite Macro `PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS`, which will if set redefine `malloc()`, `realloc()` and
   `free()` to use the PBL-variants using the garbage collector.
 
@@ -70,9 +78,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     - `PblMetaVarCtx_T` to `PblVarMetaData_T`
 - Renamed the following macros:
     - `PBL_GET_ACTUAL_TYPE_INSTANCE` to `PBL_ASSIGN_TO_VAR`
-    - `PBL_ALLOC_DECLARATION` to `PBL_DECLARE_VAR`
-    - `PBL_DEFINE_VAR` to `PBL_DEFINE_VAR`
-    - `PBL_ALLOC_ARRAY_DEFINITION` to `PBL_CREATE_NEW_ARRAY`
+    - `PBL_ALLOC_DECLARATION` to `PBL_DEC_VAR`
+    - `PBL_DEF_VAR` to `PBL_DEF_VAR`
+    - `PBL_ALLOC_ARRAY_DEFINITION` to `PBL_NEW_STATIC_ARR`
     - `PBL_DECLARATION_CONSTRUCTOR` to `PBL_TYPE_DECLARATION_DEFAULT_CONSTRUCTOR`
     - `PBL_DEFINITION_STRUCT_CONSTRUCTOR` to `PBL_TYPE_DEFINITION_DEFAULT_STRUCT_CONSTRUCTOR`
     - `PBL_DEFINITION_SINGLE_CONSTRUCTOR` to `PBL_TYPE_DEFINITION_DEFAULT_SIMPLE_CONSTRUCTOR`
@@ -117,9 +125,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Added `pbl-mem.h` for independent memory management and Garbage Collector implementation
   using [Boehm-Demers-Weiser Garbage Collector](https://github.com/ivmai/bdwgc)
 - Handler macros `PBL_GET_ACTUAL_TYPE_INSTANCE` (getting type instance), `PBL_ALLOC_DECLARATION` (Para Declarations)
-  and `PBL_DEFINE_VAR` (Para Definitions) which standardise the initialisation of Para values
+  and `PBL_DEF_VAR` (Para Definitions) which standardise the initialisation of Para values
 
 [unreleased]: https://github.com/Para-Lang/Para-Base-Library/tree/dev
+
 [v0.1.dev7]: https://github.com/Para-Lang/Para-Base-Library/compare/v0.1.dev6...v0.1.dev7
+
 [v0.1.dev6]: https://github.com/Para-Lang/Para-Base-Library/compare/v0.1.dev5...v0.1.dev6
+
 [v0.1.dev5]: https://github.com/Para-Lang/Para-Base-Library/tag/v0.1.dev5

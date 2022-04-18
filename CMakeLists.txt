@@ -16,7 +16,7 @@ include(FetchContent)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # If this is the main project, define additional terms required for testing and such
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # PBL only supports C11 and upwards
   set(CMAKE_C_STANDARD 11)
 
@@ -32,13 +32,13 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     message("Enabled PBL_DEBUG_VERBOSE successfully.")
     add_compile_definitions(PBL_DEBUG)
     add_compile_definitions(PBL_DEBUG_VERBOSE)
-  endif()
+  endif ()
 
   # Coverage cmd option
   option(PBL_COVERAGE "Enable default coverage reporting" OFF)
   set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
   if (PBL_COVERAGE)
-    if(CMAKE_COMPILER_IS_GNUCXX)
+    if (CMAKE_COMPILER_IS_GNUCXX)
       add_definitions(-fprofile-arcs -ftest-coverage)
 
       # We need to turn off optimization for non-skewed coverage reports
@@ -46,11 +46,11 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
 
       message("Enabled PBL_COVERAGE successfully.")
-    else()
+    else ()
       message("Failed to enable PBL_COVERAGE. Only supported for the GNU Compiler Collection and MingW.")
-    endif()
-  endif()
-endif()
+    endif ()
+  endif ()
+endif ()
 
 # Adding the external libraries
 add_subdirectory(lib)
@@ -69,4 +69,4 @@ if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
 
   # Add macro for the Garbage Collector to allow debugging
   add_compile_definitions(GC_DEBUG)
-endif()
+endif ()

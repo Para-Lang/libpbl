@@ -3,15 +3,15 @@
 /// macro function 't'
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 #pragma once
 
 // General Required Header Inclusion
 #include <va-opt/va-opt.h>
 
-#ifndef PBL_INCLUDE_APPLY_MACRO_H
-#define PBL_INCLUDE_APPLY_MACRO_H
+#ifndef PBL_LIB_APPLY_MACRO_H
+#define PBL_LIB_APPLY_MACRO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -669,4 +669,4 @@ extern "C" {
 };
 #endif
 
-#endif//PBL_INCLUDE_APPLY_MACRO_H
+#endif//PBL_LIB_APPLY_MACRO_H

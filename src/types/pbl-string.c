@@ -4,14 +4,21 @@
 /// entire type to save memory.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 // Parent Header for this file
 #include <libpbl/types/pbl-string.h>
 
 // General Required Header Inclusion
-#include <libpbl/types/pbl-types.h>
 #include <libpbl/mem/pbl-mem.h>
+#include <libpbl/pbl.h>
+
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS { PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblString_T, "string", false, true); };
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
@@ -22,13 +29,6 @@ PblUInt_T *PblGetLengthOfCString(const char *content) {
   return PblGetUIntT(strlen(content));
 }
 
-PblSize_T *PblGetUsableStrSize(PblString_T *str) {
-  // Validate the pointer for safety measures
-  str = PblValPtr((void *) str);
-
-  return PblGetSizeT(str->actual.allocated_len->actual * PblChar_T_Size);
-}
-
 char *PblGetCCharArrayFromCharT(PblChar_T *char_arr, PblUInt_T *len) {
   // Validate the pointer for safety measures
   char_arr = PblValPtr((void *) char_arr);
@@ -36,9 +36,7 @@ char *PblGetCCharArrayFromCharT(PblChar_T *char_arr, PblUInt_T *len) {
 
   char *ret_arr = (char *) PblMalloc(sizeof(char) * len->actual);
 
-  for (int i = 0; i < len->actual; i++) {
-    PblMemCpy(&(ret_arr[i]), &(char_arr[i].actual), sizeof(char));
-  }
+  for (int i = 0; i < len->actual; i++) { PblMemCpy(&(ret_arr[i]), &(char_arr[i].actual), sizeof(char)); }
   ret_arr[len->actual] = '\0';
 
   return ret_arr;
@@ -63,12 +61,10 @@ PblChar_T *PblGetCharTArray(const char *content) {
   PblUInt_T *len = PblGetLengthOfCString(content);
   PblChar_T *pbl_chars = PblMalloc(sizeof(PblChar_T) * (len->actual + 1)// Min. size is 1 -> plus end-char: \0
   );
-  for (int i = 0; i < len->actual; i++) {
-    PBL_ASSIGN_TO_VAR(pbl_chars[i], PblChar_T, content[i]);
-  }
+  for (int i = 0; i < len->actual; i++) { PBL_SET_VAL(&(pbl_chars[i]), PblChar_T, content[i]); }
 
   // Adding null character
-  PBL_ASSIGN_TO_VAR(pbl_chars[len->actual], PblChar_T, '\0');
+  PBL_SET_VAL(&(pbl_chars[len->actual]), PblChar_T, '\0');
   return pbl_chars;
 }
 
@@ -88,11 +84,9 @@ PblBool_T *PblCompareStringT(PblString_T *str_1, PblString_T *str_2) {
   str_2 = PblValPtr((void *) str_2);
 
   // Don't bother with comparison if the lengths are the same
-  if (str_1->actual.len->actual != str_2->actual.len->actual)
-    return PblGetBoolT(false);
+  if (str_1->actual.len->actual != str_2->actual.len->actual) return PblGetBoolT(false);
   for (int i = 0; i < str_1->actual.len->actual; i++) {
-    if (str_1->actual.str[i].actual != str_2->actual.str[i].actual)
-      return PblGetBoolT(false);
+    if (str_1->actual.str[i].actual != str_2->actual.str[i].actual) return PblGetBoolT(false);
   }
   return PblGetBoolT(true);
 }
@@ -144,7 +138,7 @@ PblVoid_T PblWriteStringToStringT(PblString_T *str, PblString_T *content, PblUIn
   content = PblValPtr((void *) content);
   len_to_write = PblValPtr((void *) len_to_write);
 
-  PBL_CREATE_NEW_ARRAY(char_arr, PblChar_T, len_to_write->actual);
+  PBL_NEW_STATIC_ARR(char_arr, PblChar_T, len_to_write->actual);
   for (int i = 0; i < len_to_write->actual; i++) {
     // Using MemCpy to properly copy the value, aka. to be certain it is copied properly
     PblMemCpy(&char_arr[i], &content->actual.str[i], sizeof(PblChar_T));
@@ -161,13 +155,11 @@ PblVoid_T PblWriteCharArrayToStringT(PblString_T *str, PblChar_T *content, PblUI
   len_to_write = PblValPtr((void *) len_to_write);
 
   // Don't bother writing when the length to write is 0
-  if (len_to_write->actual == 0)
-    return PblVoid_T_DeclDefault;
+  if (len_to_write->actual == 0) return PblVoid_T_DeclDefault;
 
   PblUInt_T *required_size = PblGetMinimumArrayLen(len_to_write);
   // If the required space is bigger that means that the available space is not sufficient
-  if (required_size->actual > str->actual.allocated_len->actual)
-    PblResizeStringT(str, len_to_write);
+  if (required_size->actual > str->actual.allocated_len->actual) PblResizeStringT(str, len_to_write);
 
   int i = 0;
   for (; i < len_to_write->actual; i++)
@@ -189,7 +181,7 @@ PblString_T *PblCreateStringT(PblChar_T *content, PblUInt_T *len) {
   len = PblValPtr((void *) len);
 
   // Using the DeclDefault to avoid recursion when 'DefDefault' is 'PblGetStringT("")' aka. an empty string
-  PBL_DEFINE_VAR(str, PblString_T);
+  PBL_DEF_VAR(str, PblString_T);
 
   str->actual.allocated_len = PblGetMinimumArrayLen(len);
   str->actual.len = len;
@@ -221,9 +213,8 @@ PblVoid_T PblDeallocateStringT(PblString_T *lvalue) {
 
   if (lvalue->meta.defined) {
     // Writing \0 onto the entire space of memory
-    PBL_CREATE_NEW_ARRAY(nullify, PblChar_T, lvalue->actual.len->actual);
-    for (int i = 0; i < lvalue->actual.len->actual; i++)
-      nullify[i].actual = '\0';
+    PBL_NEW_STATIC_ARR(nullify, PblChar_T, lvalue->actual.len->actual);
+    for (int i = 0; i < lvalue->actual.len->actual; i++) nullify[i].actual = '\0';
     PblWriteCharArrayToStringT(lvalue, nullify, lvalue->actual.len);
 
     if (lvalue->actual.allocated_len != NULL) {

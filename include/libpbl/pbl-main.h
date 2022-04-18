@@ -3,23 +3,23 @@
 /// serves as the base for the entire base-lib implementation.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2021 - 2022
 
 #pragma once
 
 // Including Headers that are required throughout the entire PBL Library
 #ifdef __cplusplus
-# include <cstdarg>
-# include <cstdio>
-# include <cstdlib>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 #else
-# include <stdarg.h>
-# include <stdio.h>
-# include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #endif
 
-#ifndef PBL_MODULES_MAIN_H
-#define PBL_MODULES_MAIN_H
+#ifndef PBL_LIB_MAIN_H
+#define PBL_LIB_MAIN_H
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 /**
@@ -31,4 +31,4 @@ void PblAbortWithCriticalError(int exit_code, const char *string);
 
 // ---- End of Function Definitions -----------------------------------------------------------------------------------
 
-#endif//PBL_MODULES_MAIN_H
+#endif//PBL_LIB_MAIN_H
