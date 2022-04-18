@@ -34,7 +34,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   getting standardised macros.
 - `PBL_COUNT_VA_ARGS` for counting the amount of arguments passed to this specific macro.
 - `PBL_FUNC_ARG` for creating the effect of arguments being `NULL` per default.
-- `PBL_CREATE_FUNC_OVERHEAD` for creating overhead of a Para function, which can support default arguments and
+- `PBL_FUNC_OVERHEAD` for creating overhead of a Para function, which can support default arguments and
   struct-like initialisation.
 - `PBL_CALL_FUNC` for calling a Para function and properly handling it.
 - Header `pbl-advanced-mem.h` for exception-supported and advanced memory handling with Para types.

@@ -8,31 +8,19 @@
 
 #pragma once
 
-// Including Headers that are required throughout the entire PBL Library
-#ifdef __cplusplus
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-#else
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#endif
-
-// Main Header Inclusions
-#include "./pbl-main.h"
-#include "./mem/pbl-mem.h"
-#include "./types/pbl-types.h"
-
-// Included the additional headers
-#include <va-opt/va-opt.h>
-
 #ifndef PBL_LIB_H
 #define PBL_LIB_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Main Header Inclusions
+#include "./pbl-err.h"
+#include "./core/pbl-core.h"
+
+// Included the additional headers
+#include <va-opt/va-opt.h>
 
 // ---- Macros --------------------------------------------------------------------------------------------------------
 
@@ -46,17 +34,6 @@ extern "C" {
 #define PBL_STABLE false
 
 // ---- End of Macros -------------------------------------------------------------------------------------------------
-
-// ---- File Helpers --------------------------------------------------------------------------------------------------
-
-#define PBL_INIT_FILE PBL_INIT_LOCAL_TYPE_LIST;
-
-#define PBL_INIT_GLOBALS                                                                                               \
-  __attribute__((unused)) __attribute__((constructor(103)))                                                            \
-  __attribute__((deprecated("Compiler-Only Function - User Call Invalid!"))) static void                               \
-  pre__PblInitGlobals()
-
-// ---- End of File Helpers ------------------------------------------------------------------------------------------
 
 #ifdef __cplusplus
 }

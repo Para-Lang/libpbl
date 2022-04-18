@@ -8,7 +8,7 @@
 #include <libpbl/pbl-io.h>
 
 // General Required Header Inclusion
-#include <libpbl/mem/pbl-mem.h>
+#include "libpbl/core/pbl-mem.h"
 #include <libpbl/types/pbl-string.h>
 
 // ---- Globals -------------------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 #include "gc.h"
 
 // General Required Header Inclusion
-#include "../pbl-main.h"
+#include "libpbl/pbl-err.h"
 
 #ifndef PBL_LIB_MEM_H
 #define PBL_LIB_MEM_H

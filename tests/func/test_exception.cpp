@@ -11,6 +11,13 @@
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
 #include "libpbl/pbl-function.h"
 
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS{};
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
+
 TEST(FunctionMetaTest, PblMetaFunctionCallCtxDefaults) {
   PBL_DECL_VAR(v_1, PblFunctionCallMetaData_T);
 

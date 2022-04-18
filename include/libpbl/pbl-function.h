@@ -8,11 +8,9 @@
 #pragma once
 
 // General Required Header Inclusion
-#include "./mem/pbl-mem.h"
-#include "./pbl-apply-macro.h"
-#include "./pbl.h"
+#include "./core/pbl-core.h"
 #include "./types/pbl-string.h"
-#include "./types/pbl-types.h"
+#include "./pbl-apply-macro.h"
 #include "va-opt/va-opt.h"
 
 #ifndef PBL_LIB_FUNCTION_H
@@ -66,23 +64,8 @@ extern "C" {
 /// @brief Validates a required argument for a Para function
 #define PBL_VAL_REQ_ARG(var) PblValPtr((void *) (var));
 
-/// @brief Creates based on the passed declaration signature a viable struct child aka. add ';'
-#define PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD(arg) arg;
-
-/// @brief Macro Function to get the standardised identifier for the 'Args' struct of a PBL function
-/// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
-/// @return The identifier in the '<func_identifier>_Args' format
-#define PBL_GET_FUNC_ARGS_IDENTIFIER(func_identifier) func_identifier##_Args
-
-/// @brief Macro Function to get the standardised identifier for the 'Base' of a PBL function
-/// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
-/// @return The identifier in the '<func_identifier>_Base' format
-#define PBL_GET_FUNC_BASE_IDENTIFIER(func_identifier) func_identifier##_Base
-
-/// @brief Macro Function to get the standardised identifier for the 'Overhead' of a PBL function
-/// @note For this identifier to be valid, the macro function 'PBL_CREATE_FUNC_OVERHEAD' has to be used before
-/// @return The identifier in the '<func_identifier>_Overhead' format
-#define PBL_GET_FUNC_OVERHEAD_IDENTIFIER(func_identifier) func_identifier##_Overhead
+/// @brief Creates a struct property
+#define PBL_STRUCT_PROPERTY(arg) arg;
 
 /// @brief This creates the overhead function for the passed new function, by declaring it and generating a struct type,
 /// which defines the arguments that may be passed
@@ -94,12 +77,12 @@ extern "C" {
 /// @note Both the macro for accessing the base and overhead have to be defined yourself!
 /// (This macro is only for headers)
 /// @return The struct definition, and the base and overhead declaration
-#define PBL_CREATE_FUNC_OVERHEAD(ret_signature, identifier, _attribute_, args...)                                        \
-  struct PBL_GET_FUNC_ARGS_IDENTIFIER(identifier) {                                                                      \
-    PBL_APPLY_MACRO(PBL_CREATE_FUNC_OVERHEAD_CREATE_STRUCT_CHILD, args)                                                    \
+#define PBL_FUNC_OVERHEAD(identifier, signature, args...)                                        \
+  struct identifier##_Args {                                                                      \
+    PBL_APPLY_MACRO(PBL_STRUCT_PROPERTY, args)                                                    \
   };                                                                                                                   \
-  ret_signature PBL_GET_FUNC_BASE_IDENTIFIER(identifier)(args) _attribute_;                                              \
-  ret_signature PBL_GET_FUNC_OVERHEAD_IDENTIFIER(identifier)(struct identifier##_Args in) _attribute_;
+  signature identifier##_Base(args);                                              \
+  signature identifier##_Overhead(struct identifier##_Args in);
 
 /// @brief Calls a function, passes the args and creates the appropriate unique identifier for the function call.
 /// @param func The function that should be called with the passed variadic arguments.

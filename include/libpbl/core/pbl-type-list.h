@@ -6,9 +6,14 @@
 #pragma once
 
 #include "./pbl-meta-types.h"
+#include "libpbl/core/pbl-mem.h"
 
 #ifndef PBL_LIB_TYPE_LIST_H
 #define PBL_LIB_TYPE_LIST_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // ---- Type List -----------------------------------------------------------------------------------------------------
 
@@ -70,5 +75,9 @@ void PblInitTypeList(PblTypeList_T *list);
   }
 
 // ---- End of Type List ----------------------------------------------------------------------------------------------
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif//PBL_LIB_TYPE_LIST_H

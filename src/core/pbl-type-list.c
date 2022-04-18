@@ -4,8 +4,7 @@
 /// @date 2022-04-16
 /// @copyright Copyright (c) 2021 - 2022
 
-#include <libpbl/mem/pbl-mem.h>
-#include <libpbl/types/pbl-types.h>
+#include "libpbl/core/pbl-type-list.h"
 
 // ---- Initialisation of the global type list ------------------------------------------------------------------------
 

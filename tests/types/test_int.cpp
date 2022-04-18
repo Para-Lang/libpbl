@@ -11,6 +11,13 @@
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
 #include <libpbl/types/pbl-int.h>
 
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS{};
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
+
 TEST(BaseTypesTest, PblInt8) {
   PblInt8_T *v = PblGetInt8T(0);
   EXPECT_EQ(v->actual, 0);

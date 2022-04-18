@@ -9,7 +9,14 @@
 // Including the header to be tested
 #define PBL_DEBUG_VERBOSE
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
-#include <libpbl/pbl.h>
+#include "libpbl/pbl.h"
+
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS{};
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
 
 TEST(MacroTest, SimpleCheckForExistances) {
   EXPECT_TRUE(PBL_VERSION);

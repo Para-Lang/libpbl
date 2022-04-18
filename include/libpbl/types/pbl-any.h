@@ -8,7 +8,7 @@
 #pragma once
 
 // General Required Header Inclusion
-#include "./pbl-types.h"
+#include "../core/pbl-core.h"
 #include "./pbl-string.h"
 
 #ifndef PBL_LIB_ANY_H

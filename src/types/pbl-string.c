@@ -6,12 +6,11 @@
 /// @date 2021-11-23
 /// @copyright Copyright (c) 2021 - 2022
 
+// General Required Header Inclusion
+#include <libpbl/pbl.h>
+
 // Parent Header for this file
 #include <libpbl/types/pbl-string.h>
-
-// General Required Header Inclusion
-#include <libpbl/mem/pbl-mem.h>
-#include <libpbl/pbl.h>
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 

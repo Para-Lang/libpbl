@@ -1,7 +1,5 @@
 /// @file pbl-types.h
-/// @brief Para Base Types Implementation, which contains handler macros, conversion functions, default declaration,
-/// default definition types and default size macros. This also includes meta-data tracking based on the
-/// 'PblMetaVarCtx_T' type.
+/// @brief Para Base types that are used throughout the library as the base abstraction and wrappers for the C types.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
 /// @copyright Copyright (c) 2021 - 2022
@@ -20,9 +18,9 @@
 #endif
 
 // Dependencies
-#include "../pbl.h"
-#include "../mem/pbl-mem.h"
+#include "./pbl-mem.h"
 #include "./pbl-type-list.h"
+#include "./pbl-file-setup.h"
 #include <va-opt/va-opt.h>
 
 #ifndef PBL_LIB_TYPES_H
@@ -140,17 +138,6 @@ extern "C" {
 /// @param var The variable to get the size from
 /// @note This type must be a Para type
 #define PBL_SIZEOF_FULL(type) (sizeof(type))
-
-/// @brief Returns the usable size of a Para type, which has been defined dynamically
-/// @param var The variable to get the size from
-/// @note This type must be a Para type
-#define PBL_SIZEOF_USABLE_ON_RUNTIME(var) var->meta.type->usable_size
-
-/// @brief Returns the full allocation size of a Para type, which has been defined dynamically.
-/// This also includes meta data
-/// @param var The variable to get the size from
-/// @note This type must be a Para type
-#define PBL_SIZEOF_FULL_ON_RUNTIME(var) var->meta.type->actual_size
 
 // ---- End of Sizeof -------------------------------------------------------------------------------------------------
 

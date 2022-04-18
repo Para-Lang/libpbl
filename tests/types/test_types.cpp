@@ -8,7 +8,14 @@
 // Including the header to be tested
 #define PBL_DEBUG_VERBOSE
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
-#include <libpbl/types/pbl-types.h>
+#include <libpbl/pbl.h>
+
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS{};
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
 
 TEST(MacroTypesTest, PblSizeof) { EXPECT_EQ(PblBool_T_Size, PBL_SIZEOF_USABLE(PblBool_T)); }
 

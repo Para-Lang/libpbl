@@ -14,6 +14,7 @@
 #endif
 
 // General Required Header Inclusion
+#include "./core/pbl-core.h"
 #include "./types/pbl-string.h"
 #include "./pbl-function.h"
 
@@ -106,7 +107,7 @@ PblIOFile_T *PblGetIOFileT(FILE *val);
 PblIOStream_T *PblGetIOStreamT(int fd, const char *mode);
 
 // Creating the overhead and struct type for the Pbl-Function 'PblPrint'
-PBL_CREATE_FUNC_OVERHEAD(PblString_T *, PblInput, , PblString_T *display_msg, PblChar_T *end)
+PBL_FUNC_OVERHEAD(PblInput, PblString_T *, PblString_T *display_msg, PblChar_T *end)
 
 /**
  * @brief Takes input and displays the entered message before it
@@ -114,10 +115,10 @@ PBL_CREATE_FUNC_OVERHEAD(PblString_T *, PblInput, , PblString_T *display_msg, Pb
  * @param end The end-character that should be displayed. If per default '\0'. This is the same logic as in Print!
  * @return The input that was given
  */
-#define PblInput(args...) PBL_GET_FUNC_OVERHEAD_IDENTIFIER(PblInput)((struct PBL_GET_FUNC_ARGS_IDENTIFIER(PblInput)){args})
+#define PblInput(args...) PblInput_Overhead((struct PblInput_Args){args})
 
 // Creating the overhead and struct type for the Pbl-Function 'PblPrint'
-PBL_CREATE_FUNC_OVERHEAD(PblChar_T *, PblInputChar, , PblString_T *display_msg, PblChar_T *end)
+PBL_FUNC_OVERHEAD(PblInputChar, PblChar_T *, PblString_T *display_msg, PblChar_T *end)
 
 /**
  * @brief Takes a single key input and displays the entered message before it
@@ -126,12 +127,10 @@ PBL_CREATE_FUNC_OVERHEAD(PblChar_T *, PblInputChar, , PblString_T *display_msg, 
  * @return The character that was fetched
  * @note If the entered char is \n or EOF, then \0 is returned.
  */
-#define PblInputChar(args...)                                                                                          \
-  PBL_GET_FUNC_OVERHEAD_IDENTIFIER(PblInputChar)((struct PBL_GET_FUNC_ARGS_IDENTIFIER(PblInputChar)){args})
+#define PblInputChar(args...) PblInputChar_Overhead((struct PblInputChar_Args){args})
 
 // Creating the overhead and struct type for the Pbl-Function 'PblPrint'
-PBL_CREATE_FUNC_OVERHEAD(__attribute__((unused)) PblVoid_T, PblPrint, , PblString_T *out, PblIOStream_T *stream,
-                       PblChar_T *end)
+PBL_FUNC_OVERHEAD(PblPrint, PblVoid_T, PblString_T *out, PblIOStream_T *stream, PblChar_T *end)
 
 /**
  * @brief Prints the content of the passed string
@@ -139,7 +138,7 @@ PBL_CREATE_FUNC_OVERHEAD(__attribute__((unused)) PblVoid_T, PblPrint, , PblStrin
  * @param stream The stream it should be printed onto
  * @param end The end character that should be printed after 'out'
  */
-#define PblPrint(args...) PBL_GET_FUNC_OVERHEAD_IDENTIFIER(PblPrint)((struct PBL_GET_FUNC_ARGS_IDENTIFIER(PblPrint)){args})
+#define PblPrint(args...) PblPrint_Overhead((struct PblPrint_Args){args})
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 

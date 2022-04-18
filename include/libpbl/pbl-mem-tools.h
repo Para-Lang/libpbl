@@ -8,9 +8,8 @@
 #pragma once
 
 // General Required Header Inclusion
-#include "../types/pbl-any.h"
-#include "../types/pbl-types.h"
-#include "./pbl-mem.h"
+#include "./core/pbl-core.h"
+#include "libpbl/types/pbl-any.h"
 
 #ifndef PBL_LIB_MEM_TOOLS_H
 #define PBL_LIB_MEM_TOOLS_H

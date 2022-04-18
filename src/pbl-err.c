@@ -1,12 +1,12 @@
-/// @file pbl-main.c
-/// @brief Main Functions, types and macros used inside the Para. This file includes no other Para headers, and
-/// serves as the base for the entire base-lib implementation.
+/// @file pbl-err.c
+/// @brief Error handling for runtime errors. This is not the same as exceptions and is purely intended for errors in
+/// the C environment.
 /// @author Luna-Klatzer
 /// @date 2021-11-23
 /// @copyright Copyright (c) 2021 - 2022
 
 // Parent Header for this file
-#include <libpbl/pbl-main.h>
+#include <libpbl/pbl-err.h>
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 

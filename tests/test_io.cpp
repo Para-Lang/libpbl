@@ -11,6 +11,13 @@
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
 #include "libpbl/pbl-io.h"
 
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS{};
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
+
 TEST(IOFileTest, ConversionCheck) {
   FILE *val = fdopen(1, "a");
   PblIOFile_T *stream = PblGetIOFileT(val);
@@ -57,4 +64,16 @@ TEST(IOPrintTest, SimplePrintWithSetStream) {
 
   // deallocating the string
   PblDeallocateStringT(str);
+}
+
+TEST(BaseFunctionalityTest, SimpleStringPrintCheck) {
+  PblString_T *string_1 = PblGetStringT("'PblGetStringT' = This is a simple string inside a test program");
+  PblPrint(string_1);
+
+  PblString_T *string_2 = PblGetStringT("'PblGetStringT' = Thus this is a simple string inside a test program");
+  PblPrint(string_2);
+
+  if (PblCompareStringT(string_1, string_2)) {
+    PblPrint(PblGetStringT("'PblCompareStringT' = The strings are not equal"));
+  }
 }

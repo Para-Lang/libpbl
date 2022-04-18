@@ -5,8 +5,15 @@
 /// @copyright Copyright (c) 2021 - 2022
 #pragma once
 
+#include <stddef.h>
+#include <stdbool.h>
+
 #ifndef PBL_LIB_META_TYPES_H
 #define PBL_LIB_META_TYPES_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // ---- Meta Types ----------------------------------------------------------------------------------------------------
 
@@ -47,5 +54,9 @@ struct PblVarMetaData {
 typedef struct PblVarMetaData PblVarMetaData_T;
 
 // ---- End of Meta Types ---------------------------------------------------------------------------------------------
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif//PBL_LIB_META_TYPES_H

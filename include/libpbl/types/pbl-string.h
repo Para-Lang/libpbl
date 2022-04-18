@@ -16,7 +16,7 @@
 #endif
 
 // General Required Header Inclusion
-#include "./pbl-types.h"
+#include "../core/pbl-core.h"
 
 #ifndef PBL_LIB_STRING_H
 #define PBL_LIB_STRING_H

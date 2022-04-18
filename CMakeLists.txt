@@ -70,3 +70,6 @@ if (CMAKE_BUILD_TYPE MATCHES Debug OR DEFINED PBL_DEBUG)
   # Add macro for the Garbage Collector to allow debugging
   add_compile_definitions(GC_DEBUG)
 endif ()
+
+# Add libgcc and libstdc++
+add_definitions(-static-libgcc -static-libstdc++)

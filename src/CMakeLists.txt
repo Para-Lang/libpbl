@@ -13,28 +13,30 @@ message("HEADER_INCLUDE_DIRECTORY = ${HEADER_INCLUDE_DIRECTORY}")
 # Using glob to get all files that should be included
 set(SOURCE_FILES
     "${SOURCE_INCLUDE_DIRECTORY}/pbl.c"
-    "${SOURCE_INCLUDE_DIRECTORY}/pbl-main.c"
+    "${SOURCE_INCLUDE_DIRECTORY}/pbl-err.c"
     "${SOURCE_INCLUDE_DIRECTORY}/types/pbl-any.c"
     "${SOURCE_INCLUDE_DIRECTORY}/types/pbl-int.c"
     "${SOURCE_INCLUDE_DIRECTORY}/types/pbl-string.c"
-    "${SOURCE_INCLUDE_DIRECTORY}/types/pbl-types.c"
-    "${SOURCE_INCLUDE_DIRECTORY}/mem/pbl-mem.c"
-    "${SOURCE_INCLUDE_DIRECTORY}/mem/pbl-mem-tools.c"
+    "${SOURCE_INCLUDE_DIRECTORY}/core/pbl-types.c"
+    "${SOURCE_INCLUDE_DIRECTORY}/core/pbl-mem.c"
+    "${SOURCE_INCLUDE_DIRECTORY}/core/pbl-type-list.c"
+    "${SOURCE_INCLUDE_DIRECTORY}/pbl-mem-tools.c"
     "${SOURCE_INCLUDE_DIRECTORY}/pbl-io.c"
-    "${SOURCE_INCLUDE_DIRECTORY}/pbl-function.c"
-    types/pbl-type-list.c)
+    "${SOURCE_INCLUDE_DIRECTORY}/pbl-function.c")
 
 set(HEADER_FILES
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-main.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-err.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-any.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-int.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-string.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-types.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-meta-types.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/types/pbl-type-list.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/mem/pbl-mem.h"
-    "${HEADER_INCLUDE_DIRECTORY}/libpbl/mem/pbl-mem-tools.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/core/pbl-types.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/core/pbl-meta-types.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/core/pbl-type-list.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/core/pbl-mem.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/core/pbl-core.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/core/pbl-file-setup.h"
+    "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-mem-tools.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-io.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-function.h"
     "${HEADER_INCLUDE_DIRECTORY}/libpbl/pbl-apply-macro.h")

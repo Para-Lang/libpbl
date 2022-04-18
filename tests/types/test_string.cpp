@@ -8,7 +8,15 @@
 // Including the header to be tested
 #define PBL_DEBUG_VERBOSE
 #define PBL_OVERWRITE_DEFAULT_ALLOC_FUNCTIONS
+#include <libpbl/pbl.h>
 #include <libpbl/types/pbl-string.h>
+
+// ---- File Setup ----------------------------------------------------------------------------------------------------
+
+PBL_INIT_FILE;
+PBL_INIT_GLOBALS{};
+
+// ---- End of File Setup ---------------------------------------------------------------------------------------------
 
 TEST(StringTypesTest, GetLenghtOfCString) {
   EXPECT_EQ(PblGetLengthOfCString("")->actual, 0);

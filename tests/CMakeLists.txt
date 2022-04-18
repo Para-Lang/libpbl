@@ -14,8 +14,14 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 # Defining the directories for source and header files
 set(TEST_SOURCE_INCLUDE_DIRECTORY "${libpbl_SOURCE_DIR}/tests")
 
-# Using glob to get all files that should be included
-file(GLOB TEST_SOURCE_FILES CONFIGURE_DEPENDS "${TEST_SOURCE_INCLUDE_DIRECTORY}/**/*.cpp")
+set(TEST_SOURCE_FILES
+    "${TEST_SOURCE_INCLUDE_DIRECTORY}/test_default_header.cpp"
+    "${TEST_SOURCE_INCLUDE_DIRECTORY}/test_io.cpp"
+    "${TEST_SOURCE_INCLUDE_DIRECTORY}/types/test_int.cpp"
+    "${TEST_SOURCE_INCLUDE_DIRECTORY}/types/test_string.cpp"
+    "${TEST_SOURCE_INCLUDE_DIRECTORY}/types/test_types.cpp"
+    "${TEST_SOURCE_INCLUDE_DIRECTORY}/func/test_exception.cpp"
+    )
 
 # Adding the test executable
 add_executable(pbl-tests ${TEST_SOURCE_FILES})
