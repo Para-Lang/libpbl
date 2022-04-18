@@ -10,7 +10,7 @@
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
-void PblAbortWithCriticalError(int exit_code, const char *string) {
+void PblAbortWithCriticalError(int exit_code, const char *string, const int line, const char* file_name) {
   fprintf(stderr, "%s", string);
   exit(exit_code);
 }

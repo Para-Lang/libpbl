@@ -26,8 +26,10 @@
  * @brief Aborts the current program with the specified 'exit_code' and logs the error message
  * @param exit_code The exit code that should be used when exiting the program
  * @param string The string that should be printed out
+ * @param line The line where the error happened
+ * @param file_name The file where the error happened
  */
-void PblAbortWithCriticalError(int exit_code, const char *string);
+void PblAbortWithCriticalError(int exit_code, const char *string, const int line, const char* file_name);
 
 // ---- End of Function Definitions -----------------------------------------------------------------------------------
 

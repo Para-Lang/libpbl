@@ -11,8 +11,9 @@
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
-void PblAbortWithCriticalError(int exit_code, const char *string) {
-  fprintf(stderr, "%s", string);
+void PblAbortWithCriticalError(int exit_code, const char *string, const int line, const char* file_name) {
+  fprintf(stderr, "Traceback: \n File \"%s\", line %i", file_name, line);
+  fprintf(stderr, "CRITICAL ERR [Para]: %s", string);
   exit(exit_code);
 }
 

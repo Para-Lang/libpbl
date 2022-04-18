@@ -40,33 +40,22 @@ extern "C" {
 // ---- Helper Macros -------------------------------------------------------------------------------------------------
 
 /// @brief Logs the entered error / string and aborts the program with the exit status '1'
-#define PBL_LOG_MEM_ERR(...) PblAbortWithCriticalError(1, __VA_ARGS__)
+#define PBL_LOG_MEM_ERR(str, line, file_name) PblAbortWithCriticalError(1, str, line, file_name)
 
-/// @brief Logs an error for attempting to copy from an invalid memory address (NULL) and aborts with exit status '1'
-#define PBL_LOG_CPY_FROM_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to copy from an invalid memory address (NULL)");
+/// @brief Logs an error for receiving 'NULL' as a return from memory functions.
+#define PBL_MEM_OPERATION_RET_NULL_ERR(line, file_name) PBL_LOG_MEM_ERR("Failed to cpy memory (Received NULL)", line, file_name);
 
 /// @brief Logs an error for attempting to copy to an invalid memory address (NULL) and aborts with exit status '1'
-#define PBL_LOG_CPY_TO_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to copy to an invalid memory address (NULL)");
-
-/// @brief Logs an error for receiving 'NULL' from the call of the C function 'memcpy' and aborts with exit status '1'
-#define PBL_LOG_CPY_RECEIVE_NULL_PTR PBL_LOG_MEM_ERR("Para: Failed to cpy memory (Received NULL)");
+#define PBL_NULL_CPY_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to copy to an invalid memory address (NULL)", line, file_name);
 
 /// @brief Logs an error for attempting to use an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_LOG_ACCESS_ERR_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to access invalid memory address (NULL)");
+#define PBL_ACCESS_NULL_PTR_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to access invalid memory address (NULL)", line, file_name);
 
 /// @brief Logs an error for attempting to free an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_LOG_FREE_ERR_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to free invalid memory address (NULL)");
-
-/// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_MALLOC' or 'GC_MALLOC_ATOMIC' and
-/// aborts with exit status '1'
-#define PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("Para: Failed to allocate memory (Received NULL)");
+#define PBL_NULL_FREE_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to free invalid memory address (NULL)", line, file_name);
 
 /// @brief Logs an error for attempting to realloc an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_LOG_REALLOC_ERR_NULL_PTR PBL_LOG_MEM_ERR("Para: Attempted to re-allocate invalid memory address (NULL)");
-
-/// @brief Logs an error for receiving 'NULL' from the call of the GC function 'GC_REALLOC' and aborts with exit status
-/// '1'
-#define PBL_LOG_REALLOC_ERR_RECEIVE_NULL_RET PBL_LOG_MEM_ERR("Para: Failed to re-allocate memory (Received NULL)");
+#define PBL_NULL_REALLOC_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to re-allocate invalid memory address (NULL)", line, file_name);
 
 // ---- End of Helper Macro -------------------------------------------------------------------------------------------
 

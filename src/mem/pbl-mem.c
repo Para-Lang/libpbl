@@ -32,23 +32,23 @@ pre__PblInitialiseGarbageCollection(void) {
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
 void *PblMemCpy(void *dest, const void *src, size_t bytes) {
-  if (dest == NULL) { PBL_LOG_CPY_FROM_NULL_PTR }
-  if (src == NULL) { PBL_LOG_CPY_TO_NULL_PTR }
+  if (dest == NULL) { PBL_NULL_CPY_ERR(__LINE__, __FILE__) }
+  if (src == NULL) { PBL_NULL_CPY_ERR(__LINE__, __FILE__) }
 
   void *ret_ptr = memcpy(dest, src, bytes);
-  if (ret_ptr == NULL) { PBL_LOG_CPY_RECEIVE_NULL_PTR }
+  if (ret_ptr == NULL) { PBL_MEM_OPERATION_RET_NULL_ERR(__LINE__, __FILE__) }
   return ret_ptr;
 }
 
 void *PblValPtr(void *ptr) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
-  if (ptr == NULL) { PBL_LOG_ACCESS_ERR_NULL_PTR }
+  if (ptr == NULL) { PBL_ACCESS_NULL_PTR_ERR(__LINE__, __FILE__) }
   return ptr;
 }
 
 void PblFree(void *ptr) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
-  if (ptr == NULL) { PBL_LOG_FREE_ERR_NULL_PTR }
+  if (ptr == NULL) { PBL_NULL_FREE_ERR(__LINE__, __FILE__) }
   GC_FREE(ptr);
 
   // old pointer is invalid
@@ -58,31 +58,31 @@ void PblFree(void *ptr) {
 __attribute__((unused)) void *PblMallocUncollectable(size_t size) {
   // allocating the memory
   void *ptr = GC_MALLOC_UNCOLLECTABLE(size);
-  if (ptr == NULL) { PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET }
+  if (ptr == NULL) { PBL_MEM_OPERATION_RET_NULL_ERR(__LINE__, __FILE__) }
   return ptr;
 }
 
 void *PblMalloc(size_t size) {
   // allocating the memory
   void *ptr = GC_MALLOC(size);
-  if (ptr == NULL) { PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET }
+  if (ptr == NULL) { PBL_MEM_OPERATION_RET_NULL_ERR(__LINE__, __FILE__) }
   return ptr;
 }
 
 __attribute__((unused)) void *PblMallocAtomic(size_t size) {
   // allocating the memory
   void *ptr = GC_MALLOC_ATOMIC(size);
-  if (ptr == NULL) { PBL_LOG_ALLOC_ERR_RECEIVE_NULL_RET }
+  if (ptr == NULL) { PBL_MEM_OPERATION_RET_NULL_ERR(__LINE__, __FILE__) }
   return ptr;
 }
 
 void *PblRealloc(void *ptr, size_t size) {
   // Crash on invalid input - Don't bother raising exceptions on this low-level area
-  if (ptr == NULL) { PBL_LOG_REALLOC_ERR_NULL_PTR }
+  if (ptr == NULL) { PBL_NULL_REALLOC_ERR(__LINE__, __FILE__) }
 
   // re-allocating the memory
   void *new_ptr = GC_REALLOC(ptr, size);
-  if (new_ptr == NULL) { PBL_LOG_REALLOC_ERR_RECEIVE_NULL_RET }
+  if (new_ptr == NULL) { PBL_MEM_OPERATION_RET_NULL_ERR(__LINE__, __FILE__) }
 
   // old pointer is invalid
   if (new_ptr != ptr) ptr = NULL;
