@@ -22,6 +22,7 @@ extern "C" {
 
 /**
  * @brief Eats the entered args and doesn't apply the macro 't' on any of the passed args
+ */
 #define PBL_APPLY_MACRO_EAT(t, ...)
 
 /**
