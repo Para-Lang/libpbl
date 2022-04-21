@@ -73,3 +73,6 @@ endif ()
 
 # Add libgcc and libstdc++
 add_definitions(-static-libgcc -static-libstdc++)
+
+# Enable exceptions for C/C++
+add_definitions(-fexceptions fcxx-exceptions)
