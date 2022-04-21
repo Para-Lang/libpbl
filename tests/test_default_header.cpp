@@ -1,7 +1,7 @@
-///
-/// Testing for the macros in the header pbl.h
-///
-/// @author Luna-Klatzer
+/**
+ * Testing for the macros in the header pbl.h
+ * @author Luna Klatzer
+ */
 
 // Including the required GTest
 #include "gtest/gtest.h"
@@ -13,7 +13,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(test_default_header);
 PBL_INIT_GLOBALS{};
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------

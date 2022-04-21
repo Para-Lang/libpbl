@@ -1,7 +1,7 @@
-///
-/// Testing for the header pbl-io.h
-///
-/// @author Luna-Klatzer
+/**
+ * Testing for the header pbl-io.h
+ * @author Luna Klatzer
+ */
 
 // Including the required GTest
 #include "gtest/gtest.h"
@@ -13,7 +13,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(test_io);
 PBL_INIT_GLOBALS{};
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ TEST(IOPrintTest, SimplePrintWithSetStream) {
   // size is per default 50 + 1 (for null char)
   EXPECT_EQ(str->actual.allocated_len->actual, 51);
 
-  PblIOStream_T *stream = (PblIOStream_T *) PblMalloc(sizeof(PblIOStream_T));
+  auto *stream = (PblIOStream_T *) PblMalloc(sizeof(PblIOStream_T));
   *stream = *PBL_STDOUT;
   PblPrint(.out = str, .stream = stream);
 

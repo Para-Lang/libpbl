@@ -1,8 +1,10 @@
-/// @file pbl-int.c
-/// @brief Int Type Implementation based on stdint.h
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-int.c
+ * @brief Int Type Implementation based on stdint.h
+ * @author Luna Klatzer
+ * @date 2021-11-23
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 // Parent Header for this file
 #include <libpbl/pbl.h>
@@ -10,7 +12,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(pbl_int);
 PBL_INIT_GLOBALS {
   PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblInt8_T, "int8", false, true);
   PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblUInt8_T, "uint8", false, true);

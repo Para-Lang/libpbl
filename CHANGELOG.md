@@ -15,12 +15,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   local type tracking. Specifically `PBL_INIT_GLOBALS` allows for the pre-main definition of globals that
   require function calls. This allows that even pointer-type globals based on memory allocations can be used globally, 
   as before execution `pre__PblInitGlobals` is called which defines the values.
+- New header initialisation macro `PBL_INIT_HEADER`, which initialises Para headers and allow the export of type
+  definitions using the ``
 
 ### Changed
 - Updated project structure and split `pbl-types.h` into three new files. (Breaking change!)
 - Renamed `PBL_STREAM_STDIN` to `PBL_STDIN`, `PBL_STREAM_STDOUT` to `PBL_STDOUT` and `PBL_STREAM_STDERR` to 
   `PBL_STDERR`, and made them global variables, which may be included using the `pbl-io.h` header.
 - Renamed `PblAbortWithCriticalError` to `PblThrowCriticalError`.
+- Renamed `PblVoid_T` to `PblNone_T` (`None` in Para) and removed the values for `DeclDefault` and `DefDefault`, as 
+  `None` is an incomplete type and does not have any properties.
 
 ### Removed
 

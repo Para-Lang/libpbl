@@ -1,19 +1,19 @@
-/// @file pbl-function.c
-/// @brief Function-related types and exception implementation. This includes meta data tracking for functions calls,
-/// function states, exceptions and tracebacks.
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-function.c
+ * @brief Function-related types and exception implementation. This includes meta data tracking for functions calls,
+ * function states, exceptions and tracebacks.
+ * @author Luna Klatzer
+ * @date 2021-11-23
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
-#include <libpbl/pbl.h>
 #include <libpbl/pbl-function.h>
+#include <libpbl/pbl.h>
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
-PBL_INIT_GLOBALS {
-  PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblException_T, "Exception", false, true);
-};
+PBL_INIT_FILE(pbl_function);
+PBL_INIT_GLOBALS { PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblException_T, "Exception", false, true); };
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ PblFunctionCallMetaData_T *PblGetMetaFunctionCallCtxT(PblString_T *function_iden
   return ptr;
 }
 
-__attribute__((unused)) __attribute__((unused)) PblVoid_T PblDeallocateMetaFunctionCallCtxT(PblFunctionCallMetaData_T *ctx) {
+__attribute__((unused)) PblNone_T PblDeallocateMetaFunctionCallCtxT(PblFunctionCallMetaData_T *ctx) {
   // Validate the pointer for safety measures
   ctx = PblValPtr((void *) ctx);
 
@@ -50,11 +50,10 @@ __attribute__((unused)) __attribute__((unused)) PblVoid_T PblDeallocateMetaFunct
     PblFree(ctx);
     ctx = NULL;
   }
-  return PblVoid_T_DeclDefault;
 }
 
 PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_T *filename, PblUInt_T *line,
-                                 PblString_T *line_content, PblVoid_T *parent_exc, PblVoid_T *child_exc) {
+                                 PblString_T *line_content, PblNone_T *parent_exc, PblNone_T *child_exc) {
   PBL_DEF_VAR(ptr, PblException_T);
 
   // Using the Definition Default
@@ -70,7 +69,7 @@ PblException_T *PblGetExceptionT(PblString_T *msg, PblString_T *name, PblString_
   return ptr;
 }
 
-PblVoid_T PblRaiseNewException(PblFunctionCallMetaData_T *this_call_meta, PblException_T *exception) {
+PblNone_T PblRaiseNewException(PblFunctionCallMetaData_T *this_call_meta, PblException_T *exception) {
   // Validate the pointer for safety measures
   this_call_meta = PblValPtr((void *) this_call_meta);
   exception = PblValPtr((void *) exception);
@@ -78,12 +77,11 @@ PblVoid_T PblRaiseNewException(PblFunctionCallMetaData_T *this_call_meta, PblExc
   this_call_meta->actual.is_failure = PblGetBoolT(true);
   this_call_meta->actual.failure_origin_ctx = this_call_meta;
   this_call_meta->actual.exception = exception;
-  return PblVoid_T_DeclDefault;
 }
 
 // TODO! Add Deallocating function for deallocating exception parents and children
 
-PblVoid_T PblDeallocateExceptionT(PblException_T *exc) {
+PblNone_T PblDeallocateExceptionT(PblException_T *exc) {
   // Validate the pointer for safety measures
   exc = PblValPtr((void *) exc);
 
@@ -91,17 +89,19 @@ PblVoid_T PblDeallocateExceptionT(PblException_T *exc) {
   if (exc->meta.defined) {
     // deallocate if the values are defined -> if not, skip de-allocation
 
-    if (exc->actual.msg != NULL && exc->actual.msg->meta.defined) PblDeallocateStringT(exc->actual.msg);
-    if (exc->actual.name != NULL && exc->actual.name->meta.defined) PblDeallocateStringT(exc->actual.name);
-    if (exc->actual.filename != NULL && exc->actual.filename->meta.defined) PblDeallocateStringT(exc->actual.filename);
-    if (exc->actual.line_content != NULL && exc->actual.line_content->meta.defined)
+    if (exc->actual.msg != NULL && exc->actual.msg->meta.defined) { PblDeallocateStringT(exc->actual.msg); }
+    if (exc->actual.name != NULL && exc->actual.name->meta.defined) { PblDeallocateStringT(exc->actual.name); }
+    if (exc->actual.filename != NULL && exc->actual.filename->meta.defined) {
+      PblDeallocateStringT(exc->actual.filename);
+    }
+    if (exc->actual.line_content != NULL && exc->actual.line_content->meta.defined) {
       PblDeallocateStringT(exc->actual.line_content);
+    }
 
     *exc = PblException_T_DeclDefault;
     PblFree(exc);
     exc = NULL;
   }
-  return PblVoid_T_DeclDefault;
 }
 
 // ---- End of Function Definitions -----------------------------------------------------------------------------------

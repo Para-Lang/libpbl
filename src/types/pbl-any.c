@@ -1,9 +1,11 @@
-/// @file pbl-any.c
-/// @brief Implementation for the any type, which allows values to be dynamically allocated and converted using
-/// pre-defined conversion functions.
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-any.c
+ * @brief Implementation for the any type, which allows values to be dynamically allocated and converted using
+ * pre-defined conversion functions.
+ * @author Luna Klatzer
+ * @date 2021-11-23
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 // Parent Header for this file
 #include <libpbl/pbl.h>
@@ -11,7 +13,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(pbl_any);
 PBL_INIT_GLOBALS { PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblAny_T, "any", false, true); };
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------
@@ -35,7 +37,7 @@ __attribute__((unused)) PblAny_T *PblGetAnyT(void *val, PblType_T *type) {
   return ptr;
 }
 
-__attribute__((unused)) PblVoid_T PblDeallocateAnyType(PblAny_T *val) {
+__attribute__((unused)) PblNone_T PblDeallocateAnyType(PblAny_T *val) {
   // Validate the pointer for safety measures
   val = PblValPtr(val);
 
@@ -49,7 +51,6 @@ __attribute__((unused)) PblVoid_T PblDeallocateAnyType(PblAny_T *val) {
 
   *val = PblAny_T_DeclDefault;
   PblFree(val);
-  return PblVoid_T_DeclDefault;
 }
 
 // ---- End of Function Definitions -----------------------------------------------------------------------------------

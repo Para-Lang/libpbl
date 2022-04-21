@@ -152,7 +152,7 @@ To manually init a para-file and register new types, you can call the following 
 P_INIT_FILE;
 P_INIT_GLOBALS {
   // Example for a void type
-  P_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblVoid_T, "void", false, false);
+  P_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblNone_T, "void", false, false);
 };
 ```
 

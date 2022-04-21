@@ -1,6 +1,7 @@
-/// Testing for the header pbl-types.h
-///
-/// @author Luna-Klatzer
+/**
+ * Testing for the header pbl-types.h
+ * @author Luna Klatzer
+ */
 
 // Including the required GTest
 #include "gtest/gtest.h"
@@ -12,7 +13,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(test_types);
 PBL_INIT_GLOBALS{};
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------
@@ -59,6 +60,14 @@ TEST(BaseTypesTest, PblPointerDefaults) {
   EXPECT_EQ(v_2.actual.p_type, nullptr);
   EXPECT_EQ(PblPointer_T_Size, sizeof(void *));
   EXPECT_EQ(v_2.meta.defined, true);
+}
+
+TEST(BaseTypesTest, PblVoid) {
+  // void is incomplete -> no testing possible!
+}
+
+TEST(BaseTypesTest, PblVoidDefaults) {
+  // void is incomplete -> no testing possible!
 }
 
 TEST(BaseTypesTest, PblBool) {

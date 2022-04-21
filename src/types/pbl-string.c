@@ -1,10 +1,12 @@
-/// @file pbl-string.c
-/// @brief String Implementation based on dynamic memory allocation - This is an optimised form of char[], which is
-/// though not equal to PblChar_T[], as it does not contain meta-data tracking for each char, but altogether as an
-/// entire type to save memory.
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-string.c
+ * @brief String Implementation based on dynamic memory allocation - This is an optimised form of char[], which is
+ * though not equal to PblChar_T[], as it does not contain meta-data tracking for each char, but altogether as an
+ * entire type to save memory.
+ * @author Luna Klatzer
+ * @date 2021-11-23
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 // General Required Header Inclusion
 #include <libpbl/pbl.h>
@@ -14,7 +16,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(pbl_string);
 PBL_INIT_GLOBALS { PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblString_T, "string", false, true); };
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------
@@ -116,7 +118,7 @@ PblSize_T *PblGetAllocSizeStringT(PblUInt_T *len) {
   return size;
 }
 
-PblVoid_T PblResizeStringT(PblString_T *str, PblUInt_T *len) {
+PblNone_T PblResizeStringT(PblString_T *str, PblUInt_T *len) {
   // Validate the pointer for safety measures
   str = PblValPtr((void *) str);
   len = PblValPtr((void *) len);
@@ -128,10 +130,9 @@ PblVoid_T PblResizeStringT(PblString_T *str, PblUInt_T *len) {
   // Calculating the size based on the allocation - the allocated memory is split into PblChar_T types
   str->actual.allocated_len = PblGetUIntT(byte_size->actual / sizeof(PblChar_T));
   str->actual.len->actual = len->actual;
-  return PblVoid_T_DeclDefault;
 }
 
-PblVoid_T PblWriteStringToStringT(PblString_T *str, PblString_T *content, PblUInt_T *len_to_write) {
+PblNone_T PblWriteStringToStringT(PblString_T *str, PblString_T *content, PblUInt_T *len_to_write) {
   // Validate the pointer for safety measures
   str = PblValPtr((void *) str);
   content = PblValPtr((void *) content);
@@ -144,17 +145,16 @@ PblVoid_T PblWriteStringToStringT(PblString_T *str, PblString_T *content, PblUIn
   }
 
   PblWriteCharArrayToStringT(str, char_arr, len_to_write);
-  return PblVoid_T_DeclDefault;
 }
 
-PblVoid_T PblWriteCharArrayToStringT(PblString_T *str, PblChar_T *content, PblUInt_T *len_to_write) {
+PblNone_T PblWriteCharArrayToStringT(PblString_T *str, PblChar_T *content, PblUInt_T *len_to_write) {
   // Validate the pointer for safety measures
   str = PblValPtr((void *) str);
   content = PblValPtr((void *) content);
   len_to_write = PblValPtr((void *) len_to_write);
 
   // Don't bother writing when the length to write is 0
-  if (len_to_write->actual == 0) return PblVoid_T_DeclDefault;
+  if (len_to_write->actual == 0) return;
 
   PblUInt_T *required_size = PblGetMinimumArrayLen(len_to_write);
   // If the required space is bigger that means that the available space is not sufficient
@@ -171,7 +171,6 @@ PblVoid_T PblWriteCharArrayToStringT(PblString_T *str, PblChar_T *content, PblUI
 
   // Updating meta data
   str->meta.defined = true;
-  return PblVoid_T_DeclDefault;
 }
 
 PblString_T *PblCreateStringT(PblChar_T *content, PblUInt_T *len) {
@@ -206,7 +205,7 @@ PblChar_T *PblAllocateStringContentT(PblUInt_T *len) {
   return ptr;
 }
 
-PblVoid_T PblDeallocateStringT(PblString_T *lvalue) {
+PblNone_T PblDeallocateStringT(PblString_T *lvalue) {
   // Validate the pointer for safety measures
   lvalue = PblValPtr((void *) lvalue);
 
@@ -233,7 +232,6 @@ PblVoid_T PblDeallocateStringT(PblString_T *lvalue) {
     lvalue = NULL;
   }
 
-  return PblVoid_T_DeclDefault;
 }
 
 // TODO! Add copy string function

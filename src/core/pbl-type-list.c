@@ -1,14 +1,16 @@
-/// @file pbl-type-list.c
-/// @brief Implementation of the base type list that keeps track of the locally available types.
-/// @author Luna-Klatzer
-/// @date 2022-04-16
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-type-list.c
+ * @brief Implementation of the base type list that keeps track of the locally available types.
+ * @author Luna Klatzer
+ * @date 2022-04-16
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 #include "libpbl/core/pbl-type-list.h"
 
 // ---- Initialisation of the global type list ------------------------------------------------------------------------
 
-PblType_T *PblCreateNewType(size_t size, void *type_template, char *name, bool user_defined, bool definable) {
+PblType_T *PblCreateNewType(size_t size, void *type_template, const char *name, bool user_defined, bool definable) {
   PblType_T *type = (PblType_T *) PblMalloc(sizeof(PblType_T));
   *type = (PblType_T){.actual_size = size,
                       .type_template = type_template,

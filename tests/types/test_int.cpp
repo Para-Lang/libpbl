@@ -1,7 +1,7 @@
-///
-/// Testing for the header pbl-int.h
-///
-/// @author Luna-Klatzer
+/**
+ * Testing for the header pbl-int.h
+ * @author Luna Klatzer
+ */
 
 // Including the required GTest
 #include "gtest/gtest.h"
@@ -13,7 +13,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(test_int);
 PBL_INIT_GLOBALS{};
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
-///
-/// Testing for the header pbl-exception.h
-///
-/// @author Luna-Klatzer
+/**
+ * Testing for the header pbl-exception.h
+ * @author Luna Klatzer
+ */
 
 // Including the required GTest
 #include "gtest/gtest.h"
@@ -13,7 +13,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(test_exception);
 PBL_INIT_GLOBALS{};
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------
@@ -57,19 +57,23 @@ TEST(ExceptionTest, PblExceptionDefaults) {
   EXPECT_EQ(v_2->meta.defined, true);
 }
 
+const int kCALL_TEST_ARG_VAL = 1;
+
 PblInt_T *NestedTestFunction(PblFunctionCallMetaData_T *this_call_meta, PblUInt_T *i) {
-  PblUInt_T *line = PblGetUIntT(__LINE__);
+  EXPECT_EQ(kCALL_TEST_ARG_VAL, i->actual);
+
+  // Raise exception
   PblException_T *exception =
-    PblGetExceptionT(PblGetStringT("test"), PblGetStringT("TestException"), PblGetStringT(__FILE__), line,
-                     PblGetStringT("raise exception"), nullptr, nullptr);
+    PblGetExceptionT(PblGetStringT("test"), PblGetStringT("TestException"), PblGetStringT(__FILE__),
+                     PblGetUIntT(__LINE__), PblGetStringT("raise exception"), nullptr, nullptr);
   PBL_RAISE_EXCEPTION(exception, PblInt_T);
 }
 
 PblInt_T *TestFunction(PblFunctionCallMetaData_T *this_call_meta) {
   PBL_DECL_VAR(r_1, PblInt_T);
 
-  /// creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
-  /// the exception occurring)
+  // creating a copy of the address, if the pointer is accidentally set to NULL by the function returning NULL (due to
+  // the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T *, H3);
   PBL_CALL_FUNC_AND_CATCH(NestedTestFunction, r_1, X1, PblGetUIntT(1));
 
@@ -77,7 +81,9 @@ PblInt_T *TestFunction(PblFunctionCallMetaData_T *this_call_meta) {
   // in this case the function raises an exception and as such it will never reach this code
   if (this_call_meta->actual.is_failure->actual) {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
+    if (r_1 == nullptr) {
+      PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
+    }
   }
   return r_1;
 }
@@ -87,16 +93,17 @@ TEST(ExceptionTest, OneNestCall) {
   PBL_DEF_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
-  // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
+  // creating a copy of the address, if the pointer is accidentally set to NULL by the function returning NULL (due to
   // the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T *, H3);
-  /// Call the function and update the local ctx if an exception was raised
+
+  // Call the function and update the local ctx if an exception was raised
   PBL_BASE_CALL_AND_CATCH_EXCEPTION(TestFunction, r_1, H3, PblGetBoolT(false), this_call_meta, );
 
   // if the function failed, treat the return as invalid -> restore previous value
   if (this_call_meta->actual.is_failure->actual) {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
+    if (r_1 == nullptr) { PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3); }
   }
 
   // the return should have failed aka. the value should have been set to NULL and then restored by
@@ -123,7 +130,7 @@ TEST(ExceptionTest, OneNestCall) {
 }
 
 PblInt_T *TestFunction2(PblFunctionCallMetaData_T *this_call_meta) {
-  /// Call the block and execute the except block if the exc names match
+  // Call the block and execute the except block if the exc names match
   PBL_TRY_EXCEPT_BLOCK(
     {
       PBL_DECL_VAR(r_1, PblInt_T);
@@ -142,19 +149,19 @@ TEST(ExceptionTest, TryExceptCall) {
   PBL_DEF_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
-  // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
+  // creating a copy of the address, if the pointer is accidentally set to NULL by the function returning NULL (due to
   // the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T *, H3);
-  /// Call the function and update the local ctx if an exception was raised
+  // Call the function and update the local ctx if an exception was raised
   PBL_BASE_CALL_AND_CATCH_EXCEPTION(TestFunction2, r_1, H3, PblGetBoolT(false), this_call_meta, );
 
   // if the function failed, treat the return as invalid -> restore previous value
   if (this_call_meta->actual.is_failure->actual) {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
+    if (r_1 == nullptr) { PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3); }
   }
 
-  // Try-except should never if there is a except statement that was executed, log it's exception and throw the results
+  // Try-except should never if there is an except statement that was executed, log its exception and throw the results
   // away right after finishing up
   EXPECT_FALSE(this_call_meta->actual.is_failure->actual);
   EXPECT_TRUE(this_call_meta->actual.failure_origin_ctx == nullptr);
@@ -165,7 +172,7 @@ TEST(ExceptionTest, TryExceptCall) {
 }
 
 PblInt_T *TestFunction3(PblFunctionCallMetaData_T *this_call_meta) {
-  /// Call the block and execute the except block if the exc names match
+  // Call the block and execute the except block if the exc names match
   PBL_TRY_EXCEPT_BLOCK(
     {
       PBL_DECL_VAR(r_1, PblInt_T);
@@ -184,16 +191,16 @@ TEST(ExceptionTest, TryExceptCallWithContinuation) {
   PBL_DEF_VAR(this_call_meta, PblFunctionCallMetaData_T);
   this_call_meta->actual.is_failure = PblGetBoolT(false);
 
-  // creating a copy of the addr, if the pointer is accidentally set to NULL by the function returning NULL (due to
+  // creating a copy of the address, if the pointer is accidentally set to NULL by the function returning NULL (due to
   // the exception occurring)
   PBL_CREATE_ADDRESS_COPY(r_1, PblInt_T *, H3);
-  /// Call the function and update the local ctx if an exception was raised
+  // Call the function and update the local ctx if an exception was raised
   PBL_BASE_CALL_AND_CATCH_EXCEPTION(TestFunction3, r_1, H3, PblGetBoolT(false), this_call_meta, );
 
   // if the function failed, treat the return as invalid -> restore previous value
   if (this_call_meta->actual.is_failure->actual) {
     // Restore if NULL -> here it should be restored as NULL is returned
-    PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3);
+    if (r_1 == nullptr) { PBL_WRITE_BACK_ADDRESS_COPY(r_1, H3); }
   }
 
   EXPECT_FALSE(this_call_meta->actual.is_failure->actual);

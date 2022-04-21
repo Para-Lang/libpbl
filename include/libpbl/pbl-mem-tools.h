@@ -1,9 +1,10 @@
-/// @file pbl-advanced-mem.c
-/// @brief Advanced memory handling and management, which is separate from the base pbl-mem.h as that implements only
-/// the most basic functions.
-/// @author Luna-Klatzer
-/// @date 2021-12-09
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-advanced-mem.c
+ * @brief Advanced memory handling and management, which is separate from the base pbl-mem.h as that implements only
+ * the most basic functions.
+ * @author Luna Klatzer
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 #pragma once
 
@@ -13,6 +14,12 @@
 
 #ifndef PBL_LIB_MEM_TOOLS_H
 #define PBL_LIB_MEM_TOOLS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PBL_INIT_HEADER(pbl_mem_tools);
 
 // ---- Functions Definitions -----------------------------------------------------------------------------------------
 
@@ -52,5 +59,9 @@ __attribute__((unused)) void *PblTypedMemCpy(void *dest, const void *src, PblTyp
                                              PblUInt_T amount);
 
 // ---- End of Functions Definitions ----------------------------------------------------------------------------------
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif//PBL_LIB_MEM_TOOLS_H

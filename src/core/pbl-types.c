@@ -1,19 +1,20 @@
-/// @file pbl-types.c
-/// @brief Para Base Types Implementation, which contains handler macros, conversion functions, default declaration,
-/// default definition types and default size macros. This also includes meta-data tracking based on the
-/// 'PblMetaVarCtx_T' type.
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-types.c
+ * @brief Para Base Types Implementation, which contains handler macros, conversion functions, default declaration,
+ * default definition types and default size macros. This also includes meta-data tracking based on the
+ * 'PblMetaVarCtx_T' type.
+ * @author Luna Klatzer
+ * @date 2021-11-23
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 // Parent Header for this file
 #include "libpbl/pbl.h"
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(pbl_types);
 PBL_INIT_GLOBALS {
-  PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblVoid_T, "void", false, false);
   PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblPointer_T, "ptr", false, true);
   PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblSize_T, "size", false, true);
   PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblBool_T, "bool", false, true);

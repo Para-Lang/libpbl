@@ -1,9 +1,11 @@
-/// @file pbl-mem.c
-/// @brief Para memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
-/// collector)
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-mem.c
+ * @brief Para memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
+ * collector)
+ * @author Luna Klatzer
+ * @date 2021-11-23
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 // General Required Header Inclusion
 #include "libpbl/core/pbl-mem.h"
@@ -11,7 +13,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(pbl_mem);
 PBL_INIT_GLOBALS{};
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------

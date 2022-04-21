@@ -1,6 +1,7 @@
-/// Testing for the header pbl-string.h
-///
-/// @author Luna-Klatzer
+/**
+ * Testing for the header pbl-string.h
+ * @author Luna Klatzer
+ */
 
 // Including the required GTest
 #include "gtest/gtest.h"
@@ -13,7 +14,7 @@
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(test_string);
 PBL_INIT_GLOBALS{};
 
 // ---- End of File Setup ---------------------------------------------------------------------------------------------

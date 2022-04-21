@@ -12,7 +12,6 @@ message("HEADER_INCLUDE_DIRECTORY = ${HEADER_INCLUDE_DIRECTORY}")
 
 # Using glob to get all files that should be included
 set(SOURCE_FILES
-    "${SOURCE_INCLUDE_DIRECTORY}/pbl.c"
     "${SOURCE_INCLUDE_DIRECTORY}/pbl-err.c"
     "${SOURCE_INCLUDE_DIRECTORY}/types/pbl-any.c"
     "${SOURCE_INCLUDE_DIRECTORY}/types/pbl-int.c"

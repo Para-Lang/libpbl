@@ -1,9 +1,10 @@
-/// @file pbl-mem.h
-/// @brief Para memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
-/// collector)
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-mem.h
+ * @brief Para memory management and handling implementation based on `malloc.h` and `gc.h` (Hans-J. Boehm garbage
+ * collector)
+ * @author Luna Klatzer
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 #pragma once
 
@@ -39,23 +40,40 @@ extern "C" {
 
 // ---- Helper Macros -------------------------------------------------------------------------------------------------
 
-/// @brief Logs the entered error / string and aborts the program with the exit status '1'
+/**
+ * @brief Logs the entered error / string and aborts the program with the exit status '1'.
+ */
 #define PBL_LOG_MEM_ERR(str, line, file_name) PblThrowCriticalError(1, str, line, file_name)
 
-/// @brief Logs an error for receiving 'NULL' as a return from memory functions.
-#define PBL_MEM_OPERATION_RET_NULL_ERR(line, file_name) PBL_LOG_MEM_ERR("Failed to cpy memory (Received NULL)", line, file_name);
+/**
+ * @brief Logs an error for receiving 'NULL' as a return from memory functions.
+ */
+#define PBL_MEM_OPERATION_RET_NULL_ERR(line, file_name)                                                                \
+  PBL_LOG_MEM_ERR("Failed to cpy memory (Received NULL)", line, file_name);
 
-/// @brief Logs an error for attempting to copy to an invalid memory address (NULL) and aborts with exit status '1'
-#define PBL_NULL_CPY_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to copy to an invalid memory address (NULL)", line, file_name);
+/**
+ * @brief Logs an error for attempting to copy to an invalid memory address (NULL) and aborts with exit status '1'.
+ */
+#define PBL_NULL_CPY_ERR(line, file_name)                                                                              \
+  PBL_LOG_MEM_ERR("Attempted to copy to an invalid memory address (NULL)", line, file_name);
 
-/// @brief Logs an error for attempting to use an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_ACCESS_NULL_PTR_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to access invalid memory address (NULL)", line, file_name);
+/**
+ * @brief Logs an error for attempting to use an invalid pointer address (NULL) and aborts with exit status '1'.
+ */
+#define PBL_ACCESS_NULL_PTR_ERR(line, file_name)                                                                       \
+  PBL_LOG_MEM_ERR("Attempted to access invalid memory address (NULL)", line, file_name);
 
-/// @brief Logs an error for attempting to free an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_NULL_FREE_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to free invalid memory address (NULL)", line, file_name);
+/**
+ * @brief Logs an error for attempting to free an invalid pointer address (NULL) and aborts with exit status '1'.
+ */
+#define PBL_NULL_FREE_ERR(line, file_name)                                                                             \
+  PBL_LOG_MEM_ERR("Attempted to free invalid memory address (NULL)", line, file_name);
 
-/// @brief Logs an error for attempting to realloc an invalid pointer address (NULL) and aborts with exit status '1'
-#define PBL_NULL_REALLOC_ERR(line, file_name) PBL_LOG_MEM_ERR("Attempted to re-allocate invalid memory address (NULL)", line, file_name);
+/**
+ * @brief Logs an error for attempting to realloc an invalid pointer address (NULL) and aborts with exit status '1'.
+ */
+#define PBL_NULL_REALLOC_ERR(line, file_name)                                                                          \
+  PBL_LOG_MEM_ERR("Attempted to re-allocate invalid memory address (NULL)", line, file_name);
 
 // ---- End of Helper Macro -------------------------------------------------------------------------------------------
 
@@ -63,9 +81,11 @@ extern "C" {
 
 /**
  * @brief This is the Pbl equivalent of memcpy(), but in this case additional checking is applied for safety measures.
- * This may be used to copy bytes from one destination to the other, though it should be watched out the byte sizes are
- * properly fetched using sizeof(PBL_TYPE | C_TYPE), as it **only** copies 1 byte at a time, and as such does NOT check
- * for proper sizing.
+ * This may be used to copy bytes from one destination to the other.
+ *
+ * Usage must be done carefully, as the byte sizes must be valid (preferably fetched using `sizeof(PBL_TYPE | C_TYPE)`),
+ * as the function **only** copies 1 byte at a time, and as such does NOT check for proper sizing. If this function is
+ * used improperly, the `dest` may have invalid bytes and can have invalid values!
  *
  * For proper checking you may use 'PblTypedMemCpy' (from 'pbl-advanced-mem.h'), which will copy a type one at a time,
  * and not allow incomplete ones!

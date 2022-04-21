@@ -1,8 +1,10 @@
-/// @file pbl-io.c
-/// @brief IO Implementation based on stdio.h
-/// @author Luna-Klatzer
-/// @date 2021-11-23
-/// @copyright Copyright (c) 2021 - 2022
+/**
+ * @file pbl-io.c
+ * @brief IO Implementation based on stdio.h
+ * @author Luna Klatzer
+ * @date 2021-11-23
+ * @copyright Copyright (c) 2021 - 2022
+ */
 
 // Parent Header for this file
 #include <libpbl/pbl-io.h>
@@ -13,15 +15,15 @@
 
 // ---- Globals -------------------------------------------------------------------------------------------------------
 
-__attribute__((unused)) PblIOStream_T* PBL_STDIN = NULL;
-__attribute__((unused)) PblIOStream_T* PBL_STDOUT = NULL;
-__attribute__((unused)) PblIOStream_T* PBL_STDERR = NULL;
+__attribute__((unused)) PblIOStream_T *PBL_STDIN = NULL;
+__attribute__((unused)) PblIOStream_T *PBL_STDOUT = NULL;
+__attribute__((unused)) PblIOStream_T *PBL_STDERR = NULL;
 
 // ---- End of Globals ------------------------------------------------------------------------------------------------
 
 // ---- File Setup ----------------------------------------------------------------------------------------------------
 
-PBL_INIT_FILE;
+PBL_INIT_FILE(pbl_io);
 PBL_INIT_GLOBALS {
   PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblIOFile_T, "IOFile", false, true);
   PBL_REGISTER_TYPE(&LOCAL_TYPE_LIST, PblIOStream_T, "IOStream", false, true);
@@ -67,7 +69,7 @@ PblChar_T *PblInputChar_Base(PblString_T *display_msg, PblChar_T *end) {
   return in_char == '\n' || (int) in_char == EOF ? '\0' : PblGetCharT(in_char);
 }
 
-__attribute__((unused)) PblChar_T *PblInputChar_Overhead(struct PblInputChar_Args in) {
+PblChar_T *PblInputChar_Overhead(struct PblInputChar_Args in) {
   // Validate the pointer for safety measures
   PblString_T *display_msg = PBL_VAL_REQ_ARG(in.display_msg);
   PblChar_T *end = in.end != NULL ? in.end : PblGetCharT('\0');
@@ -103,24 +105,23 @@ PblString_T *PblInput_Base(PblString_T *display_msg, PblChar_T *end) {
   return PblGetStringT(in_str);
 }
 
-__attribute__((unused)) PblString_T *PblInput_Overhead(struct PblInput_Args in) {
+PblString_T *PblInput_Overhead(struct PblInput_Args in) {
   // Validate the pointer for safety measures
   PblString_T *display_msg = PBL_VAL_REQ_ARG(in.display_msg);
   PblChar_T *end = in.end != NULL ? in.end : PblGetCharT('\0');
   return PblInput_Base(display_msg, end);
 }
 
-PblVoid_T PblPrint_Base(PblString_T *out, PblIOStream_T *stream, PblChar_T *end) {
+PblNone_T PblPrint_Base(PblString_T *out, PblIOStream_T *stream, PblChar_T *end) {
   // Validate the pointer for safety measures
   out = PblValPtr((void *) out);
 
   for (int i = 0; i < out->actual.len->actual; i++)
     fprintf(stream->actual.file->actual, "%c", (out->actual.str[i].actual));
   fprintf(stream->actual.file->actual, "%c", end->actual);
-  return PblVoid_T_DeclDefault;
 }
 
-__attribute__((unused)) PblVoid_T PblPrint_Overhead(struct PblPrint_Args in) {
+PblNone_T PblPrint_Overhead(struct PblPrint_Args in) {
   // Validate the pointer for safety measures
   PblString_T *out = PBL_VAL_REQ_ARG(in.out);
 
