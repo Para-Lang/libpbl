@@ -22,20 +22,11 @@ extern "C" {
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Type Dict
  */
-#define PblTypeList_T_Size sizeof(void *)
-
+#define PblTypeList_T_WritableSize sizeof(void *)
 /**
- * @returns The declaration default for the type 'PblTypeList_T'
+ * @returns The definition default for the type 'PblTypeList_T'.
  */
-#define PblTypeList_T_DeclDefault                                                                                      \
-  (PblTypeList_T) {}
-
-/**
- * @returns The definition default for the type 'PblTypeList_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblTypeList_T_DefDefault                                                                                       \
+#define PblTypeList_T_Default                                                                                       \
   (PblTypeList_T) { .alloc_len = 0, .t_amount = 0, .t_items = NULL }
 
 /**
@@ -67,7 +58,8 @@ typedef struct PblTypeList PblTypeList_T;
  * @brief Allocates and creates a new type signature based on the passed arguments.
  * @returns The newly allocated type.
  */
-PblType_T *PblCreateNewType(size_t size, void *type_template, const char *name, bool user_defined, bool definable);
+PblType_T *PblCreateNewType(size_t size, void *type_template, const char *name, bool user_defined, bool definable,
+                            bool primitive);
 
 /**
  * @brief Adds a new type to the type list by adding a new pointer which points to the type.
@@ -81,15 +73,13 @@ void PblAddTypeToTypeList(PblTypeList_T *list, PblType_T *type);
 void PblInitTypeList(PblTypeList_T *list);
 
 /**
- * @brief Simple Wrapper for the functions 'PblCreateNewType' and 'PblAddTypeToTypeList', which pre-populates the
- * arguments size and type_template by using 'sizeof()' and '_DefDefault'.
+ * @brief Simple Wrapper for the functions 'PblCreateNewType' and 'PblAddTypeToTypeList'.
  * @note This macro function should only be used inside 'PBL_INIT_LOCAL_TYPES' blocks, as it intends to register types
  * before starting execution.
  */
-#define PBL_REGISTER_TYPE(list, type, name, user_defined, definable)                                                   \
-  type *type##_DefaultTemplate = PblMalloc(sizeof(type));                                                              \
-  *type##_DefaultTemplate = type##_DefDefault;                                                                         \
-  PblAddTypeToTypeList(list, PblCreateNewType(sizeof(type), type##_DefaultTemplate, name, user_defined, definable));
+#define PBL_REGISTER_TYPE(list, type, name, user_defined, definable, primitive)                                        \
+  PblAddTypeToTypeList(list, PblCreateNewType(sizeof(type), type##_Default, name, user_defined, definable, primitive)\
+);
 
 /**
  * @brief Creates the local type list and initialises it for the local file. This also will create a local
@@ -97,7 +87,7 @@ void PblInitTypeList(PblTypeList_T *list);
  */
 #define PBL_INIT_LOCAL_TYPE_LIST(file_name)                                                                            \
   static bool LOCAL_TYPE_TRACKING_INITIALISED = false;                                                                 \
-  static PblTypeList_T LOCAL_TYPE_LIST = PblTypeList_T_DefDefault;                                                     \
+  static PblTypeList_T LOCAL_TYPE_LIST = PblTypeList_T_Default;                                                     \
   const PblTypeList_T *file_name##_EXPORT_TYPE_LIST = &LOCAL_TYPE_LIST;                                                \
   __attribute__((constructor(102)))                                                                                    \
   __attribute__((deprecated("Compiler-Only Function - User Call Invalid!"))) static void                               \

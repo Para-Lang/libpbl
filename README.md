@@ -112,28 +112,41 @@ The order of constructor evaluation is as following:
 Variables in Para are specifically handled using a garbage collector, meaning that initialised variables are
 going to be represented and accessed using pointers.
 
-States of a Variable:
+States of a Variable in Para:
 
-- Only Declared (True C Declaration)
-- Technically "Declared" (Technically defined in C, but handled as declared in Para). Two possible
-  scenarios:
-    - Allocated, but the meta-Property `.meta.defined` is set to false, since no value was assigned yet
-    - The value is NULL, as it's a pointer and there has not been any clear definition.
-- Defined Variable that has been written to
-- Freed Variable by the Garbage Collector
+- Only Declared.
+- Defined Variable that can be null (`.meta.can_be_null` is true).
+- Defined Variable that has been written to (Per default `.meta.can_be_null` is false). 
+- Freed/Destroyed Variable that was destroyed explicitly/manually or automatically by the Garbage Collector.
+
+## Variable Base Model
+
+The variable base model (`type var`) consists of two features:
+
+- The `PblVarMetaData_T meta` property that defines meta-data about the variable. This is always defined when creating 
+  a new variable.
+- The `actual` field, which defines the actual value of the variable. This field can have two different types:
+  - Pointer type (`type* actual`). This type is used in case that the type of the variable is struct-based. This may be 
+    null if `meta.can_be_null` is set to true. Otherwise, setting it to NULL is an error and null-safety violation.
+  - Default type (`type actual`). This type is used in case that the type is a primitive type. This can never be `null`
+    and has to be always defined.
+
+Note that the main wrapper/para type that is provided by the library will be defined locally in the stack, and only
+if the type is complex, then the `type *actual` property will be allocated in the heap.
 
 ## Meta-Data Tracking - `pbl-types.h`
 
 Para implements meta-data tracking using `PblVarMetaData_T` and pre-defined macros, tracking things like:
 
-- If the variable has been defined yet
-- Effective space the user has to utilise. Note that effective space does not include actual space that is allocated!
-  This is due to meta-data also taking up a bit of memory space.
+- If the variable has been destroyed.
+- If the variable can be assigned to null. (Only for complex types)
+- The type of the variable.
 
-### `_DefDefault` and `_DeclDefault` for PBL-Types
-
-When declaring a built-in type that should be used inside Para, the style of the general types should be replicated,
-to allow for the proper usage of defaults aka. `_DefDefault` and `_DeclDefault`
+### Definition defaults `_Default` for PBL-Types
+ 
+When defining a new built-in type, there should always be a macro that defines the `_Default` for the variable.
+This defines the default values for the variable when defining it. This serves as a basic foundation that the user
+can overwrite from.
 
 ### Type List - `pbl-type-list.h`
 
@@ -156,39 +169,19 @@ P_INIT_GLOBALS {
 };
 ```
 
-### Declared and Defined handling
+Inside Para this is very important, as all variables should allow runtime checking of the type 
 
-In Para, there are two different states a variable can exist in; It is either declared or defined.
+```c
+entry status Main() {
+  int var = 4;
+  
+  // Compile-time 'typeof' which will try to convert this to a direct call to the local type list.
+  type var_type = typeof(var); 
 
-#### Declared Variable
-
-A declared variable is, unlike in C, can be appearing in two forms:
-
-- Allocated and with a value set, though their meta-property `.meta.defined` is set to `false`, which means the program
-  knows it is invalid to be accessed.
-- The value is `NULL` aka. this is usually what is passed to a function as args to indicate the value is not set. This
-  is in this case a *True `NULL`*, as it is not a pointer set to NULL or a value with their memory set to `NULL`
-
-This must be watched out for when writing PBL code, as both NULL and .meta.defined == false mean a variable is declared.
-
-As a note, a double-pointer (user-created pointer) to a variable is always going to be NULL, aka. there is no way to
-properly determine whether the variable is declared or defined, meaning the compiler will work out whether the
-user-created variable is declared. This means user-pointers are by default defined in the generated source code.
-
-(This will be changed later, by implementing `PblPointer_T` as a new type and as such pointers will be like variables,
-meaning a `PblPointer_T` can be undefined with NULL and declared, but with `.meta.defined == false`)
-
-#### Defined Variable
-
-The defined variables on the other hand will always be initialised with a default value, usually `0`, except for struct
-types, which will have all their property-pointers set to NULL, aka. they are also only 'declared' but not initialised.
-
-### Function Return Type Handling
-
-For functions, returns will always be pointers no matter what, since all variables are dynamically allocated and the
-actual storage in the stack is the pointer itself.
-
-This means that returning NULL will always be valid in Para aka. it's the `None` (from Python) of Para,
+  // The above is equal to this, but here it will be executed on runtime.
+  type var_type = GetTypeOf(var);
+}
+```
 
 ### Global Variable handling
 
@@ -206,15 +199,15 @@ That means that code will be converted like this:
 
 - After:
   ```c
-  PblInt_T *num = NULL;
-  PblString_T *str = NULL;
+  PblInt_T num;
+  PblString_T str;
   
   P_INIT_FILE;
   P_INIT_GLOBALS {
     // ... type initialisations
     
     num = PblGetIntT(4);
-    str = PblGetStringT("4");
+    str = PblString_T_New("4");
   };
   ```
 

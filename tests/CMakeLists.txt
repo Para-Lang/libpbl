@@ -16,11 +16,7 @@ set(TEST_SOURCE_INCLUDE_DIRECTORY "${libpbl_SOURCE_DIR}/tests")
 
 set(TEST_SOURCE_FILES
     "${TEST_SOURCE_INCLUDE_DIRECTORY}/test_default_header.cpp"
-    "${TEST_SOURCE_INCLUDE_DIRECTORY}/test_io.cpp"
-    "${TEST_SOURCE_INCLUDE_DIRECTORY}/types/test_int.cpp"
-    "${TEST_SOURCE_INCLUDE_DIRECTORY}/types/test_string.cpp"
-    "${TEST_SOURCE_INCLUDE_DIRECTORY}/types/test_types.cpp"
-    "${TEST_SOURCE_INCLUDE_DIRECTORY}/func/test_exception.cpp"
+    "${TEST_SOURCE_INCLUDE_DIRECTORY}/test_types.cpp"
     )
 
 # Adding the test executable

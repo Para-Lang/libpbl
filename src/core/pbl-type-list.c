@@ -10,13 +10,15 @@
 
 // ---- Initialisation of the global type list ------------------------------------------------------------------------
 
-PblType_T *PblCreateNewType(size_t size, void *type_template, const char *name, bool user_defined, bool definable) {
+PblType_T *PblCreateNewType(size_t size, void *type_template, const char *name, bool user_defined, bool definable,
+                            bool primitive) {
   PblType_T *type = (PblType_T *) PblMalloc(sizeof(PblType_T));
   *type = (PblType_T){.actual_size = size,
                       .type_template = type_template,
                       .name = name,
-                      .user_defined = user_defined,
-                      .definable = definable};
+                      .is_builtin = user_defined,
+                      .definable = definable,
+                      .primitive = primitive};
   return type;
 }
 

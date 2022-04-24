@@ -43,19 +43,17 @@ PBL_INIT_HEADER(pbl_types);
  * @note This should only be used when wanting the actual type itself written onto a variable.
  */
 #define PBL_SET_VAL(ptr, type, write_val)                                                                              \
-  if (!(ptr)->meta.defined) { *(ptr) = type##_DefDefault; }                                                            \
+  if (!(ptr)->meta.defined) { *(ptr) = type##_Default; }                                                            \
   (ptr)->actual = write_val;
-
-// Use auto with C++
-#ifdef __cplusplus
 
 /**
  * @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet.
  * @note This should only be used when creating a declaration of a Para type.
  */
-#define PBL_DECL_VAR(var_identifier, type, cleanup...)                                                                 \
-  auto *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
-  *(var_identifier) = type##_DeclDefault;
+#define PBL_DECL_VAR(var_identifier, type, cleanup...) type *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup));
+
+// Use auto with C++
+#ifdef __cplusplus
 
 /**
  * @brief This macro allocates an instance of type, which has the default initialisation value set.
@@ -63,8 +61,9 @@ PBL_INIT_HEADER(pbl_types);
  * to Para the defined GetTypeT(...) function should be used, which will properly allocate and write to the variable.
  */
 #define PBL_DEF_VAR(var_identifier, type, cleanup...)                                                                  \
-  auto *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
-  *(var_identifier) = type##_DefDefault;
+  type var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) { .meta = PBL_META_DEFAULT };                      \
+  var_identifier.actual = PblMalloc(sizeof(type));                                                                     \
+  var_identifier.actual = type##_Default;
 
 /**
  * @brief This macro should serve as a helper for writing static arrays that shall be used to store types.
@@ -73,17 +72,9 @@ PBL_INIT_HEADER(pbl_types);
  */
 #define PBL_NEW_STATIC_ARR(to_write, type, length, cleanup...)                                                         \
   auto *to_write IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type) * (length));                     \
-  for (int i = 0; i < (length); i++) { (to_write)[i] = type##_DefDefault; }
+  for (int i = 0; i < (length); i++) { (to_write)[i] = type##_Default; }
 
 #else
-
-/**
- * @brief This macro allocates an empty declaration instance of a type, which has no actual value set yet.
- * @note This should only be used when creating a declaration of a Para type.
- */
-#define PBL_DECL_VAR(var_identifier, type, cleanup...)                                                                 \
-  type *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
-  *(var_identifier) = type##_DeclDefault;
 
 /**
  * @brief This macro allocates an instance of type, which has the default initialisation value set.
@@ -92,7 +83,7 @@ PBL_INIT_HEADER(pbl_types);
  */
 #define PBL_DEF_VAR(var_identifier, type, cleanup...)                                                                  \
   type *var_identifier IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type));                          \
-  *(var_identifier) = type##_DefDefault;
+  *(var_identifier) = type##_Default;
 
 /**
  * @brief This macro should serve as a helper for writing static arrays that shall be used to store types.
@@ -101,7 +92,7 @@ PBL_INIT_HEADER(pbl_types);
  */
 #define PBL_NEW_STATIC_ARR(to_write, type, length, cleanup...)                                                         \
   type *to_write IFN(cleanup)(PBL_CLEANUP(cleanup)) = (type *) PblMalloc(sizeof(type) * (length));                     \
-  for (int i = 0; i < (length); i++) { (to_write)[i] = type##_DefDefault; }
+  for (int i = 0; i < (length); i++) { (to_write)[i] = type##_Default; }
 
 #endif
 
@@ -110,26 +101,18 @@ PBL_INIT_HEADER(pbl_types);
 // ---- Constructor Macros --------------------------------------------------------------------------------------------
 
 /**
- * @brief Declaration constructor which initialised the meta data for the passed type.
+ * @brief Creates the body for a Para type definition wrapper - the base_type is the actual value/struct.
  */
-#define PBL_TYPE_DECL_VAL(type)                                                                                        \
-  (type) {                                                                                                             \
-    .meta = {.defined = false }                                                                                        \
-  }
-
-/**
- * @brief Definition constructor, which initialises the meta data for the passed type and passes to '.actual' the args
- * as struct.
- */
-#define PBL_TYPE_DEF_VAL(type, def_val...)                                                                             \
-  (type) { .meta = {.defined = true}, .actual = def_val }
+#define PBL_PRIMITIVE_TYPE_BODY(base_type)                                                                             \
+  PblVarMetaData_T meta;                                                                                               \
+  base_type actual;
 
 /**
  * @brief Creates the body for a Para type definition wrapper - the base_type is the actual value/struct.
  */
-#define PBL_TYPE_DEF_HELPER(base_type)                                                                                 \
+#define PBL_COMPLEX_TYPE_BODY(base_type)                                                                               \
   PblVarMetaData_T meta;                                                                                               \
-  base_type actual;
+  base_type *actual;
 
 // ---- End of Constructor Macros -------------------------------------------------------------------------------------
 
@@ -162,7 +145,7 @@ PBL_INIT_HEADER(pbl_types);
  * @param var The variable to get the size from.
  * @note This type must be a Para type.
  */
-#define PBL_SIZEOF_USABLE(type) (type##_Size)
+#define PBL_SIZEOF_USABLE(type) (type##_WritableSize)
 
 /**
  * @brief Returns the full allocation size of a Para type. This also includes meta data.
@@ -175,21 +158,16 @@ PBL_INIT_HEADER(pbl_types);
 
 // ---- Pointer Type --------------------------------------------------------------------------------------------------
 
+#define PblPointer_T_ActualName ptr
+#define PblPointer_T_Primitive true
+#define PblPointer_T_Complex false
+#define PblPointer_T_FullSize sizeof(PblPointer_T)
+#define PblPointer_T_WritableSize sizeof(void *)
 /**
- * @brief (Never use this for malloc - this only indicates the usable memory space).
- * @returns The usable size in bytes of the PBL Bool type.
+ * @returns The definition default for the type 'PblPointer_T'.
  */
-#define PblPointer_T_Size sizeof(void *)
-/**
- * @returns The declaration default for the type 'PblPointer_T'.
- */
-#define PblPointer_T_DeclDefault PBL_TYPE_DECL_VAL(PblPointer_T)
-/**
- * @returns The definition default for the type 'PblPointer_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblPointer_T_DefDefault PBL_TYPE_DEF_VAL(PblPointer_T, {.p_type = NULL, .p_void = NULL})
+#define PblPointer_T_Default {.p_type = NULL, .p_void = NULL}
+#define PblPointer_T_Properties { "p_type", "p_void" }
 
 /**
  * @brief The base pointer type, implemented with 'PblPointer_T'.
@@ -197,11 +175,11 @@ PBL_INIT_HEADER(pbl_types);
  */
 typedef struct PblPointer_Base {
   /**
-   * @brief The type of the pointer
+   * @brief The type of the pointer.
    */
-  PblType_T *p_type;
+  PblType_T p_type;
   /**
-   * @brief The actual pointer to the type
+   * @brief The actual pointer to the type.
    */
   void *p_void;
 } PblPointer_T_Base;
@@ -211,7 +189,7 @@ typedef struct PblPointer_Base {
  * differentiated between instances.
  */
 typedef struct PblPointer {
-  PBL_TYPE_DEF_HELPER(PblPointer_T_Base)
+  PBL_PRIMITIVE_TYPE_BODY(PblPointer_T_Base)
 } PblPointer_T;
 
 // ---- End of Pointer Type -------------------------------------------------------------------------------------------
@@ -222,17 +200,12 @@ typedef struct PblPointer {
  * @brief (Never use this for malloc - this only indicates the usable memory space).
  * @returns The usable size in bytes of the PBL PblNone_T type.
  */
-#define PblNone_T_Size 0
-/**
- * @brief Returns the declaration default for the type 'PblNone_T'.
- * @note This type does not allow any declarations, so using it as such is invalid.
- */
-#define PblNone_T_DeclDefault
+#define PblNone_T_WritableSize 0
 /**
  * @brief Returns the definition default for the type 'PblNone_T'.
  * @note This type does not allow any definition, so using it as such is invalid.
  */
-#define PblNone_T_DefDefault
+#define PblNone_T_Default
 
 /**
  * @brief None/empty type implementation. This is a simple redefinition of the standard void, so it is still an
@@ -252,23 +225,17 @@ typedef void PblNone_T;
  * @brief (Never use this for malloc - this only indicates the usable memory space).
  * @returns The usable size in bytes of the PBL Bool type.
  */
-#define PblBool_T_Size sizeof(bool)
+#define PblBool_T_WritableSize sizeof(bool)
 /**
- * @returns The declaration default for the type 'PblBool_T'.
+ * @returns The definition default for the type 'PblBool_T'.
  */
-#define PblBool_T_DeclDefault PBL_TYPE_DECL_VAL(PblBool_T)
-/**
- * @returns The definition default for the type 'PblBool_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblBool_T_DefDefault PBL_TYPE_DEF_VAL(PblBool_T, false)
+#define PblBool_T_Default false
 
 /**
  * @brief PBL Bool implementation.
  */
 typedef struct PblBool {
-  PBL_TYPE_DEF_HELPER(bool);
+  PBL_PRIMITIVE_TYPE_BODY(bool);
 } PblBool_T;
 
 // ---- End of Bool ---------------------------------------------------------------------------------------------------
@@ -279,23 +246,17 @@ typedef struct PblBool {
  * @brief (Never use this for malloc - this only indicates the usable memory space).
  * @returns The usable size in bytes of the PBL Size type.
  */
-#define PblSize_T_Size sizeof(size_t)
+#define PblSize_T_WritableSize sizeof(size_t)
 /**
- * @returns The declaration default for the type 'PblSize_T'.
+ * @returns The definition default for the type 'PblSize_T'.
  */
-#define PblSize_T_DeclDefault PBL_TYPE_DECL_VAL(PblSize_T)
-/**
- * @returns The definition default for the type 'PblSize_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblSize_T_DefDefault PBL_TYPE_DEF_VAL(PblSize_T, 0)
+#define PblSize_T_Default 0
 
 /**
  * @brief PBL Byte Size implementation.
  */
 typedef struct PblSize {
-  PBL_TYPE_DEF_HELPER(size_t);
+  PBL_PRIMITIVE_TYPE_BODY(size_t);
 } PblSize_T;
 
 // ---- End of Size ---------------------------------------------------------------------------------------------------
@@ -306,23 +267,17 @@ typedef struct PblSize {
  * @brief (Never use this for malloc - this only indicates the usable memory space).
  * @returns The usable size in bytes of the PBL Signed Char type.
  */
-#define PblChar_T_Size sizeof(signed char)
+#define PblChar_T_WritableSize sizeof(signed char)
 /**
- * @returns The declaration default for the type 'PblChar_T'.
+ * @returns The definition default for the type 'PblChar_T'.
  */
-#define PblChar_T_DeclDefault PBL_TYPE_DECL_VAL(PblChar_T)
-/**
- * @returns The definition default for the type 'PblChar_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblChar_T_DefDefault PBL_TYPE_DEF_VAL(PblChar_T, 0)
+#define PblChar_T_Default 0
 
 /**
  * @brief PBL Signed Char implementation.
  */
 typedef struct PblChar {
-  PBL_TYPE_DEF_HELPER(signed char);
+  PBL_PRIMITIVE_TYPE_BODY(signed char);
 } PblChar_T;
 
 // ---- End of Char ---------------------------------------------------------------------------------------------------
@@ -333,23 +288,17 @@ typedef struct PblChar {
  * @brief (Never use this for malloc - this only indicates the usable memory space).
  * @returns The usable size in bytes of the PBL Unsigned Char type.
  */
-#define PblUChar_T_Size sizeof(unsigned char)
+#define PblUChar_T_WritableSize sizeof(unsigned char)
 /**
- * @returns The declaration default for the type 'PblUChar_T_Size'.
+ * @returns The definition default for the type 'PblUChar_T'.
  */
-#define PblUChar_T_DeclDefault PBL_TYPE_DECL_VAL(PblUChar_T)
-/**
- * @returns The definition default for the type 'PblUChar_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblUChar_T_DefDefault PBL_TYPE_DEF_VAL(PblUChar_T, 0)
+#define PblUChar_T_Default 0
 
 /**
  * @brief PBL Unsigned Char implementation.
  */
 typedef struct PblUChar {
-  PBL_TYPE_DEF_HELPER(unsigned char);
+  PBL_PRIMITIVE_TYPE_BODY(unsigned char);
 } PblUChar_T;
 
 // ---- End of UChar --------------------------------------------------------------------------------------------------
@@ -360,23 +309,17 @@ typedef struct PblUChar {
  * @brief (Never use this for malloc - this only indicates the usable memory space).
  * @returns The usable size in bytes of the PBL Signed Short type.
  */
-#define PblShort_T_Size sizeof(signed short)
+#define PblShort_T_WritableSize sizeof(signed short)
 /**
- * @returns The declaration default for the type 'PblShort_T'.
+ * @returns The definition default for the type 'PblShort_T'.
  */
-#define PblShort_T_DeclDefault PBL_TYPE_DECL_VAL(PblShort_T)
-/**
- * @returns The definition default for the type 'PblShort_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblShort_T_DefDefault PBL_TYPE_DEF_VAL(PblShort_T, 0)
+#define PblShort_T_Default 0
 
 /**
  * @brief PBL Signed Short implementation.
  */
 typedef struct PblShort {
-  PBL_TYPE_DEF_HELPER(signed short);
+  PBL_PRIMITIVE_TYPE_BODY(signed short);
 } PblShort_T;
 
 // ---- End of Short --------------------------------------------------------------------------------------------------
@@ -387,23 +330,17 @@ typedef struct PblShort {
  * @brief (Never use this for malloc - this only indicates the usable memory space).
  * @returns The usable size in bytes of the PBL Unsigned Short type.
  */
-#define PblUShort_T_Size sizeof(unsigned short)
+#define PblUShort_T_WritableSize sizeof(unsigned short)
 /**
- * @returns The declaration default for the type 'PblUShort_T_Size'.
+ * @returns The definition default for the type 'PblUShort_T'.
  */
-#define PblUShort_T_DeclDefault PBL_TYPE_DECL_VAL(PblUShort_T)
-/**
- * @returns The definition default for the type 'PblUShort_T', where the value/the children have not been set yet
- * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
- * initialised to 0 or another Definition Default of another type.
- */
-#define PblUShort_T_DefDefault PBL_TYPE_DEF_VAL(PblUShort_T, 0)
+#define PblUShort_T_Default 0
 
 /**
  * @brief PBL Unsigned Short implementation.
  */
 typedef struct PblUShort {
-  PBL_TYPE_DEF_HELPER(unsigned short);
+  PBL_PRIMITIVE_TYPE_BODY(unsigned short);
 } PblUShort_T;
 
 // ---- End of UShort -------------------------------------------------------------------------------------------------
@@ -414,21 +351,18 @@ typedef struct PblUShort {
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Signed Int type
  */
-#define PblInt_T_Size sizeof(signed int)
-/**
- * @returns The declaration default for the type 'PblInt_T' */
-#define PblInt_T_DeclDefault PBL_TYPE_DECL_VAL(PblInt_T)
+#define PblInt_T_WritableSize sizeof(signed int)
 /**
  * @returns The definition default for the type 'PblInt_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblInt_T_DefDefault PBL_TYPE_DEF_VAL(PblInt_T, 0)
+#define PblInt_T_Default 0
 
 /**
  * @brief PBL Signed Int implementation
  */
 typedef struct PblInt {
-  PBL_TYPE_DEF_HELPER(signed int);
+  PBL_PRIMITIVE_TYPE_BODY(signed int);
 } PblInt_T;
 
 // ---- End of Int ----------------------------------------------------------------------------------------------------
@@ -438,21 +372,18 @@ typedef struct PblInt {
 /**
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Unsigned Int type */
-#define PblUInt_T_Size sizeof(unsigned int)
-/**
- * @returns The declaration default for the type 'PblUInt_T' */
-#define PblUInt_T_DeclDefault PBL_TYPE_DECL_VAL(PblUInt_T)
+#define PblUInt_T_WritableSize sizeof(unsigned int)
 /**
  * @returns The definition default for the type 'PblUInt_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblUInt_T_DefDefault PBL_TYPE_DEF_VAL(PblUInt_T, 0)
+#define PblUInt_T_Default 0
 
 /**
  * @brief PBL Unsigned Int implementation
  */
 typedef struct PblUInt {
-  PBL_TYPE_DEF_HELPER(unsigned int);
+  PBL_PRIMITIVE_TYPE_BODY(unsigned int);
 } PblUInt_T;
 
 // ---- End of UInt ---------------------------------------------------------------------------------------------------
@@ -462,21 +393,18 @@ typedef struct PblUInt {
 /**
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Signed Long type */
-#define PblLong_T_Size sizeof(signed long)
-/**
- * @returns The declaration default for the type 'PblLong_T' */
-#define PblLong_T_DeclDefault PBL_TYPE_DECL_VAL(PblLong_T)
+#define PblLong_T_WritableSize sizeof(signed long)
 /**
  * @returns The definition default for the type 'PblLong_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblLong_T_DefDefault PBL_TYPE_DEF_VAL(PblLong_T, 0)
+#define PblLong_T_Default 0
 
 /**
  * @brief PBL Signed Long implementation
  */
 typedef struct PblLong {
-  PBL_TYPE_DEF_HELPER(signed long);
+  PBL_PRIMITIVE_TYPE_BODY(signed long);
 } PblLong_T;
 
 // ---- End of Long --------------------------------------------------------------------------------------------------
@@ -486,21 +414,18 @@ typedef struct PblLong {
 /**
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Unsigned Long type */
-#define PblULong_T_Size sizeof(unsigned long)
-/**
- * @returns The declaration default for the type 'PblULong_T' */
-#define PblULong_T_DeclDefault PBL_TYPE_DECL_VAL(PblULong_T)
+#define PblULong_T_WritableSize sizeof(unsigned long)
 /**
  * @returns The definition default for the type 'PblULong_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblULong_T_DefDefault PBL_TYPE_DEF_VAL(PblULong_T, 0)
+#define PblULong_T_Default 0
 
 /**
  * @brief PBL Unsigned Long implementation
  */
 typedef struct PblULong {
-  PBL_TYPE_DEF_HELPER(unsigned long);
+  PBL_PRIMITIVE_TYPE_BODY(unsigned long);
 } PblULong_T;
 
 // ---- End of ULong --------------------------------------------------------------------------------------------------
@@ -511,22 +436,18 @@ typedef struct PblULong {
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Signed Long Long type
  */
-#define PblLongLong_T_Size sizeof(signed long long)
-/**
- * @returns The declaration default for the type 'PblLongLong_T'
- */
-#define PblLongLong_T_DeclDefault PBL_TYPE_DECL_VAL(PblLongLong_T)
+#define PblLongLong_T_WritableSize sizeof(signed long long)
 /**
  * @returns The definition default for the type 'PblLongLong_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblLongLong_T_DefDefault PBL_TYPE_DEF_VAL(PblLongLong_T, 0)
+#define PblLongLong_T_Default 0
 
 /**
  * @brief PBL Signed Long Long implementation
  */
 typedef struct PblLongLong {
-  PBL_TYPE_DEF_HELPER(signed long long);
+  PBL_PRIMITIVE_TYPE_BODY(signed long long);
 } PblLongLong_T;
 
 // ---- End of Long Long ----------------------------------------------------------------------------------------------
@@ -536,21 +457,18 @@ typedef struct PblLongLong {
 /**
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Unsigned Long Long type */
-#define PblULongLong_T_Size sizeof(unsigned long long)
-/**
- * @returns The declaration default for the type 'PblULongLong_T' */
-#define PblULongLong_T_DeclDefault PBL_TYPE_DECL_VAL(PblULongLong_T)
+#define PblULongLong_T_WritableSize sizeof(unsigned long long)
 /**
  * @returns The definition default for the type 'PblULongLong_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblULongLong_T_DefDefault PBL_TYPE_DEF_VAL(PblULongLong_T, 0)
+#define PblULongLong_T_Default 0
 
 /**
  * @brief PBL Unsigned Long Long implementation
  */
 typedef struct PblULongLong {
-  PBL_TYPE_DEF_HELPER(unsigned long long);
+  PBL_PRIMITIVE_TYPE_BODY(unsigned long long);
 } PblULongLong_T;
 
 // ---- End of ULong Long ---------------------------------------------------------------------------------------------
@@ -560,21 +478,18 @@ typedef struct PblULongLong {
 /**
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Float type */
-#define PblFloat_T_Size sizeof(float)
-/**
- * @returns The declaration default for the type 'PblFloat_T' */
-#define PblFloat_T_DeclDefault PBL_TYPE_DECL_VAL(PblFloat_T)
+#define PblFloat_T_WritableSize sizeof(float)
 /**
  * @returns The definition default for the type 'PblFloat_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblFloat_T_DefDefault PBL_TYPE_DEF_VAL(PblFloat_T, 0)
+#define PblFloat_T_Default 0
 
 /**
  * @brief PBL Float implementation
  */
 typedef struct PblFloat {
-  PBL_TYPE_DEF_HELPER(float);
+  PBL_PRIMITIVE_TYPE_BODY(float);
 } PblFloat_T;
 
 // ---- End of Float --------------------------------------------------------------------------------------------------
@@ -584,21 +499,18 @@ typedef struct PblFloat {
 /**
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Double type */
-#define PblDouble_T_Size sizeof(double)
-/**
- * @returns The declaration default for the type 'PblDouble_T' */
-#define PblDouble_T_DeclDefault PBL_TYPE_DECL_VAL(PblDouble_T)
+#define PblDouble_T_WritableSize sizeof(double)
 /**
  * @returns The definition default for the type 'PblDouble_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblDouble_T_DefDefault PBL_TYPE_DEF_VAL(PblDouble_T, 0)
+#define PblDouble_T_Default 0
 
 /**
  * @brief PBL Double implementation
  */
 typedef struct PblDouble {
-  PBL_TYPE_DEF_HELPER(double);
+  PBL_PRIMITIVE_TYPE_BODY(double);
 } PblDouble_T;
 
 // ---- End of Double -------------------------------------------------------------------------------------------------
@@ -608,21 +520,18 @@ typedef struct PblDouble {
 /**
  * @brief (Never use this for malloc - this only indicates the usable memory space)
  * @returns The usable size in bytes of the PBL Long Double type */
-#define PblLongDouble_T_Size sizeof(long double)
-/**
- * @returns The declaration default for the type 'PblLongDouble_T' */
-#define PblLongDouble_T_DeclDefault PBL_TYPE_DECL_VAL(PblLongDouble_T)
+#define PblLongDouble_T_WritableSize sizeof(long double)
 /**
  * @returns The definition default for the type 'PblLongDouble_T', where the value/the children have not been set yet
  * and only the value itself 'exists' already. If the type is a struct-type, then the children will likely be NULL,
  * initialised to 0 or another Definition Default of another type */
-#define PblLongDouble_T_DefDefault PBL_TYPE_DEF_VAL(PblLongDouble_T, 0)
+#define PblLongDouble_T_Default 0
 
 /**
  * @brief PBL Long Double implementation
  */
 typedef struct PblLongDouble {
-  PBL_TYPE_DEF_HELPER(long double);
+  PBL_PRIMITIVE_TYPE_BODY(long double);
 } PblLongDouble_T;
 
 // ---- End of Numeric Types ------------------------------------------------------------------------------------------
@@ -640,7 +549,7 @@ typedef struct PblLongDouble {
 #define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(para_type, val, c_type)                                                \
   {                                                                                                                    \
     auto *conv = (para_type *) PblMalloc(sizeof(para_type));                                                           \
-    *conv = para_type##_DefDefault;                                                                                    \
+    *conv = para_type##_Default;                                                                                    \
     conv->actual = (c_type) (val);                                                                                     \
     return conv;                                                                                                       \
   }
@@ -655,7 +564,7 @@ typedef struct PblLongDouble {
 #define PBL_CONVERSION_FUNCTION_DEF_CONSTRUCTOR(para_type, val, c_type)                                                \
   {                                                                                                                    \
     para_type *conv = (para_type *) PblMalloc(sizeof(para_type));                                                      \
-    *conv = para_type##_DefDefault;                                                                                    \
+    *conv = para_type##_Default;                                                                                    \
     conv->actual = (c_type) (val);                                                                                     \
     return conv;                                                                                                       \
   }

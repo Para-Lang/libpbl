@@ -121,7 +121,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   one-line conversion
 - Proper meta-tracking for all Para types using `PblVarMeta_T`
 - Default declaration and definition macros for all types in `libpbl`. These are defined using `_DeclDefault` and
-  `_DefDefault` for all types
+  `_Default` for all types
 - `PblIOStream_T` and `PblIOFile_T` implementation for stream handling
 - Specified Int Types in `pbl-int.h` that wrap the int types in `stdint.h`
 - Meta handling for managing a function call context and Exception handling in `pbl-function.h`
